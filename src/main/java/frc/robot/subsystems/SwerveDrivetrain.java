@@ -309,7 +309,7 @@ public class SwerveDrivetrain extends SubsystemBase {
 	/** Zeroes the heading of the robot. */
 	public void zeroHeading() {
 		m_gyro.reset();
-		m_gyro.calibrate();
+		//m_gyro.calibrate();
 		m_gyro.setAngleAdjustment(90);
 	}
 
