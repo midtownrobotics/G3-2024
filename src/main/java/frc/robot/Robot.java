@@ -206,14 +206,6 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putBoolean("Mouth isDangerous", m_robotContainer.getMouth().isDangerous());
 
 */
-		SmartDashboard.putString("Auton selected", m_robotContainer.getAutonChooser().getSelected());	
-		SmartDashboard.putString("Game piece", m_robotContainer.getGamePieceChooser().getSelected());
-		SmartDashboard.putString("Start position", m_robotContainer.getStartPositionChooser().getSelected());
-		SmartDashboard.putString("Main target", m_robotContainer.getMainTargetChooser().getSelected());
-		SmartDashboard.putString("Camera option", m_robotContainer.getCameraOptionChooser().getSelected());
-		SmartDashboard.putString("Sonar option", m_robotContainer.getSonarOptionChooser().getSelected());
-		SmartDashboard.putString("Release chosen", m_robotContainer.getReleaseChooser().getSelected());
-		SmartDashboard.putString("Auton option", m_robotContainer.getAutonOptionChooser().getSelected());
 	}
 
 	@Override
