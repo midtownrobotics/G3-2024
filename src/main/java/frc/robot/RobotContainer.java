@@ -112,54 +112,13 @@ public class RobotContainer {
 	private String autonOption;
 	private SendableChooser<String> autonOptionChooser = new SendableChooser<>();
 
-	// sensors
-
-	// private final HMAccelerometer accelerometer = new HMAccelerometer();
-
-	// motorized devices
-
 	private final SwerveDrivetrain drivetrain = new SwerveDrivetrain();
-
-	/*
-	private final WPI_TalonSRX drawer_master = new WPI_TalonSRX(Ports.CAN.DRAWER);
-
-	private final Drawer drawer = new Drawer(drawer_master);
-
-	private final WPI_TalonSRX elevator_master = new WPI_TalonSRX(Ports.CAN.ELEVATOR_MASTER);
-
-	private final WPI_VictorSPX elevator_follower = new WPI_VictorSPX(Ports.CAN.ELEVATOR_FOLLOWER);
-
-	private final Elevator elevator = new Elevator(elevator_master, elevator_follower);
-
-	private final WPI_TalonFX neck_master = new WPI_TalonFX(Ports.CAN.NECK);
-	
-	private final Neck neck = new Neck(neck_master);
-
-	private final WPI_TalonSRX roller_master = new WPI_TalonSRX(Ports.CAN.ROLLER);
-	
-	private final Roller roller = new Roller(roller_master);
-	
-	// pneumatic devices
-
-	private final Compressor compressor = new Compressor();
-
-	private final Mouth mouth = new Mouth();
-*/
-	// misc
 
 	private final Field2d field = new Field2d(); //  a representation of the field
 
-	//private final Indicator indicator = new Indicator(null);
-
-	// The driver's and copilot's joystick(s) and controller(s)
-
-	/*CommandJoystick joyLeft = new CommandJoystick(Ports.USB.LEFT_JOYSTICK);
-	CommandJoystick joyRight = new CommandJoystick(Ports.USB.RIGHT_JOYSTICK);*/
 	CommandJoystick joyMain = new CommandJoystick(Ports.USB.MAIN_JOYSTICK);
 	XboxController driver = new XboxController(Ports.USB.DRIVER_CONTROLLER);
-	//CommandXboxController driverGamepad = new CommandXboxController(Ports.USB.DRIVER_GAMEPAD);
 	CommandXboxController copilotGamepad = new CommandXboxController(Ports.USB.COPILOT_GAMEPAD);
-	
 
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -231,23 +190,6 @@ public class RobotContainer {
 		// Configure the button bindings
 
 		configureButtonBindings();
-
-
-		// Configure default commands
-
-		// drivetrain.setDefaultCommand(
-		// 	// The left stick controls translation of the robot.
-		// 	// Turning is controlled by the X axis of the right stick.
-		// 	// We are inverting LeftY because Xbox controllers return negative values when we push forward.
-		// 	// We are inverting LeftX because we want a positive value when we pull to the left. Xbox controllers return positive values when you pull to the right by default.
-		// 	// We are also inverting RightX because we want a positive value when we pull to the left (CCW is positive in mathematics).
-		// 	new RunCommand(
-		// 		() -> drivetrain.drive(
-		// 			-MathUtil.applyDeadband(joyMain.getY(), JOYSTICK_Y_AXIS_THRESHOLD),
-		// 			-MathUtil.applyDeadband(joyMain.getX(), JOYSTICK_X_AXIS_THRESHOLD),
-		// 			-MathUtil.applyDeadband(joyMain.getZ(), JOYSTICK_Z_AXIS_THRESHOLD),
-		// 			true, true),
-		// 		drivetrain));
 			
 		drivetrain.setDefaultCommand(new RunCommand(
 			() -> drivetrain.drive(
@@ -255,13 +197,6 @@ public class RobotContainer {
 				MathUtil.applyDeadband((driver.getLeftX() * Math.abs(driver.getLeftX()))*.25, JOYSTICK_X_AXIS_THRESHOLD),
 				-MathUtil.applyDeadband((driver.getRightX() * Math.abs(driver.getRightX()))*1, JOYSTICK_Z_AXIS_THRESHOLD),
 				true, false), drivetrain));
-		
-/*		roller.setDefaultCommand(new RollerStopForever(roller)); // we stop by default
-
-		compressor.checkCompressor(); //we compress in the background
-
-		indicator.setDefaultCommand(new IndicatorScrollRainbow(indicator)); // temp
-*/
 	}
 
 	/**
@@ -275,111 +210,6 @@ public class RobotContainer {
 	 */
 	private void configureButtonBindings() {
 
-		// driver (joystick)
-
-			//.onTrue(new DrivetrainTurnAngleUsingPidController(drivetrain, 90));
-
-/*
-		joyMain.button(7)
-			.whileTrue(new RollerJoystickControl(roller, drivetrain, getMainJoystick()));
-		
-		joyMain.button(8)
-			.whileTrue(new NeckJoystickControl(neck, drivetrain, getMainJoystick()));
-		
-		joyMain.button(9)
-			.whileTrue(new DrawerJoystickControl(drawer, drivetrain, getMainJoystick()));
-		
-		joyMain.button(10)
-			.whileTrue(new ElevatorJoystickControl(elevator, drivetrain, getMainJoystick()));
-
-		//joyMain.button(11)
-			//.onTrue(new DrivetrainZeroHeading(drivetrain));
-		
-		//joyMain.button(12)
-			//.whileTrue(new DrivetrainSetXFormation(drivetrain));
-			
-				
-		// copilot (gamepad)
-		
-		copilotGamepad.a()
-			.whileTrue(new RollerRelease(roller));
-		
-		copilotGamepad.b()
-			.whileTrue(new RollerRoll(roller));
-
-		copilotGamepad.x()
-			.onTrue(new MouthSafeClose(mouth, neck, getCopilotGamepad()));
-
-		copilotGamepad.y()
-			.onTrue(new MouthOpen(mouth));
-
-		copilotGamepad.back()
-			.onTrue(new DrivetrainAndGyroReset(drivetrain));
-
-		copilotGamepad.start()
-			.onTrue(new AlmostEverythingStop(elevator, drawer, neck, roller));
-
-
-		copilotGamepad.leftTrigger()
-			.onTrue(new DrawerRetractWithStallDetection(drawer));
-
-		copilotGamepad.rightTrigger()
-			.onTrue(new DrawerExtendWithStallDetection(drawer));
-
-
-		copilotGamepad.povDown()
-			.onTrue(new ElevatorMoveDownWithStallDetection(elevator));
-
-		copilotGamepad.povLeft()
-			.onTrue(new ElevatorMoveMidwayWithStallDetection(elevator));
-
-		copilotGamepad.povRight()
-			.onTrue(new ElevatorMoveMidwayWithStallDetection(elevator));
-
-		copilotGamepad.povUp()
-			.onTrue(new ElevatorMoveUpWithStallDetection(elevator));
-
-
-		copilotGamepad.leftBumper()
-			.onTrue(new NeckSafeMoveUpWithStallDetection(neck, mouth, getCopilotGamepad()));
-
-		copilotGamepad.rightBumper()
-			.onTrue(new NeckMoveDownWithStallDetection(neck));
-
-
-		copilotGamepad.leftStick()
-			.onTrue(new RollerTimedRoll(roller, 3));
-			//.onTrue(new GamepadRumble(getCopilotGamepad(),false));			
-
-		copilotGamepad.rightStick()
-			.onTrue(new RollerTimedRelease(roller, 3));
-			//.onTrue(new GamepadRumble(getCopilotGamepad(),false));
-
-
-		copilotGamepad.axisGreaterThan(LY,GAMEPAD_AXIS_THRESHOLD)
-			.whileTrue(new ElevatorGamepadControl(elevator, getCopilotGamepad()));
-
-		copilotGamepad.axisLessThan(LY,-GAMEPAD_AXIS_THRESHOLD)
-			.whileTrue(new ElevatorGamepadControl(elevator, getCopilotGamepad()));
-*/
-		/*copilotGamepad.axisGreaterThan(LX,GAMEPAD_AXIS_THRESHOLD)
-			.whileTrue();
-
-		copilotGamepad.axisLessThan(LX,-GAMEPAD_AXIS_THRESHOLD)
-			.whileTrue();*/
-/*
-		copilotGamepad.axisGreaterThan(RY,GAMEPAD_AXIS_THRESHOLD)
-			.whileTrue(new NeckGamepadControl(neck, getCopilotGamepad()));
-
-		copilotGamepad.axisLessThan(RY,-GAMEPAD_AXIS_THRESHOLD)
-			.whileTrue(new NeckGamepadControl(neck, getCopilotGamepad()));
-
-		copilotGamepad.axisGreaterThan(RX,GAMEPAD_AXIS_THRESHOLD)
-			.whileTrue(new DrawerGamepadControl(drawer, getCopilotGamepad()));
-
-		copilotGamepad.axisLessThan(RX,-GAMEPAD_AXIS_THRESHOLD)
-			.whileTrue(new DrawerGamepadControl(drawer, getCopilotGamepad()));	
-*/			
 	}
 
 	/**
@@ -415,14 +245,7 @@ public class RobotContainer {
 
 		switch (autonSelected) {
 			case AUTON_SAMPLE_SWERVE:
-				//return createSwerveControllerCommand(createExampleTrajectory());
-				//return new DrivetrainSwerveRelative(drivetrain, this, createExampleTrajectory());
-/*
-			case AUTON_CUSTOM:
-				return new CustomAuton(gamePieceSelected, startPosition, mainTarget, cameraOption, sonarOption, autonOption,
-					drivetrain, this, elevator, drawer, roller, neck, mouth);
-				//break;
-*/
+
 			case AUTON_DO_NOTHING:
 				return null;
 				//break;
@@ -454,87 +277,16 @@ public class RobotContainer {
 		return config;
 	}
 
-	/*public Trajectory createExampleTrajectory() {
-		// An example trajectory to follow. All units in meters.
-		Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-			// Start at the origin facing the +X direction
-			new Pose2d(0, 0, Rotation2d.fromDegrees(0)),
-			// Pass through these two interior waypoints, making an 's' curve path
-			List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-			// End 3 meters straight ahead of where we started, facing forward
-			new Pose2d(3, 0, Rotation2d.fromDegrees(0)),
-			createTrajectoryConfig());
-
-		return exampleTrajectory;
-	}*/
-	
-	/*public Command createSwerveControllerCommand(Trajectory trajectory) {
-
-		ProfiledPIDController thetaController = new ProfiledPIDController(
-			AutoConstants.THETA_CONTROLLER_P, 0, 0, AutoConstants.THETA_CONTROLLER_CONSTRAINTS);
-			
-		thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-		SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-			trajectory, // trajectory to follow
-			drivetrain::getPose, // Functional interface to feed supplier
-			DrivetrainConstants.DRIVE_KINEMATICS, // kinematics of the drivetrain
-			new PIDController(AutoConstants.X_CONTROLLER_P, 0, 0), // trajectory tracker PID controller for x position
-			new PIDController(AutoConstants.Y_CONTROLLER_P, 0, 0), // trajectory tracker PID controller for y position
-			thetaController, // trajectory tracker PID controller for rotation
-			drivetrain::setModuleStates, // raw output module states from the position controllers
-			drivetrain); // subsystems to require
-
-		// Reset odometry to the starting pose of the trajectory.
-		drivetrain.resetOdometry(trajectory.getInitialPose()); // WARNING: https://github.com/REVrobotics/MAXSwerve-Java-Template/issues/13
-
-		field.getObject("trajectory").setTrajectory(trajectory);
-
-		// Run path following command, then stop at the end.
-		return swerveControllerCommand.andThen(() -> drivetrain.drive(0, 0, 0, false, false));
-	}*/
-
 	public Field2d getField()
 	{
 		return field;
 	}
 
-	// public HMAccelerometer getAccelerometer()
-	// {
-	// 	return accelerometer;
-	// }
-
 	public SwerveDrivetrain getDrivetrain()
 	{
 		return drivetrain;
 	}
-/*
-
-	public Elevator getElevator()
-	{
-		return elevator;
-	}
-
-	public Drawer getDrawer()
-	{
-		return drawer;
-	}
-
-	public Neck getNeck()
-	{
-		return neck;
-	}
-
-	public Roller getRoller()
-	{
-		return roller;
-	}
-
-	public Mouth getMouth()
-	{
-		return mouth;
-	}
-*/
+	
 	public Joystick getMainJoystick()
 	{
 		return joyMain.getHID();
