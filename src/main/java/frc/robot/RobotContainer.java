@@ -15,8 +15,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DrivetrainConstants;
@@ -37,20 +35,11 @@ public class RobotContainer {
 	public static final double JOYSTICK_Y_AXIS_THRESHOLD = 0.15;
 	public static final double JOYSTICK_Z_AXIS_THRESHOLD = 0.25;
 
-	public static final int LX = 0;
-	public static final int LY = 1;
-	public static final int LT = 2;
-	public static final int RT = 3;
-	public static final int RX = 4;
-	public static final int RY = 5;
-
 	private final SwerveDrivetrain drivetrain = new SwerveDrivetrain();
 
 	private final Field2d field = new Field2d(); //  a representation of the field
 
-	CommandJoystick joyMain = new CommandJoystick(Ports.USB.MAIN_JOYSTICK);
 	XboxController driver = new XboxController(Ports.USB.DRIVER_CONTROLLER);
-	CommandXboxController copilotGamepad = new CommandXboxController(Ports.USB.COPILOT_GAMEPAD);
 
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -121,13 +110,4 @@ public class RobotContainer {
 		return drivetrain;
 	}
 
-	public Joystick getMainJoystick()
-	{
-		return joyMain.getHID();
-	}
-
-	public XboxController getCopilotGamepad()
-	{
-		return copilotGamepad.getHID();
-	}
 }
