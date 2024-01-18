@@ -20,7 +20,6 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.RelativeEncoder;
 
 import frc.robot.Constants.SwerveModuleConstants;
-//import frc.robot.sensors.ThriftyEncoder;
 
 /**
  * The {@code SwerveModule} class contains fields and methods pertaining to the function of a swerve module.
