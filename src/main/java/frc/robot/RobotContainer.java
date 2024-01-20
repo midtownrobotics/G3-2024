@@ -52,8 +52,8 @@ public class RobotContainer {
 			
 		drivetrain.setDefaultCommand(new RunCommand(
 			() -> drivetrain.drive(
-				MathUtil.applyDeadband((driver.getLeftY() * Math.abs(driver.getLeftY()))*.25, JOYSTICK_Y_AXIS_THRESHOLD),
-				MathUtil.applyDeadband((driver.getLeftX() * Math.abs(driver.getLeftX()))*.25, JOYSTICK_X_AXIS_THRESHOLD),
+				MathUtil.applyDeadband((driver.getLeftY() * Math.abs(driver.getLeftY()))*1, JOYSTICK_Y_AXIS_THRESHOLD),
+				MathUtil.applyDeadband((driver.getLeftX() * Math.abs(driver.getLeftX()))*1, JOYSTICK_X_AXIS_THRESHOLD),
 				-MathUtil.applyDeadband((driver.getRightX() * Math.abs(driver.getRightX()))*1, JOYSTICK_Z_AXIS_THRESHOLD),
 				true, false), drivetrain));
 	}
