@@ -4,60 +4,110 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
 
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController; 
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+
+import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.DrivetrainConstants;
+
+import frc.robot.subsystems.SwerveDrivetrain;
+
+
+/*
+ * This class is where the bulk of the robot should be declared.  Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
+ * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
+ * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+	public static final double GAMEPAD_AXIS_THRESHOLD = 0.15;
+	public static final double JOYSTICK_X_AXIS_THRESHOLD = 0.15;
+	public static final double JOYSTICK_Y_AXIS_THRESHOLD = 0.15;
+	public static final double JOYSTICK_Z_AXIS_THRESHOLD = 0.25;
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
-    // Configure the trigger bindings
-    configureBindings();
-  }
+	private final SwerveDrivetrain drivetrain = new SwerveDrivetrain();
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
-  private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+	private final Field2d field = new Field2d(); //  a representation of the field
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-  }
+	CommandXboxController driver = new CommandXboxController(Ports.USB.DRIVER_CONTROLLER);
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
-  }
+	/**
+	 * The container for the robot. Contains subsystems, OI devices, and commands.
+	 */
+	public RobotContainer() {		
+
+		// Configure the button bindings
+
+		configureButtonBindings();
+			
+		drivetrain.setDefaultCommand(new RunCommand(
+			() -> drivetrain.drive(
+				MathUtil.applyDeadband((driver.getLeftY() * Math.abs(driver.getLeftY()))*1, JOYSTICK_Y_AXIS_THRESHOLD),
+				MathUtil.applyDeadband((driver.getLeftX() * Math.abs(driver.getLeftX()))*1, JOYSTICK_X_AXIS_THRESHOLD),
+				-MathUtil.applyDeadband((driver.getRightX() * Math.abs(driver.getRightX()))*1, JOYSTICK_Z_AXIS_THRESHOLD),
+				true, false), drivetrain));
+	}
+
+	/**
+	 * Use this method to define your button->command mappings. Buttons can be
+	 * created by
+	 * instantiating a {@link edu.wpi.first.wpilibj.GenericHID} or one of its
+	 * subclasses ({@link
+	 * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling
+	 * passing it to a
+	 * {@link JoystickButton}.
+	 */
+	private void configureButtonBindings() {
+		driver.x().whileTrue(new RunCommand(() -> drivetrain.setX(), drivetrain));
+	}
+
+	/**
+	 * Use this to pass the autonomous command to the main {@link Robot} class.
+	 *
+	 * @return the command to run in autonomous
+	 */
+	public Command getAutonomousCommand() {
+		return null;
+	}
+
+	public TrajectoryConfig createTrajectoryConfig() {
+		// Create config for trajectory
+		TrajectoryConfig config = new TrajectoryConfig(
+			AutoConstants.MAX_SPEED_METERS_PER_SECOND,
+			AutoConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
+			// Add kinematics to ensure max speed is actually obeyed
+			.setKinematics(DrivetrainConstants.DRIVE_KINEMATICS);
+
+		return config;
+	}
+
+	public TrajectoryConfig createReverseTrajectoryConfig() {
+
+		TrajectoryConfig config = createTrajectoryConfig();
+
+		config.setReversed(true); // in reverse!
+
+		return config;
+	}
+
+	public Field2d getField()
+	{
+		return field;
+	}
+
+	public SwerveDrivetrain getDrivetrain()
+	{
+		return drivetrain;
+	}
+
 }
