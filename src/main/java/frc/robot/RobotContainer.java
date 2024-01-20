@@ -39,7 +39,7 @@ public class RobotContainer {
 
 	private final Field2d field = new Field2d(); //  a representation of the field
 
-	XboxController driver = new XboxController(Ports.USB.DRIVER_CONTROLLER);
+	CommandXboxController driver = new CommandXboxController(Ports.USB.DRIVER_CONTROLLER);
 
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -68,7 +68,7 @@ public class RobotContainer {
 	 * {@link JoystickButton}.
 	 */
 	private void configureButtonBindings() {
-
+		driver.x().whileTrue(new RunCommand(() -> drivetrain.setX(), drivetrain));
 	}
 
 	/**
