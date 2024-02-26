@@ -9,13 +9,14 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.signals.AbsoluteSensorRangeValue;
-import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.ctre.phoenix.sensors.AbsoluteSensorRange;
+import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix.sensors.CANCoderStatusFrame;
+import com.ctre.phoenix.sensors.SensorTimeBase;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkPIDController;
-import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.RelativeEncoder;
 
 import frc.robot.Constants.SwerveModuleConstants;
@@ -29,10 +30,10 @@ public class SwerveModule {
 
 	private final RelativeEncoder m_drivingEncoder;
 	private final RelativeEncoder m_turningEncoder;
-	private final CANcoder m_turningAbsoluteEncoder;
+	private final CANCoder m_turningAbsoluteEncoder;
 
-	private final SparkPIDController m_drivingPIDController;
-	private final SparkPIDController m_turningPIDController;
+	private final SparkMaxPIDController m_drivingPIDController;
+	private final SparkMaxPIDController m_turningPIDController;
 	private double offset = 0;
 
 
@@ -57,13 +58,13 @@ public class SwerveModule {
 		// Setup encoders and PID controllers for the driving and turning SPARKS MAX.
 		m_drivingEncoder = m_drivingSparkMax.getEncoder();
 		m_turningEncoder = m_turningSparkMax.getEncoder();
-		m_turningAbsoluteEncoder = new CANcoder(turningAnalogPort);
-		CANcoderConfiguration config = new CANcoderConfiguration();
-		// CANCoderConfiguration config = new CANCoderConfiguration();
-		config.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
-		config.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
-		config.MagnetSensor.MagnetOffset = offset;
- 		m_turningAbsoluteEncoder.getConfigurator().apply(config);
+		m_turningAbsoluteEncoder = new CANCoder(turningAnalogPort);
+		CANCoderConfiguration config = new CANCoderConfiguration();
+		config.sensorCoefficient = 2*Math.PI/4096;
+		config.unitString = "rad";
+		config.sensorTimeBase = SensorTimeBase.PerSecond;
+		config.absoluteSensorRange = AbsoluteSensorRange.Signed_PlusMinus180;
+ 		m_turningAbsoluteEncoder.configAllSettings(config);
 
 		m_drivingPIDController = m_drivingSparkMax.getPIDController();
 		m_turningPIDController = m_turningSparkMax.getPIDController();
@@ -186,7 +187,7 @@ public class SwerveModule {
 
 		m_turningSparkMax.set(0); // no moving during reset of relative turning encoder
 
-		m_turningEncoder.setPosition((m_turningAbsoluteEncoder.getAbsolutePosition().getValueAsDouble()/*2*Math.PI*/)+offset); // set relative position based on virtual absolute position
+		m_turningEncoder.setPosition(m_turningAbsoluteEncoder.getAbsolutePosition()+offset); // set relative position based on virtual absolute position
 	}
 
 	/** Calibrates the virtual position (i.e. sets position offset) of the absolute encoder. */
@@ -209,7 +210,7 @@ public class SwerveModule {
 		return m_turningEncoder;
 	}
 
-	public CANcoder getTurningAbsoluteEncoder()
+	public CANCoder getTurningAbsoluteEncoder()
 	{
 		return m_turningAbsoluteEncoder;
 	}
