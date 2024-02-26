@@ -43,9 +43,11 @@ public class SwerveModule {
 	 * Constructs a SwerveModule and configures the driving and turning motor,
 	 * encoder, and PID controller.
 	 */
-	public SwerveModule(int drivingCANId, int turningCANId, int turningAnalogPort) {
+	public SwerveModule(int drivingCANId, int turningCANId, int turningAnalogPort, double offset, boolean inverted) {
 		m_drivingSparkMax = new CANSparkMax(drivingCANId, MotorType.kBrushless);
+		m_drivingSparkMax.setInverted(inverted);
 		m_turningSparkMax = new CANSparkMax(turningCANId, MotorType.kBrushless);
+		this.offset = offset;
 
 		// Factory reset, so we get the SPARKS MAX to a known state before configuring
 		// them. This is useful in case a SPARK MAX is swapped out.
@@ -60,6 +62,7 @@ public class SwerveModule {
 		// CANCoderConfiguration config = new CANCoderConfiguration();
 		config.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
 		config.MagnetSensor.AbsoluteSensorRange = AbsoluteSensorRangeValue.Signed_PlusMinusHalf;
+		config.MagnetSensor.MagnetOffset = offset;
  		m_turningAbsoluteEncoder.getConfigurator().apply(config);
 
 		m_drivingPIDController = m_drivingSparkMax.getPIDController();
@@ -183,7 +186,7 @@ public class SwerveModule {
 
 		m_turningSparkMax.set(0); // no moving during reset of relative turning encoder
 
-		m_turningEncoder.setPosition((m_turningAbsoluteEncoder.getAbsolutePosition().getValueAsDouble()*2*Math.PI)+offset); // set relative position based on virtual absolute position
+		m_turningEncoder.setPosition((m_turningAbsoluteEncoder.getAbsolutePosition().getValueAsDouble()/*2*Math.PI*/)+offset); // set relative position based on virtual absolute position
 	}
 
 	/** Calibrates the virtual position (i.e. sets position offset) of the absolute encoder. */

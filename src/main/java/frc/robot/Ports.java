@@ -23,8 +23,6 @@ public class Ports {
 		 * Digital ports
 		 */
 		public static class Digital {
-			public static final int CHECK_PRESSURE = 0;
-			
 		}
 		
 		/**
@@ -58,7 +56,7 @@ public class Ports {
 
 			public static final int FRONT_LEFT_DRIVING = 20;
 			public static final int FRONT_LEFT_TURNING = 21;
-
+			
 			public static final int REAR_LEFT_DRIVING = 30;
 			public static final int REAR_LEFT_TURNING = 31;
 
@@ -79,25 +77,17 @@ public class Ports {
 		 * PCM ports
 		 */
 		public static class PCM {
-
-			//2023 Off-season
-			public static final int MOUTH_CLOSED = 0;
-			public static final int MOUTH_OPEN = 1;
 		}
 
 		/**
 		 * PWM ports
 		 */
 		public static class PWM {
-			public static final int LED_STRIP = 9;
 		}
 
 		/**
 		 * USB cameras
 		 */
 		public static class UsbCamera {
-			public static final int PRIMARY_CAMERA = 0;
-			public static final int BOTTOM_CAMERA = 1;
-			public static final int TOP_CAMERA = 2;
 		}
 }

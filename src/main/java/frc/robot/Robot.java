@@ -120,10 +120,10 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("RearRightDrivingEncoderPosition", m_robotContainer.getDrivetrain().getRearRightModule().getDrivingEncoder().getPosition());
 		SmartDashboard.putNumber("RearRightTurningEncoderPosition", m_robotContainer.getDrivetrain().getRearRightModule().getTurningEncoder().getPosition());
 	
-		SmartDashboard.putNumber("2 turn", m_robotContainer.getDrivetrain().getFrontLeftModule().getTurningAbsoluteEncoder().getPosition().getValueAsDouble());
-		SmartDashboard.putNumber("3 turn", m_robotContainer.getDrivetrain().getRearLeftModule().getTurningAbsoluteEncoder().getPosition().getValueAsDouble());
-		SmartDashboard.putNumber("1 turn", m_robotContainer.getDrivetrain().getFrontRightModule().getTurningAbsoluteEncoder().getPosition().getValueAsDouble());
-		SmartDashboard.putNumber("4 turn", m_robotContainer.getDrivetrain().getRearRightModule().getTurningAbsoluteEncoder().getPosition().getValueAsDouble());
+		SmartDashboard.putNumber("2 turn", m_robotContainer.getDrivetrain().getFrontLeftModule().getTurningAbsoluteEncoder().getAbsolutePosition().getValueAsDouble());
+		SmartDashboard.putNumber("3 turn", m_robotContainer.getDrivetrain().getRearLeftModule().getTurningAbsoluteEncoder().getAbsolutePosition().getValueAsDouble());
+		SmartDashboard.putNumber("1 turn", m_robotContainer.getDrivetrain().getFrontRightModule().getTurningAbsoluteEncoder().getAbsolutePosition().getValueAsDouble());
+		SmartDashboard.putNumber("4 turn", m_robotContainer.getDrivetrain().getRearRightModule().getTurningAbsoluteEncoder().getAbsolutePosition().getValueAsDouble());
 
 		SmartDashboard.putNumber("FrontLeftTurningAbsoluteEncoderVirtualPosition", m_robotContainer.getDrivetrain().getFrontLeftModule().getTurningAbsoluteEncoder().getAbsolutePosition().getValueAsDouble());
 		SmartDashboard.putNumber("RearLeftTurningAbsoluteEncoderVirtualPosition", m_robotContainer.getDrivetrain().getRearLeftModule().getTurningAbsoluteEncoder().getAbsolutePosition().getValueAsDouble());
