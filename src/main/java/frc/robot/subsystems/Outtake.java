@@ -12,9 +12,9 @@ public class Outtake extends SubsystemBase {
 
     private final CANSparkMax outtakeSparkMax;
     private final CANSparkMax pivotOuttake;
-    private final TalonSRX roller;
-    
-    public Outtake(CANSparkMax outtakeSparkMax, CANSparkMax pivotOuttake, TalonSRX roller){
+    private final CANSparkMax roller;
+
+    public Outtake(CANSparkMax outtakeSparkMax, CANSparkMax pivotOuttake, CANSparkMax roller){
         this.outtakeSparkMax = outtakeSparkMax;
         this.pivotOuttake = pivotOuttake;
         this.roller = roller;
@@ -31,6 +31,6 @@ public class Outtake extends SubsystemBase {
     }
 
     public void roller(double power){
-        roller.set(ControlMode.PercentOutput, power);
+        roller.set(power);
     }
 }

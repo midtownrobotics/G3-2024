@@ -8,7 +8,7 @@ public class RunOuttake extends Command{
     private final Outtake outtake;
     private final double power;
     
-    public RunOuttake(double power, Outtake outtake){
+    public RunOuttake(Outtake outtake, double power){
         this.power = power;
         this.outtake = outtake;
     }
