@@ -32,17 +32,16 @@ import frc.robot.Ports;
  */
 public class SwerveDrivetrain extends SubsystemBase {
 
-/* 	public static final double FRONT_LEFT_VIRTUAL_OFFSET_RADIANS = 1.340; // adjust as needed so that virtual (turn) position of wheel is zero when straight
-	public static final double FRONT_RIGHT_VIRTUAL_OFFSET_RADIANS = -3.083; // adjust as needed so that virtual (turn) position of wheel is zero when straight
-	public static final double REAR_LEFT_VIRTUAL_OFFSET_RADIANS = -0.934; // adjust as needed so that virtual (turn) position of wheel is zero when straight
-	public static final double REAR_RIGHT_VIRTUAL_OFFSET_RADIANS = +1.021; // adjust as needed so that virtual (turn) position of wheel is zero when straight
-*/
-	public static final double FRONT_LEFT_VIRTUAL_OFFSET_RADIANS = 10.75+Math.PI; // adjust as needed so that virtual (turn) position of wheel is zero when straight
-	public static final double FRONT_RIGHT_VIRTUAL_OFFSET_RADIANS = 7.47; // adjust as needed so that virtual (turn) position of wheel is zero when straight
-	public static final double REAR_LEFT_VIRTUAL_OFFSET_RADIANS = 0.9+Math.PI; // adjust as needed so that virtual (turn) position of wheel is zero when straight
-	public static final double REAR_RIGHT_VIRTUAL_OFFSET_RADIANS = 6.95; // adjust as needed so that virtual (turn) position of wheel is zero when straight
+ 	// public static final double FRONT_LEFT_VIRTUAL_OFFSET_RADIANS = 1.340; // adjust as needed so that virtual (turn) position of wheel is zero when straight
+	// public static final double FRONT_RIGHT_VIRTUAL_OFFSET_RADIANS = -3.083; // adjust as needed so that virtual (turn) position of wheel is zero when straight
+	// public static final double REAR_LEFT_VIRTUAL_OFFSET_RADIANS = -0.934; // adjust as needed so that virtual (turn) position of wheel is zero when straight
+	// public static final double REAR_RIGHT_VIRTUAL_OFFSET_RADIANS = +1.021; // adjust as needed so that virtual (turn) position of wheel is zero when straight
 
-	public static final int GYRO_ORIENTATION = 1; // might be able to merge with kGyroReversed
+	public static final double FRONT_LEFT_VIRTUAL_OFFSET_RADIANS = 10.75-(Math.PI/2.0); // adjust as needed so that virtual (turn) position of wheel is zero when straight
+	public static final double FRONT_RIGHT_VIRTUAL_OFFSET_RADIANS = 7.47-Math.PI-(Math.PI/2.0); // adjust as needed so that virtual (turn) position of wheel is zero when straight
+	public static final double REAR_LEFT_VIRTUAL_OFFSET_RADIANS = 0.9-(Math.PI/2.0); // adjust as needed so that virtual (turn) position of wheel is zero when straight
+	public static final double REAR_RIGHT_VIRTUAL_OFFSET_RADIANS = 6.95+Math.PI-(Math.PI/2.0); // adjust as needed so that virtual (turn) position of wheel is zero when straight
+ static final int GYRO_ORIENTATION = 1; // might be able to merge with kGyroReversed
 
 	public static final double FIELD_LENGTH_INCHES = 54*12+1; // 54ft 1in
 	public static final double FIELD_WIDTH_INCHES = 26*12+7; // 26ft 7in
@@ -64,25 +63,29 @@ public class SwerveDrivetrain extends SubsystemBase {
 	// end turn settings	
 
 	// Create SwerveModules
-	private final SwerveModule m_frontLeft = new SwerveModule(
+	private final SwerveModule m_frontLeft /* #2 */ = new SwerveModule(
 		Ports.CAN.FRONT_LEFT_DRIVING,
 		Ports.CAN.FRONT_LEFT_TURNING,
-		Ports.Analog.FRONT_LEFT_TURNING_ABSOLUTE_ENCODER);
+		Ports.Analog.FRONT_LEFT_TURNING_ABSOLUTE_ENCODER,
+		-0.317, false);
 
-	private final SwerveModule m_frontRight = new SwerveModule(
+	private final SwerveModule m_frontRight /* #1 */ = new SwerveModule(
 		Ports.CAN.FRONT_RIGHT_DRIVING,
 		Ports.CAN.FRONT_RIGHT_TURNING,
-		Ports.Analog.FRONT_RIGHT_TURNING_ABSOLUTE_ENCODER);
+		Ports.Analog.FRONT_RIGHT_TURNING_ABSOLUTE_ENCODER,
+		0.86, true);
 
-	private final SwerveModule m_rearLeft = new SwerveModule(
+	private final SwerveModule m_rearLeft /* #3 */ = new SwerveModule(
 		Ports.CAN.REAR_LEFT_DRIVING,
 		Ports.CAN.REAR_LEFT_TURNING,
-		Ports.Analog.REAR_LEFT_TURNING_ABSOLUTE_ENCODER);
+		Ports.Analog.REAR_LEFT_TURNING_ABSOLUTE_ENCODER,
+		-0.9, true);
 
-	private final SwerveModule m_rearRight = new SwerveModule(
+	private final SwerveModule m_rearRight /* #4 */ = new SwerveModule(
 		Ports.CAN.REAR_RIGHT_DRIVING,
 		Ports.CAN.REAR_RIGHT_TURNING,
-		Ports.Analog.REAR_RIGHT_TURNING_ABSOLUTE_ENCODER);
+		Ports.Analog.REAR_RIGHT_TURNING_ABSOLUTE_ENCODER,
+		-0.33, false);
 
 	// The gyro sensor
 	private final AHRS m_gyro = new AHRS(SPI.Port.kMXP); // usign SPI by default, which is what we want.
@@ -309,7 +312,6 @@ public class SwerveDrivetrain extends SubsystemBase {
 	/** Zeroes the heading of the robot. */
 	public void zeroHeading() {
 		m_gyro.reset();
-		m_gyro.calibrate();
 		m_gyro.setAngleAdjustment(90);
 	}
 

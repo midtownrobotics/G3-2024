@@ -36,15 +36,19 @@ public class SwerveModule {
 	private final SparkMaxPIDController m_turningPIDController;
 	private double offset = 0;
 
+
+
 	private SwerveModuleState m_desiredState = new SwerveModuleState(0.0, new Rotation2d());
 
 	/**
 	 * Constructs a SwerveModule and configures the driving and turning motor,
 	 * encoder, and PID controller.
 	 */
-	public SwerveModule(int drivingCANId, int turningCANId, int turningAnalogPort) {
+	public SwerveModule(int drivingCANId, int turningCANId, int turningAnalogPort, double offset, boolean inverted) {
 		m_drivingSparkMax = new CANSparkMax(drivingCANId, MotorType.kBrushless);
+		m_drivingSparkMax.setInverted(inverted);
 		m_turningSparkMax = new CANSparkMax(turningCANId, MotorType.kBrushless);
+		this.offset = offset;
 
 		// Factory reset, so we get the SPARKS MAX to a known state before configuring
 		// them. This is useful in case a SPARK MAX is swapped out.

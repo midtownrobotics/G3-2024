@@ -1,5 +1,6 @@
 package frc.robot;
 
+
 /**
  * Contains the definitions of all the ports
  */
@@ -23,8 +24,6 @@ public class Ports {
 		 * Digital ports
 		 */
 		public static class Digital {
-			public static final int CHECK_PRESSURE = 0;
-			
 		}
 		
 		/**
@@ -37,17 +36,16 @@ public class Ports {
 			// 2023 Off-season
 			// SPARK MAX Absolute encoders
 			
-			public static final int FRONT_RIGHT_TURNING_ABSOLUTE_ENCODER = 12;
-			public static final int REAR_RIGHT_TURNING_ABSOLUTE_ENCODER = 42;
+			public static final int FRONT_RIGHT_TURNING_ABSOLUTE_ENCODER = 12;			
+			public static final int FRONT_LEFT_TURNING_ABSOLUTE_ENCODER = 22;
 			public static final int REAR_LEFT_TURNING_ABSOLUTE_ENCODER = 32;
-			public static final int FRONT_LEFT_TURNING_ABSOLUTE_ENCODER = 22;			
-		}
-		
-		/**
-		 * Relays
-		 */
-		public static class Relay {
-			public static final int COMPRESSOR_RELAY = 0;
+			public static final int REAR_RIGHT_TURNING_ABSOLUTE_ENCODER = 42;
+
+			// TODO
+			// public static final int MODULE_1_CANCODER = 12;
+			// public static final int MODULE_2_CANCODER = 15;
+			// public static final int MODULE_3_CANCODER = 18;
+			// public static final int MODULE_4_CANCODER = 21;
 		}
 		
 		/**
@@ -60,49 +58,56 @@ public class Ports {
 			public static final int PDP = 0;	
 
 			// SPARK MAX CAN IDs
-			public static final int FRONT_LEFT_DRIVING = 20;
-			public static final int REAR_LEFT_DRIVING = 30;
 			public static final int FRONT_RIGHT_DRIVING = 10;
-			public static final int REAR_RIGHT_DRIVING = 40;
-
-			public static final int FRONT_LEFT_TURNING = 21;
-			public static final int REAR_LEFT_TURNING = 31;
 			public static final int FRONT_RIGHT_TURNING = 11;
+
+			public static final int FRONT_LEFT_DRIVING = 20;
+			public static final int FRONT_LEFT_TURNING = 21;
+			
+			public static final int REAR_LEFT_DRIVING = 30;
+			public static final int REAR_LEFT_TURNING = 31;
+
+			public static final int REAR_RIGHT_DRIVING = 40;
 			public static final int REAR_RIGHT_TURNING = 41;
+			
+			// TODO
+			// public static final int MODULE_1_DRIVING = 10;
+			// public static final int MODULE_1_TURNING = 11;
+
+			// public static final int MODULE_2_DRIVING = 13;
+			// public static final int MODULE_2_TURNING = 14;
+
+			// public static final int MODULE_3_DRIVING = 16;
+			// public static final int MODULE_3_TURNING = 17;
+
+			// public static final int MODULE_4_DRIVING = 19;
+			// public static final int MODULE_4_TURNING = 20;
+
 		}
 		
 		/**
 		 * USB ports
 		 */
 		public static class USB {
-			public static final int COPILOT_GAMEPAD = 2;
-			public static final int MAIN_JOYSTICK = 4;
 			public static final int DRIVER_CONTROLLER = 0;
+			public static final int OPERATOR_CONTROLLER = 1;
 		}
 		
 		/**
 		 * PCM ports
 		 */
 		public static class PCM {
-
-			//2023 Off-season
-			public static final int MOUTH_CLOSED = 0;
-			public static final int MOUTH_OPEN = 1;
 		}
 
 		/**
 		 * PWM ports
 		 */
 		public static class PWM {
-			public static final int LED_STRIP = 9;
 		}
 
 		/**
 		 * USB cameras
 		 */
 		public static class UsbCamera {
-			public static final int PRIMARY_CAMERA = 0;
-			public static final int BOTTOM_CAMERA = 1;
-			public static final int TOP_CAMERA = 2;
 		}
 }
