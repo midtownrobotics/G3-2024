@@ -29,10 +29,6 @@ public class Ports {
 		 * Analog ports
 		 */
 		public static class Analog {
-			//public static final int SONAR = 3;
-			//public static final int PRESSURE_SENSOR = 1;
-
-			// 2023 Off-season
 			// SPARK MAX Absolute encoders
 			
 			public static final int FRONT_RIGHT_TURNING_ABSOLUTE_ENCODER = 12;			
@@ -46,7 +42,6 @@ public class Ports {
 		 */
 		public static class CAN {
 
-			//2023 Off-season
 			public static final int PCM = 1;
 			public static final int PDP = 0;	
 

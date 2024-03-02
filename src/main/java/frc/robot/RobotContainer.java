@@ -43,26 +43,26 @@ import frc.robot.subsystems.SwerveDrivetrain;
  */
 public class RobotContainer {
 
-	private final CANSparkMax CAN30 = new CANSparkMax(30, MotorType.kBrushless);
-	private final CANSparkMax CAN31 = new CANSparkMax(31, MotorType.kBrushless);
-	private final CANSparkMax CAN32 = new CANSparkMax(32, MotorType.kBrushless);
-	private final CANSparkMax CAN40 = new CANSparkMax(40, MotorType.kBrushless);
-	private final CANSparkMax CAN41 = new CANSparkMax(41, MotorType.kBrushless);
-	private final CANSparkMax CAN42 = new CANSparkMax(42, MotorType.kBrushless);
-	private final CANSparkMax CAN50 = new CANSparkMax(50, MotorType.kBrushless);
-	private final CANSparkMax CAN51 = new CANSparkMax(51, MotorType.kBrushless);
-	private final DigitalInput DIO0 = new DigitalInput(0);
-	private final DigitalInput DIO1 = new DigitalInput(1);
+	// private final CANSparkMax CAN30 = new CANSparkMax(30, MotorType.kBrushless);
+	// private final CANSparkMax CAN31 = new CANSparkMax(31, MotorType.kBrushless);
+	// private final CANSparkMax CAN32 = new CANSparkMax(32, MotorType.kBrushless);
+	// private final CANSparkMax CAN40 = new CANSparkMax(40, MotorType.kBrushless);
+	// private final CANSparkMax CAN41 = new CANSparkMax(41, MotorType.kBrushless);
+	// private final CANSparkMax CAN42 = new CANSparkMax(42, MotorType.kBrushless);
+	// private final CANSparkMax CAN50 = new CANSparkMax(50, MotorType.kBrushless);
+	// private final CANSparkMax CAN51 = new CANSparkMax(51, MotorType.kBrushless);
+	// private final DigitalInput DIO0 = new DigitalInput(0);
+	// private final DigitalInput DIO1 = new DigitalInput(1);
 
 	public static final double JOYSTICK_X1_AXIS_THRESHOLD = 0.1;
 	public static final double JOYSTICK_Y1_AXIS_THRESHOLD = 0.1;
 	public static final double JOYSTICK_X2_AXIS_THRESHOLD = 0.1;
 	public static final double JOYSTICK_Y2_AXIS_THRESHOLD = 0.1;
 
-	// private final SwerveDrivetrain drivetrain = new SwerveDrivetrain();
-	private final Climber climber = new Climber(CAN50, CAN51, DIO0, DIO1);
-	private final Outtake outtake = new Outtake(CAN30, CAN31, CAN32);
-	private final Intake intake = new Intake(CAN40, CAN41, CAN42);
+	private final SwerveDrivetrain drivetrain = new SwerveDrivetrain();
+	// private final Climber climber = new Climber(CAN50, CAN51, DIO0, DIO1);
+	// private final Outtake outtake = new Outtake(CAN30, CAN31, CAN32);
+	// private final Intake intake = new Intake(CAN40, CAN41, CAN42);
 
 	private final Field2d field = new Field2d(); //  a representation of the field
 
@@ -80,13 +80,13 @@ public class RobotContainer {
 
 		double control_limiter = .5;
 			
-		// drivetrain.setDefaultCommand(new RunCommand(
-		// 	() -> drivetrain.drive(
-		// 		MathUtil.applyDeadband((driver.getLeftY() * Math.abs(driver.getLeftY()))*control_limiter, JOYSTICK_Y1_AXIS_THRESHOLD),
-		// 		MathUtil.applyDeadband((driver.getLeftX() * Math.abs(driver.getLeftX()))*control_limiter, JOYSTICK_X1_AXIS_THRESHOLD),
-		// 		-MathUtil.applyDeadband((driver.getRightX() * Math.abs(driver.getRightX()))*control_limiter, JOYSTICK_X2_AXIS_THRESHOLD),
-		// 		true, false), drivetrain));
-		climber.setDefaultCommand(new Climb(climber, operator));
+		drivetrain.setDefaultCommand(new RunCommand(
+			() -> drivetrain.drive(
+				MathUtil.applyDeadband((driver.getLeftY() * Math.abs(driver.getLeftY()))*control_limiter, JOYSTICK_Y1_AXIS_THRESHOLD),
+				MathUtil.applyDeadband((driver.getLeftX() * Math.abs(driver.getLeftX()))*control_limiter, JOYSTICK_X1_AXIS_THRESHOLD),
+				-MathUtil.applyDeadband((driver.getRightX() * Math.abs(driver.getRightX()))*control_limiter, JOYSTICK_X2_AXIS_THRESHOLD),
+				true, false), drivetrain));
+		// climber.setDefaultCommand(new Climb(climber, operator));
 
 		
 	}
@@ -123,11 +123,11 @@ public class RobotContainer {
 	 * {@link JoystickButton}.
 	 */
 	private void configureButtonBindings() {
-		// driver.x().whileTrue(new RunCommand(() -> drivetrain.setX(), drivetrain));
-		operator.a().whileTrue(new RunOuttake(outtake, 1));
-		operator.povUp().whileTrue(new PivotIntake(intake, .5));
-		operator.povDown().whileTrue(new PivotIntake(intake, -.5));
-		operator.x().whileTrue(new RunIntake(intake, 1));
+		driver.x().whileTrue(new RunCommand(() -> drivetrain.setX(), drivetrain));
+		// operator.a().whileTrue(new RunOuttake(outtake, 1));
+		// operator.povUp().whileTrue(new PivotIntake(intake, .5));
+		// operator.povDown().whileTrue(new PivotIntake(intake, -.5));
+		// operator.x().whileTrue(new RunIntake(intake, 1));
 	}
 
 	/**
