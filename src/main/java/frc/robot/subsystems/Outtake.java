@@ -5,6 +5,7 @@ import com.ctre.phoenix6.signals.ControlModeValue;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -20,6 +21,7 @@ public class Outtake extends SubsystemBase {
         this.roller = roller;
         outtakeSparkMax.restoreFactoryDefaults();
         pivotOuttake.restoreFactoryDefaults();
+        outtakeSparkMax.setIdleMode(IdleMode.kCoast);
     }
 
     public void run(double power){

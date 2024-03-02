@@ -1,5 +1,6 @@
 package frc.robot;
 
+
 /**
  * Contains the definitions of all the ports
  */
@@ -38,7 +39,13 @@ public class Ports {
 			public static final int FRONT_RIGHT_TURNING_ABSOLUTE_ENCODER = 12;			
 			public static final int FRONT_LEFT_TURNING_ABSOLUTE_ENCODER = 22;
 			public static final int REAR_LEFT_TURNING_ABSOLUTE_ENCODER = 32;
-			public static final int REAR_RIGHT_TURNING_ABSOLUTE_ENCODER = 42;		
+			public static final int REAR_RIGHT_TURNING_ABSOLUTE_ENCODER = 42;
+
+			// TODO
+			// public static final int MODULE_1_CANCODER = 12;
+			// public static final int MODULE_2_CANCODER = 15;
+			// public static final int MODULE_3_CANCODER = 18;
+			// public static final int MODULE_4_CANCODER = 21;
 		}
 		
 		/**
@@ -62,6 +69,19 @@ public class Ports {
 
 			public static final int REAR_RIGHT_DRIVING = 40;
 			public static final int REAR_RIGHT_TURNING = 41;
+			
+			// TODO
+			// public static final int MODULE_1_DRIVING = 10;
+			// public static final int MODULE_1_TURNING = 11;
+
+			// public static final int MODULE_2_DRIVING = 13;
+			// public static final int MODULE_2_TURNING = 14;
+
+			// public static final int MODULE_3_DRIVING = 16;
+			// public static final int MODULE_3_TURNING = 17;
+
+			// public static final int MODULE_4_DRIVING = 19;
+			// public static final int MODULE_4_TURNING = 20;
 
 		}
 		
