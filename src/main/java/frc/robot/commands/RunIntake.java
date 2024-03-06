@@ -18,7 +18,7 @@ public class RunIntake extends Command {
     public void execute() {
         intake.run(power);
     }
- 
+
     @Override
     public void end(boolean interrupted) {
         intake.run(0);

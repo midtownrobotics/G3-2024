@@ -22,6 +22,7 @@ public class Outtake extends SubsystemBase {
         outtakeSparkMax.restoreFactoryDefaults();
         pivotOuttake.restoreFactoryDefaults();
         outtakeSparkMax.setIdleMode(IdleMode.kCoast);
+        outtakeSparkMax.setInverted(true);
     }
 
     public void run(double power){

@@ -37,18 +37,18 @@ public class SwerveDrivetrain extends SubsystemBase {
 	// public static final double REAR_LEFT_VIRTUAL_OFFSET_RADIANS = -0.934; // adjust as needed so that virtual (turn) position of wheel is zero when straight
 	// public static final double REAR_RIGHT_VIRTUAL_OFFSET_RADIANS = +1.021; // adjust as needed so that virtual (turn) position of wheel is zero when straight
 
-	public static final double FRONT_LEFT_VIRTUAL_OFFSET_RADIANS = 10.75-(Math.PI/2.0); // adjust as needed so that virtual (turn) position of wheel is zero when straight
-	public static final double FRONT_RIGHT_VIRTUAL_OFFSET_RADIANS = 7.47-Math.PI-(Math.PI/2.0); // adjust as needed so that virtual (turn) position of wheel is zero when straight
-	public static final double REAR_LEFT_VIRTUAL_OFFSET_RADIANS = 0.9-(Math.PI/2.0); // adjust as needed so that virtual (turn) position of wheel is zero when straight
-	public static final double REAR_RIGHT_VIRTUAL_OFFSET_RADIANS = 6.95+Math.PI-(Math.PI/2.0); // adjust as needed so that virtual (turn) position of wheel is zero when straight
- static final int GYRO_ORIENTATION = 1; // might be able to merge with kGyroReversed
+	public static final double FRONT_LEFT_VIRTUAL_OFFSET_RADIANS = Math.PI; // adjust as needed so that virtual (turn) position of wheel is zero when straight
+	public static final double FRONT_RIGHT_VIRTUAL_OFFSET_RADIANS = -0.5; // adjust as needed so that virtual (turn) position of wheel is zero when straight
+	public static final double REAR_LEFT_VIRTUAL_OFFSET_RADIANS = Math.PI/4; // adjust as needed so that virtual (turn) position of wheel is zero when straight
+	public static final double REAR_RIGHT_VIRTUAL_OFFSET_RADIANS = Math.PI/2+Math.PI/16; // adjust as needed so that virtual (turn) position of wheel is zero when straight
+    static final int GYRO_ORIENTATION = 1; // might be able to merge with kGyroReversed
 
 	public static final double FIELD_LENGTH_INCHES = 54*12+1; // 54ft 1in
 	public static final double FIELD_WIDTH_INCHES = 26*12+7; // 26ft 7in
 
 	// turn settings
 	// NOTE: it might make sense to decrease the PID controller period below 0.02 sec (which is the period used by the main loop)
-	static final double TURN_PID_CONTROLLER_PERIOD_SECONDS = .01; // 0.01 sec = 10 ms 	
+	static final double TURN_PID_CONTROLLER_PERIOD_SECONDS = .02; // 0.01 sec = 10 ms 	
 	
 	static final double MIN_TURN_PCT_OUTPUT = 0.1; // 0.1;
 	static final double MAX_TURN_PCT_OUTPUT = 0.4; // 0.4;
@@ -90,7 +90,7 @@ public class SwerveDrivetrain extends SubsystemBase {
 	// The gyro sensor
 	private final AHRS m_gyro = new AHRS(SPI.Port.kMXP); // usign SPI by default, which is what we want.
 
-	public final Pigeon2 pigeon = new Pigeon2(50);
+	public final Pigeon2 pigeon = new Pigeon2(5);
 
 	// Slew rate filter variables for controlling lateral acceleration
 	private double m_currentRotation = 0.0;
