@@ -33,6 +33,7 @@ import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.commands.Climb;
 import frc.robot.commands.IntakeOuttake;
 import frc.robot.commands.PivotIntake;
+import frc.robot.commands.PivotOuttake;
 import frc.robot.commands.RunFlywheel;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.RunOuttake;
@@ -73,7 +74,7 @@ public class RobotContainer {
 
 	private final SwerveDrivetrain drivetrain = new SwerveDrivetrain();
 	private final Climber climber = new Climber(CAN50, CAN51, DIO0, DIO1);
-	private final Outtake outtake = new Outtake(CAN30, CAN31, CAN32, CAN33, CAN34, DIO2);
+	private final Outtake outtake = new Outtake(CAN32, CAN33, CAN30, CAN31, CAN34, DIO2);
 	private final Intake intake = new Intake(CAN41, CAN40, PCM01);
 
 	private final Field2d field = new Field2d(); //  a representation of the field
@@ -140,10 +141,10 @@ public class RobotContainer {
 	 */
 	private void configureButtonBindings() {
 		driver.x().whileTrue(new RunCommand(() -> drivetrain.setX(), drivetrain));
-		operator.povUp().whileTrue(new PivotIntake(intake, Value.kForward));
-		operator.povDown().whileTrue(new PivotIntake(intake, Value.kReverse));
-		operator.rightBumper().whileTrue(new RunIntake(intake, 1));
-		operator.leftBumper().whileTrue(new RunIntake(intake, -1));
+		operator.povUp().whileTrue(new PivotOuttake(outtake, .2));
+		operator.povDown().whileTrue(new PivotOuttake(outtake, -.2));
+		operator.rightBumper().whileTrue(new RunIntake(intake, -1));
+		operator.leftBumper().whileTrue(new RunIntake(intake, 1));
 		operator.rightTrigger(.1).whileTrue(new RunOuttake(outtake, 1));
 		operator.leftTrigger(.1).whileTrue(new RunOuttake(outtake, -1));
 		operator.a().whileTrue(new SequentialCommandGroup(new RunFlywheel(intake, outtake, 1).withTimeout(1.5), new IntakeOuttake(intake, outtake, 1)));
