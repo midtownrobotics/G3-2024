@@ -25,13 +25,15 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.commands.Climb;
+import frc.robot.commands.IntakeOuttake;
 import frc.robot.commands.PivotIntake;
+import frc.robot.commands.RunFlywheel;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.RunOuttake;
 import frc.robot.subsystems.Climber;
@@ -138,10 +140,13 @@ public class RobotContainer {
 	 */
 	private void configureButtonBindings() {
 		driver.x().whileTrue(new RunCommand(() -> drivetrain.setX(), drivetrain));
-		operator.a().whileTrue(new RunOuttake(outtake, 1));
 		operator.povUp().whileTrue(new PivotIntake(intake, Value.kForward));
 		operator.povDown().whileTrue(new PivotIntake(intake, Value.kReverse));
-		operator.x().whileTrue(new RunIntake(intake, 1));
+		operator.rightBumper().whileTrue(new RunIntake(intake, 1));
+		operator.leftBumper().whileTrue(new RunIntake(intake, -1));
+		operator.rightTrigger(.1).whileTrue(new RunOuttake(outtake, 1));
+		operator.leftTrigger(.1).whileTrue(new RunOuttake(outtake, -1));
+		operator.a().whileTrue(new SequentialCommandGroup(new RunFlywheel(intake, outtake, 1).withTimeout(1.5), new IntakeOuttake(intake, outtake, 1)));
 	}
 
 	/**
@@ -150,7 +155,7 @@ public class RobotContainer {
 	 * @return the command to run in autonomous
 	 */
 	public Command getAutonomousCommand() {
-		return null;
+		return new RunCommand(() -> drivetrain.drive(0, .5, 0, true, false), drivetrain).withTimeout(2);
 	}
 
 	public TrajectoryConfig createTrajectoryConfig() {

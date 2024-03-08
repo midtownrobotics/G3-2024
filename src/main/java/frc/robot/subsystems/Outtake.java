@@ -44,8 +44,16 @@ public class Outtake extends SubsystemBase {
     }
 
     public void run(double power){
+        flywheel(power);
+        roller(power);
+    }
+
+    public void flywheel(double power){
         rightWheel.set(power);
         leftWheel.set(power * .35);
+    }
+
+    public void roller(double power){
         rollerLeader.set(power);
     }
 
