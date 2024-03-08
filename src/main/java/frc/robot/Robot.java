@@ -74,6 +74,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousInit() {
 		m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+		m_robotContainer.resetSpeed();
 
 		// schedule the autonomous command (example)
 		if (m_autonomousCommand != null) {
@@ -94,6 +95,7 @@ public class Robot extends TimedRobot {
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
+		m_robotContainer.resetSpeed();
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.cancel();
 		}
@@ -145,6 +147,8 @@ public class Robot extends TimedRobot {
 		m_robotContainer.getField().setRobotPose(m_robotContainer.getDrivetrain().getPose());
 		SmartDashboard.putNumber(   "Heading",             m_robotContainer.getDrivetrain().getHeading());
 		SmartDashboard.putNumber("yaw", m_robotContainer.getDrivetrain().pigeon.getYaw());
+
+		SmartDashboard.putNumber("Pivot Encoder", m_robotContainer.getOuttake().getPivot() * (360/4096));
 
 		// SmartDashboard.putNumber("distance", m_robotContainer.getDistanceThing());
 	}

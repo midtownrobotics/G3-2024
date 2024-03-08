@@ -22,10 +22,20 @@ public class Climber extends SubsystemBase {
         rightWinch.restoreFactoryDefaults();
         leftWinch.setIdleMode(IdleMode.kBrake);
         rightWinch.setIdleMode(IdleMode.kBrake);
+        leftWinch.setInverted(true);
+        rightWinch.setInverted(false);
     }
 
     public void winch(double left, double right){
         leftWinch.set(left);
         rightWinch.set(right);
+    }
+
+    public boolean getLeftSensor() {
+        return leftSensor.get();
+    }
+
+    public boolean getRightSensor() {
+        return rightSensor.get();
     }
 }

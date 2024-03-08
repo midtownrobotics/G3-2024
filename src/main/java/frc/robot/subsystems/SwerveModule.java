@@ -65,6 +65,7 @@ public class SwerveModule {
 		config.sensorTimeBase = SensorTimeBase.PerSecond;
 		config.absoluteSensorRange = AbsoluteSensorRange.Signed_PlusMinus180;
  		m_turningAbsoluteEncoder.configAllSettings(config);
+		m_turningAbsoluteEncoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 100);
 
 		m_drivingPIDController = m_drivingSparkMax.getPIDController();
 		m_turningPIDController = m_turningSparkMax.getPIDController();

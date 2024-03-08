@@ -36,10 +36,10 @@ public class Ports {
 			// 2023 Off-season
 			// SPARK MAX Absolute encoders
 			
-			public static final int FRONT_RIGHT_TURNING_ABSOLUTE_ENCODER = 12;			
-			public static final int FRONT_LEFT_TURNING_ABSOLUTE_ENCODER = 22;
-			public static final int REAR_LEFT_TURNING_ABSOLUTE_ENCODER = 32;
-			public static final int REAR_RIGHT_TURNING_ABSOLUTE_ENCODER = 42;
+			public static final int FRONT_RIGHT_TURNING_ABSOLUTE_ENCODER = 15;			
+			public static final int FRONT_LEFT_TURNING_ABSOLUTE_ENCODER = 12;
+			public static final int REAR_LEFT_TURNING_ABSOLUTE_ENCODER = 21;
+			public static final int REAR_RIGHT_TURNING_ABSOLUTE_ENCODER = 18;
 
 			// TODO
 			// public static final int MODULE_1_CANCODER = 12;
@@ -58,17 +58,18 @@ public class Ports {
 			public static final int PDP = 0;	
 
 			// SPARK MAX CAN IDs
-			public static final int FRONT_RIGHT_DRIVING = 10;
-			public static final int FRONT_RIGHT_TURNING = 11;
+			public static final int FRONT_RIGHT_DRIVING = 13;
+			public static final int FRONT_RIGHT_TURNING = 14;
 
-			public static final int FRONT_LEFT_DRIVING = 20;
-			public static final int FRONT_LEFT_TURNING = 21;
+			public static final int FRONT_LEFT_DRIVING = 10;
+			public static final int FRONT_LEFT_TURNING = 11;
 			
-			public static final int REAR_LEFT_DRIVING = 30;
-			public static final int REAR_LEFT_TURNING = 31;
+			public static final int REAR_LEFT_DRIVING = 19;
+			public static final int REAR_LEFT_TURNING = 20;
 
-			public static final int REAR_RIGHT_DRIVING = 40;
-			public static final int REAR_RIGHT_TURNING = 41;
+			public static final int REAR_RIGHT_DRIVING = 16;
+			public static final int REAR_RIGHT_TURNING = 17;
+			;
 			
 			// TODO
 			// public static final int MODULE_1_DRIVING = 10;
