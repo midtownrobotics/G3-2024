@@ -155,7 +155,7 @@ public class RobotContainer {
 	 * @return the command to run in autonomous
 	 */
 	public Command getAutonomousCommand() {
-		return new RunCommand(() -> drivetrain.drive(0, .5, 0, true, false), drivetrain).withTimeout(2);
+		return new RunCommand(() -> drivetrain.drive(-.5, 0, 0, true, false), drivetrain).withTimeout(2);
 	}
 
 	public TrajectoryConfig createTrajectoryConfig() {
