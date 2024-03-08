@@ -1,20 +1,21 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Outtake;
 
-public class RunFlywheel extends Command{
+public class ChangeSpeed extends Command{
     private final Outtake outtake;
+    private final double speed;
 
-    public RunFlywheel(Outtake outtake) {
+    public ChangeSpeed(Outtake outtake, double speed) {
         this.outtake = outtake;
+        this.speed = speed;
         addRequirements(outtake);
     }
 
     @Override
-    public void execute() {
-        outtake.flywheel();
+    public void initialize() {
+        outtake.setSpeed(speed);
     }
-    
+
 }

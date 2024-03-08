@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DrivetrainConstants;
+import frc.robot.commands.ChangeSpeed;
 import frc.robot.commands.Climb;
 import frc.robot.commands.IntakeOuttake;
 import frc.robot.commands.PivotIntake;
@@ -73,7 +74,7 @@ public class RobotContainer {
 
 	private final SwerveDrivetrain drivetrain = new SwerveDrivetrain();
 	private final Climber climber = new Climber(CAN50, CAN51, DIO0, DIO1);
-	private final Outtake outtake = new Outtake(CAN30, CAN31, CAN32, CAN33, CAN34, DIO2);
+	private final Outtake outtake = new Outtake(CAN33, CAN32, CAN30, CAN31, CAN34, DIO2);
 	private final Intake intake = new Intake(CAN41, CAN40, PCM01);
 
 	private final Field2d field = new Field2d(); //  a representation of the field
@@ -103,7 +104,7 @@ public class RobotContainer {
 				-MathUtil.applyDeadband((driver.getRightX() * Math.abs(driver.getRightX()))*control_limiter, JOYSTICK_X2_AXIS_THRESHOLD),
 		 		true, false), drivetrain));
 		climber.setDefaultCommand(new Climb(climber, operator));
-
+		outtake.setDefaultCommand(new RunFlywheel(outtake));
 		
 	}
 
@@ -146,7 +147,10 @@ public class RobotContainer {
 		operator.leftBumper().whileTrue(new RunIntake(intake, -1));
 		operator.rightTrigger(.1).whileTrue(new RunOuttake(outtake, 1));
 		operator.leftTrigger(.1).whileTrue(new RunOuttake(outtake, -1));
-		operator.a().whileTrue(new SequentialCommandGroup(new RunFlywheel(intake, outtake, 1).withTimeout(1.5), new IntakeOuttake(intake, outtake, 1)));
+		operator.b().whileTrue(new IntakeOuttake(intake, outtake, 1));
+		operator.y().whileTrue(new ChangeSpeed(outtake, 1));
+		operator.x().whileTrue(new ChangeSpeed(outtake, .5));
+		operator.a().whileTrue(new ChangeSpeed(outtake, 0));
 	}
 
 	/**

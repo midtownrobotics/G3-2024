@@ -21,6 +21,8 @@ public class Outtake extends SubsystemBase {
     private final CANSparkMax leftWheel;
     private final SparkPIDController pivotPID;
     private final DutyCycleEncoder pivotEncoder;
+    private double speed;
+    private boolean intakeOuttake;
 
     public Outtake(CANSparkMax rightWheel, CANSparkMax leftWheel, CANSparkMax rollerLeader, CANSparkMax rollerFollower, CANSparkMax pivotOuttake, DigitalInput pivotDIO){
         this.rightWheel = rightWheel;
@@ -40,7 +42,8 @@ public class Outtake extends SubsystemBase {
         rollerFollower.follow(rollerLeader, false);
         pivotPID = pivotOuttake.getPIDController();
         // pivotPID.setFeedbackDevice(pivotEncoder);
-
+        speed = 0;
+        intakeOuttake = false;
     }
 
     public void run(double power){
@@ -67,6 +70,27 @@ public class Outtake extends SubsystemBase {
 
     public void setPivot() {
         // pivotPID.
+    }
+
+    public void run() {
+        flywheel();
+        roller(1);
+    }
+
+    public void flywheel() {
+        flywheel(speed);
+    }
+
+    public void rollSpeed() {
+        roller(speed);
+    }
+
+    public void setSpeed(double change) {
+        speed = change;
+    }
+
+    public double getSpeed() {
+        return speed;
     }
 
 }
