@@ -148,6 +148,8 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber(   "Heading",             m_robotContainer.getDrivetrain().getHeading());
 		SmartDashboard.putNumber("yaw", m_robotContainer.getDrivetrain().pigeon.getYaw());
 
+		SmartDashboard.putNumber("Pivot Encoder", m_robotContainer.getOuttake().getPivot() * (360/4096));
+
 		// SmartDashboard.putNumber("distance", m_robotContainer.getDistanceThing());
 	}
 

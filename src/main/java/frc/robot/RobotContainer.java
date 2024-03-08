@@ -145,8 +145,8 @@ public class RobotContainer {
 	 */
 	private void configureButtonBindings() {
 		driver.x().whileTrue(new RunCommand(() -> drivetrain.setX(), drivetrain));
-		operator.povUp().whileTrue(new PivotOuttake(outtake, .2));
-		operator.povDown().whileTrue(new PivotOuttake(outtake, -.2));
+		operator.povUp().whileTrue(new PivotOuttake(outtake, .5));
+		operator.povDown().whileTrue(new PivotOuttake(outtake, -.5));
 		operator.rightBumper().whileTrue(new RunIntake(intake, -1));
 		operator.leftBumper().whileTrue(new RunIntake(intake, 1));
 		operator.rightTrigger(.1).whileTrue(new RunOuttake(outtake, 1));
@@ -196,4 +196,7 @@ public class RobotContainer {
 		return drivetrain;
 	}
 
+	public Outtake getOuttake() {
+		return outtake;
+	}
 }
