@@ -39,7 +39,7 @@ public class Outtake extends SubsystemBase {
         leftWheel.setInverted(true);
         rollerFollower.follow(rollerLeader, false);
         pivotPID = pivotOuttake.getPIDController();
-        pivotPID.setFeedbackDevice(pivotEncoder);
+        // pivotPID.setFeedbackDevice(pivotEncoder);
 
     }
 
@@ -58,7 +58,7 @@ public class Outtake extends SubsystemBase {
     }
 
     public void setPivot() {
-        pivotPID.
+        // pivotPID.
     }
 
 }
