@@ -76,6 +76,9 @@ public class RobotContainer {
 	private final Climber climber = new Climber(CAN50, CAN51, DIO0, DIO1);
 	private final Outtake outtake = new Outtake(CAN33, CAN32, CAN30, CAN31, CAN34, DIO2);
 	private final Intake intake = new Intake(CAN41, CAN40, PCM01);
+	public void resetSpeed() {
+		outtake.setSpeed(0);
+	}
 
 	private final Field2d field = new Field2d(); //  a representation of the field
 
@@ -143,11 +146,11 @@ public class RobotContainer {
 		driver.x().whileTrue(new RunCommand(() -> drivetrain.setX(), drivetrain));
 		operator.povUp().whileTrue(new PivotIntake(intake, Value.kForward));
 		operator.povDown().whileTrue(new PivotIntake(intake, Value.kReverse));
-		operator.rightBumper().whileTrue(new RunIntake(intake, 1));
+		operator.rightBumper().whileTrue(new RunIntake(intake, .75));
 		operator.leftBumper().whileTrue(new RunIntake(intake, -1));
 		operator.rightTrigger(.1).whileTrue(new RunOuttake(outtake, 1));
 		operator.leftTrigger(.1).whileTrue(new RunOuttake(outtake, -1));
-		operator.b().whileTrue(new IntakeOuttake(intake, outtake, 1));
+		operator.b().whileTrue(new IntakeOuttake(intake, outtake, .75));
 		operator.y().whileTrue(new ChangeSpeed(outtake, 1));
 		operator.x().whileTrue(new ChangeSpeed(outtake, .5));
 		operator.a().whileTrue(new ChangeSpeed(outtake, 0));

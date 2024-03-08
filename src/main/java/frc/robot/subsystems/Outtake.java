@@ -39,6 +39,7 @@ public class Outtake extends SubsystemBase {
         rollerLeader.setIdleMode(IdleMode.kCoast);
         rollerFollower.setIdleMode(IdleMode.kCoast);
         leftWheel.setInverted(true);
+        rollerLeader.setInverted(true);
         rollerFollower.follow(rollerLeader, false);
         pivotPID = pivotOuttake.getPIDController();
         // pivotPID.setFeedbackDevice(pivotEncoder);
