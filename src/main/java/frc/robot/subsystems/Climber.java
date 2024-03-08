@@ -30,4 +30,12 @@ public class Climber extends SubsystemBase {
         leftWinch.set(left);
         rightWinch.set(right);
     }
+
+    public boolean getLeftSensor() {
+        return leftSensor.get();
+    }
+
+    public boolean getRightSensor() {
+        return rightSensor.get();
+    }
 }

@@ -15,6 +15,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -50,6 +51,8 @@ public class RobotContainer {
 	private final CANSparkMax CAN30 = new CANSparkMax(30, MotorType.kBrushless);
 	private final CANSparkMax CAN31 = new CANSparkMax(31, MotorType.kBrushless);
 	private final CANSparkMax CAN32 = new CANSparkMax(32, MotorType.kBrushless);
+	private final CANSparkMax CAN33 = new CANSparkMax(33, MotorType.kBrushless);
+	private final CANSparkMax CAN34 = new CANSparkMax(34, MotorType.kBrushless);
 	private final CANSparkMax CAN40 = new CANSparkMax(40, MotorType.kBrushless);
 	private final CANSparkMax CAN41 = new CANSparkMax(41, MotorType.kBrushless);
 	// private final CANSparkMax CAN42 = new CANSparkMax(42, MotorType.kBrushless);
@@ -57,6 +60,7 @@ public class RobotContainer {
 	private final CANSparkMax CAN51 = new CANSparkMax(51, MotorType.kBrushless);
 	private final DigitalInput DIO0 = new DigitalInput(0);
 	private final DigitalInput DIO1 = new DigitalInput(1);
+	private final DigitalInput DIO2 = new DigitalInput(2);
 	private final PneumaticsControlModule pcm = new PneumaticsControlModule(1);
 	private final DoubleSolenoid PCM01 = new DoubleSolenoid(1, PneumaticsModuleType.CTREPCM, 0, 1);
 
@@ -67,7 +71,7 @@ public class RobotContainer {
 
 	private final SwerveDrivetrain drivetrain = new SwerveDrivetrain();
 	private final Climber climber = new Climber(CAN50, CAN51, DIO0, DIO1);
-	private final Outtake outtake = new Outtake(CAN30, CAN31, CAN32);
+	private final Outtake outtake = new Outtake(CAN30, CAN31, CAN32, CAN33, CAN34, DIO2);
 	private final Intake intake = new Intake(CAN41, CAN40, PCM01);
 
 	private final Field2d field = new Field2d(); //  a representation of the field
