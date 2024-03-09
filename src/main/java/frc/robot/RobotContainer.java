@@ -149,12 +149,10 @@ public class RobotContainer {
 		operator.povDown().whileTrue(new PivotOuttake(outtake, -.5));
 		operator.rightBumper().whileTrue(new RunIntake(intake, 1));
 		operator.leftBumper().whileTrue(new RunIntake(intake, -1));
-		operator.rightTrigger(.1).whileTrue(new RunOuttake(outtake, 1));
 		operator.leftTrigger(.1).whileTrue(new RunOuttake(outtake, -1));
-		operator.b().whileTrue(new IntakeOuttake(intake, outtake, .75));
-		operator.y().whileTrue(new ChangeSpeed(outtake, 1));
-		operator.x().whileTrue(new ChangeSpeed(outtake, .5));
-		operator.a().whileTrue(new ChangeSpeed(outtake, 0));
+		operator.rightTrigger(.1).whileTrue(new IntakeOuttake(intake, outtake, .75));
+		operator.a().whileTrue(new ChangeSpeed(outtake, 1));
+		operator.b().whileTrue(new ChangeSpeed(outtake, 0));
 	}
 
 	/**
