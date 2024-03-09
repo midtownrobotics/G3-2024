@@ -183,11 +183,11 @@ public class RobotContainer {
 		switch (autonChooser.getSelected()) {
 			case SHOOT:
 				autoCommand = new SequentialCommandGroup(
-					new ChangeSpeed(outtake, 1),
+					new ChangeSpeed(outtake, 1).withTimeout(0.1),
 					new RunFlywheel(outtake).withTimeout(2),
-					new IntakeOuttake(intake, outtake, .75).withTimeout(2),
-					new ChangeSpeed(outtake, 0),
-					new RunFlywheel(outtake)
+					new IntakeOuttake(intake, outtake, .75).withTimeout(1),
+					new ChangeSpeed(outtake, 0).withTimeout(0.1),
+					new RunFlywheel(outtake).withTimeout(0.1)
 				);
 				break;
 			case STRAIGHT_TAXI:
@@ -195,9 +195,11 @@ public class RobotContainer {
 				break;
 			case SHOOT_STRAIGHT_TAXI:
 				autoCommand = new SequentialCommandGroup(
-					new ChangeSpeed(outtake, 1).withTimeout(1),
-					new IntakeOuttake(intake, outtake, .75).withTimeout(1),
+					new ChangeSpeed(outtake, 1),
+					new RunFlywheel(outtake).withTimeout(2),
+					new IntakeOuttake(intake, outtake, .75).withTimeout(2),
 					new ChangeSpeed(outtake, 0),
+					new RunFlywheel(outtake),
 					new RunIntake(intake, 1).alongWith(new RunCommand(() -> drivetrain.drive(.5, 0, 0), drivetrain)).withTimeout(2)
 				);
 			default:
