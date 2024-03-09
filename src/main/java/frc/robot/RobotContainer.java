@@ -33,6 +33,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.commands.ChangeSpeed;
 import frc.robot.commands.Climb;
+import frc.robot.commands.DoNothing;
 import frc.robot.commands.IntakeOuttake;
 import frc.robot.commands.PivotIntake;
 import frc.robot.commands.PivotOuttake;
@@ -102,9 +103,9 @@ public class RobotContainer {
 	 */
 	public RobotContainer() {
 
-		autonChooser.addOption("Straight Taxi", Auton.STRAIGHT_TAXI);
+		autonChooser.setDefaultOption("Straight Taxi", Auton.STRAIGHT_TAXI);
 		autonChooser.addOption("Shoot", Auton.SHOOT);
-		autonChooser.setDefaultOption("Shoot & Straight Taxi", Auton.SHOOT_STRAIGHT_TAXI);
+		autonChooser.addOption("Shoot & Straight Taxi", Auton.SHOOT_STRAIGHT_TAXI);
 		autonTab.add(autonChooser);
 
 		// Configure the button bindings
@@ -178,15 +179,29 @@ public class RobotContainer {
 	 * @return the command to run in autonomous
 	 */
 	public Command getAutonomousCommand() {
-		// just taxi
-		// return new RunCommand(() -> drivetrain.drive(-.5, 0, 0, true, false), drivetrain).withTimeout(2);
-		// shoot & intake (from subwoofer)
-		return new SequentialCommandGroup(
-			new ChangeSpeed(outtake, 1).withTimeout(1),
-			new IntakeOuttake(intake, outtake, .75).withTimeout(1),
-			new ChangeSpeed(outtake, 0),
-			new RunIntake(intake, 1).alongWith(new RunCommand(() -> drivetrain.drive(.5, 0, 0), drivetrain)).withTimeout(2)
-		);
+		Command autoCommand = new DoNothing();
+		switch (autonChooser.getSelected()) {
+			case SHOOT:
+				autoCommand = new SequentialCommandGroup(
+					new ChangeSpeed(outtake, 1).withTimeout(1),
+					new IntakeOuttake(intake, outtake, .75).withTimeout(1),
+					new ChangeSpeed(outtake, 0)
+				);
+				break;
+			case STRAIGHT_TAXI:
+				autoCommand = new RunCommand(() -> drivetrain.drive(-.5, 0, 0, true, false), drivetrain).withTimeout(2);
+				break;
+			case SHOOT_STRAIGHT_TAXI:
+				autoCommand = new SequentialCommandGroup(
+					new ChangeSpeed(outtake, 1).withTimeout(1),
+					new IntakeOuttake(intake, outtake, .75).withTimeout(1),
+					new ChangeSpeed(outtake, 0),
+					new RunIntake(intake, 1).alongWith(new RunCommand(() -> drivetrain.drive(.5, 0, 0), drivetrain)).withTimeout(2)
+				);
+			default:
+				break;
+		}
+		return autoCommand;
 	}
 
 	public TrajectoryConfig createTrajectoryConfig() {
