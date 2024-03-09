@@ -192,6 +192,14 @@ public class SwerveDrivetrain extends SubsystemBase {
 			pose);
 	}
 
+	public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
+		drive(xSpeed, ySpeed, rot, fieldRelative, false);
+	}
+
+	public void drive(double xSpeed, double ySpeed, double rot) {
+		drive(xSpeed, ySpeed, rot, true);
+	}
+
 	/**
 	 * Method to drive the robot using joystick info.
 	 *

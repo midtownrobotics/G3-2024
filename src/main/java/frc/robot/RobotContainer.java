@@ -161,7 +161,15 @@ public class RobotContainer {
 	 * @return the command to run in autonomous
 	 */
 	public Command getAutonomousCommand() {
-		return new RunCommand(() -> drivetrain.drive(-.5, 0, 0, true, false), drivetrain).withTimeout(2);
+		// just taxi
+		// return new RunCommand(() -> drivetrain.drive(-.5, 0, 0, true, false), drivetrain).withTimeout(2);
+		// shoot & intake (from subwoofer)
+		return new SequentialCommandGroup(
+			new ChangeSpeed(outtake, 1).withTimeout(1),
+			new IntakeOuttake(intake, outtake, .75).withTimeout(1),
+			new ChangeSpeed(outtake, 0),
+			new RunIntake(intake, 1).alongWith(new RunCommand(() -> drivetrain.drive(.5, 0, 0), drivetrain)).withTimeout(2)
+		);
 	}
 
 	public TrajectoryConfig createTrajectoryConfig() {
