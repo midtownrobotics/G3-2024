@@ -7,6 +7,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.EncoderType;
 import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -42,7 +43,11 @@ public class Outtake extends SubsystemBase {
         rollerLeader.setInverted(true);
         rollerFollower.follow(rollerLeader, false);
         pivotPID = pivotOuttake.getPIDController();
-        // pivotPID.setFeedbackDevice(pivotEncoder);    
+        pivotPID.setP(0.1);
+        pivotPID.setI(0);
+        pivotPID.setD(0);
+        pivotPID.setOutputRange(-1, 1);
+        pivotOuttake.getEncoder().setPositionConversionFactor(360/4096);
         speed = 0;
         intakeOuttake = false;
     }
@@ -67,6 +72,10 @@ public class Outtake extends SubsystemBase {
 
     public double getPivot() {
         return pivotEncoder.getAbsolutePosition();
+    }
+
+    public void setPivot(double setpoint) {
+        pivotPID.setReference(setpoint, ControlType.kPosition);
     }
 
     public void setPivot() {
