@@ -7,7 +7,8 @@ package frc.robot;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.networktables.NetworkTable;
@@ -27,7 +28,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.commands.ChangeSpeed;
@@ -86,10 +87,25 @@ public class RobotContainer {
 	CommandXboxController driver = new CommandXboxController(Ports.USB.DRIVER_CONTROLLER);
 	CommandXboxController operator = new CommandXboxController(Ports.USB.OPERATOR_CONTROLLER);
 
+	public static enum Auton {
+		STRAIGHT_TAXI,
+		SHOOT,
+		SHOOT_STRAIGHT_TAXI
+	}
+
+	private final ShuffleboardTab autonTab = Shuffleboard.getTab("Auton");
+	private final SendableChooser<Auton> autonChooser = new SendableChooser<>();
+	
+
 	/**
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
 	 */
 	public RobotContainer() {
+
+		autonChooser.addOption("Straight Taxi", Auton.STRAIGHT_TAXI);
+		autonChooser.addOption("Shoot", Auton.SHOOT);
+		autonChooser.setDefaultOption("Shoot & Straight Taxi", Auton.SHOOT_STRAIGHT_TAXI);
+		autonTab.add(autonChooser);
 
 		// Configure the button bindings
 
@@ -106,7 +122,8 @@ public class RobotContainer {
 				MathUtil.applyDeadband((driver.getLeftY() * Math.abs(driver.getLeftY()))*control_limiter, JOYSTICK_Y1_AXIS_THRESHOLD),
 				MathUtil.applyDeadband((driver.getLeftX() * Math.abs(driver.getLeftX()))*control_limiter, JOYSTICK_X1_AXIS_THRESHOLD),
 				-MathUtil.applyDeadband((driver.getRightX() * Math.abs(driver.getRightX()))*control_limiter, JOYSTICK_X2_AXIS_THRESHOLD),
-		 		true, false), drivetrain));
+		 		false
+				, false), drivetrain));
 		climber.setDefaultCommand(new Climb(climber, operator));
 		outtake.setDefaultCommand(new RunFlywheel(outtake));
 		
