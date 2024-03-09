@@ -200,7 +200,7 @@ public class RobotContainer {
 					new IntakeOuttake(intake, outtake, .75).withTimeout(2),
 					new ChangeSpeed(outtake, 0).withTimeout(0.1),
 					new RunFlywheel(outtake).withTimeout(0.1),
-					new RunIntake(intake, 1).alongWith(new RunCommand(() -> drivetrain.drive(.5, 0, 0), drivetrain)).withTimeout(2)
+					new RunIntake(intake, 1).alongWith(new RunCommand(() -> drivetrain.drive(-.5, 0, 0), drivetrain)).withTimeout(2)
 				);
 			default:
 				break;
