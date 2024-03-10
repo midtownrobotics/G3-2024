@@ -166,8 +166,8 @@ public class RobotContainer {
 		driver.x().whileTrue(new RunCommand(() -> drivetrain.setX(), drivetrain));
 		operator.povUp().whileTrue(new PivotOuttake(outtake, .75));
 		operator.povDown().whileTrue(new PivotOuttake(outtake, -.75));
-		operator.rightBumper().whileTrue(new RunIntake(intake, 1));
-		operator.leftBumper().whileTrue(new RunIntake(intake, -1));
+		operator.rightBumper().whileTrue(new RunIntake(intake, outtake, 1));
+		operator.leftBumper().whileTrue(new RunIntake(intake, outtake, -1));
 		operator.leftTrigger(.1).whileTrue(new RunOuttake(outtake, -1));
 		operator.rightTrigger(.1).whileTrue(new IntakeOuttake(intake, outtake, .75));
 		operator.a().whileTrue(new ChangeSpeed(outtake, 1));
@@ -196,12 +196,12 @@ public class RobotContainer {
 				break;
 			case SHOOT_STRAIGHT_TAXI:
 				autoCommand = new SequentialCommandGroup(
-					new ChangeSpeed(outtake, 1),
+					new ChangeSpeed(outtake, 1).withTimeout(0.1),
 					new RunFlywheel(outtake).withTimeout(2),
 					new IntakeOuttake(intake, outtake, .75).withTimeout(2),
-					new ChangeSpeed(outtake, 0),
-					new RunFlywheel(outtake),
-					new RunIntake(intake, 1).alongWith(new RunCommand(() -> drivetrain.drive(.5, 0, 0), drivetrain)).withTimeout(2)
+					new ChangeSpeed(outtake, 0).withTimeout(0.1),
+					new RunFlywheel(outtake).withTimeout(0.1),
+					new RunIntake(intake, outtake, 1).alongWith(new RunCommand(() -> drivetrain.drive(-.5, 0, 0), drivetrain)).withTimeout(2)
 				);
 			default:
 				break;
