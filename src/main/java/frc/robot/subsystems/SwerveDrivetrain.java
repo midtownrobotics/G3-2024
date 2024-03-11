@@ -200,6 +200,10 @@ public class SwerveDrivetrain extends SubsystemBase {
 		drive(xSpeed, ySpeed, rot, true);
 	}
 
+	public void drivePID(double xSpeed, double ySpeed, double rot) {
+		double error = rot + pigeon.getYaw() / 360;
+	}
+
 	/**
 	 * Method to drive the robot using joystick info.
 	 *
