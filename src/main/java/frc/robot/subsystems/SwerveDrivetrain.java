@@ -202,6 +202,8 @@ public class SwerveDrivetrain extends SubsystemBase {
 
 	public void drivePID(double xSpeed, double ySpeed, double rot) {
 		double error = rot + pigeon.getYaw() / 360;
+		double kP = 0.1;
+		drive(xSpeed, ySpeed, kP * error);
 	}
 
 	/**
