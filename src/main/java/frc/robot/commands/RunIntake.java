@@ -28,4 +28,9 @@ public class RunIntake extends Command {
         intake.run(0);
         outtake.roller(0);
     }
+
+    @Override
+    public boolean isFinished() {
+        return intake.getNoteSensor();
+    }
 }

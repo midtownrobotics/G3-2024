@@ -67,6 +67,7 @@ public class RobotContainer {
 	private final DigitalInput DIO0 = new DigitalInput(0);
 	private final DigitalInput DIO1 = new DigitalInput(1);
 	private final DigitalInput DIO2 = new DigitalInput(2);
+	private final DigitalInput DIO6 = new DigitalInput(6);
 	private final PneumaticsControlModule pcm = new PneumaticsControlModule(1);
 	private final DoubleSolenoid PCM01 = new DoubleSolenoid(1, PneumaticsModuleType.CTREPCM, 0, 1);
 
@@ -78,7 +79,7 @@ public class RobotContainer {
 	private final SwerveDrivetrain drivetrain = new SwerveDrivetrain();
 	private final Climber climber = new Climber(CAN50, CAN51, DIO0, DIO1);
 	private final Outtake outtake = new Outtake(CAN33, CAN32, CAN30, CAN31, CAN34, DIO2);
-	private final Intake intake = new Intake(CAN41, CAN40, PCM01);
+	private final Intake intake = new Intake(CAN41, CAN40, PCM01, DIO6);
 	public void resetSpeed() {
 		outtake.setSpeed(0);
 	}
@@ -106,7 +107,7 @@ public class RobotContainer {
 		autonChooser.setDefaultOption("Straight Taxi", Auton.STRAIGHT_TAXI);
 		autonChooser.addOption("Shoot", Auton.SHOOT);
 		autonChooser.addOption("Shoot & Straight Taxi", Auton.SHOOT_STRAIGHT_TAXI);
-		autonTab.add(autonChooser);
+		autonTab.add("Auton Mode Chooser", autonChooser);
 
 		// Configure the button bindings
 
@@ -200,7 +201,7 @@ public class RobotContainer {
 					new IntakeOuttake(intake, outtake, .75).withTimeout(2),
 					new ChangeSpeed(outtake, 0).withTimeout(0.1),
 					new RunFlywheel(outtake).withTimeout(0.1),
-					new RunIntake(intake, outtake, 1).alongWith(new RunCommand(() -> drivetrain.drive(-.5, 0, 0), drivetrain)).withTimeout(2)
+					new RunIntake(intake, outtake, .67).alongWith(new RunCommand(() -> drivetrain.drive(-.5, 0, 0), drivetrain).withTimeout(2)).withTimeout(2)
 				);
 			default:
 				break;
@@ -240,5 +241,9 @@ public class RobotContainer {
 
 	public Outtake getOuttake() {
 		return outtake;
+	}
+
+	public Intake getIntake() {
+		return intake;
 	}
 }
