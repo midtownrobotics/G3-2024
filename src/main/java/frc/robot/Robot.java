@@ -24,7 +24,7 @@ public class Robot extends TimedRobot {
 	public boolean noteSensorBoolean;
 	private boolean noteSensorBooleanLast = false;
 
-	private int timer;
+	private int timer = 0;
 
 	/**
 	 * This function is run when the robot is first started up and should be used for any
@@ -77,7 +77,9 @@ public class Robot extends TimedRobot {
 			}
 		}
 
-		if (timer == 1 * 1000 / 20) {
+		double rumbleTimeSeconds = 0.2;
+
+		if (timer == rumbleTimeSeconds * 1000 / 20) {
 			m_intakeBeamBreak.stop();
 		}
 

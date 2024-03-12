@@ -8,7 +8,7 @@ public class IntakeBeamBreak {
     XboxController driver;
 
     public IntakeBeamBreak() {
-        this.driver = new XboxController(Ports.USB.DRIVER_CONTROLLER);;
+        this.driver = new XboxController(Ports.USB.DRIVER_CONTROLLER);
     }
 
     public void onTrue() {
