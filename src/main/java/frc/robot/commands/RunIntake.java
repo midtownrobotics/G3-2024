@@ -31,6 +31,7 @@ public class RunIntake extends Command {
 
     @Override
     public boolean isFinished() {
-        return intake.getNoteSensor();
+        boolean intakeStatus = intake.getNoteSensor();
+        return intakeStatus;
     }
 }
