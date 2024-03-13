@@ -162,16 +162,7 @@ public class Robot extends TimedRobot {
 		// Shooter
 		SmartDashboard.putNumber("ShooterRTemp", m_robotContainer.getOuttake().getRightWheelMotorTemp());
 		SmartDashboard.putNumber("ShooterLTemp", m_robotContainer.getOuttake().getLeftWheelMotorTemp());
-		// Drive Train
-		SmartDashboard.putNumber("FLTurnTemp", m_robotContainer.getDrivetrain());
-		SmartDashboard.putNumber("FRTurnTemp", m_robotContainer.getDrivetrain());
-		SmartDashboard.putNumber("BLTurnTemp", m_robotContainer.getDrivetrain());
-		SmartDashboard.putNumber("BRTurnTemp", m_robotContainer.getDrivetrain());
 
-		SmartDashboard.putNumber("FLDriveTemp", m_robotContainer.getDrivetrain());
-		SmartDashboard.putNumber("FRDriveTemp", m_robotContainer.getDrivetrain());
-		SmartDashboard.putNumber("BLDriveTemp", m_robotContainer.getDrivetrain());
-		SmartDashboard.putNumber("BRDriveTemp", m_robotContainer.getDrivetrain());
 
 		
 
