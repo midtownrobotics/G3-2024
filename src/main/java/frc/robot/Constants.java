@@ -120,6 +120,6 @@ public final class Constants {
 	}
 
 	public static final class ClimberConstants {
-		public static final double CLIMBER_STOP_CURRENT = 0;
+		public static final double CLIMBER_STOP_CURRENT = 60;
 	}
 }
