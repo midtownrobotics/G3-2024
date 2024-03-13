@@ -39,7 +39,7 @@ public class Intake extends SubsystemBase{
     }
 
     public boolean getNoteSensor() {
-        return !noteSensor.get(); // Inverted because we set beam break to be normally open
+        return noteSensor.get();
     }
 
 }
