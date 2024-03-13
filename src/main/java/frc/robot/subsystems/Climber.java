@@ -48,4 +48,12 @@ public class Climber extends SubsystemBase {
     public boolean getRightSensor() {
         return rightSensor.get();
     }
+
+    public double getRightMotorTemp() {
+        return rightWinch.getMotorTemperature();
+    }
+
+    public double getLeftMotorTemp() {
+        return leftWinch.getMotorTemperature();
+    }
 }

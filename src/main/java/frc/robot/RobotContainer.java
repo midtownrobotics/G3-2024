@@ -249,4 +249,8 @@ public class RobotContainer {
 	public Intake getIntake() {
 		return intake;
 	}
+
+	public Climber getClimber() {
+		return climber;
+	}
 }

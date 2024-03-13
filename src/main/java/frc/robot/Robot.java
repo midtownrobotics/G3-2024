@@ -152,6 +152,30 @@ public class Robot extends TimedRobot {
 
 		SmartDashboard.putNumber("Pivot Encoder", m_robotContainer.getOuttake().getPivot() * (360/4096));
 
+
+		// Temps
+		// Intake
+		SmartDashboard.putNumber("Intake Temp", m_robotContainer.getIntake().getInternalMotorTemp());
+		// Climber
+		SmartDashboard.putNumber("RightCTemp", m_robotContainer.getClimber().getRightMotorTemp());
+		SmartDashboard.putNumber("LeftCTemp", m_robotContainer.getClimber().getLeftMotorTemp());
+		// Shooter
+		SmartDashboard.putNumber("ShooterRTemp", m_robotContainer.getOuttake().getRightWheelMotorTemp());
+		SmartDashboard.putNumber("ShooterLTemp", m_robotContainer.getOuttake().getLeftWheelMotorTemp());
+		// Drive Train
+		SmartDashboard.putNumber("FLTurnTemp", m_robotContainer.getDrivetrain());
+		SmartDashboard.putNumber("FRTurnTemp", m_robotContainer.getDrivetrain());
+		SmartDashboard.putNumber("BLTurnTemp", m_robotContainer.getDrivetrain());
+		SmartDashboard.putNumber("BRTurnTemp", m_robotContainer.getDrivetrain());
+
+		SmartDashboard.putNumber("FLDriveTemp", m_robotContainer.getDrivetrain());
+		SmartDashboard.putNumber("FRDriveTemp", m_robotContainer.getDrivetrain());
+		SmartDashboard.putNumber("BLDriveTemp", m_robotContainer.getDrivetrain());
+		SmartDashboard.putNumber("BRDriveTemp", m_robotContainer.getDrivetrain());
+
+		
+
+
 		// SmartDashboard.putNumber("distance", m_robotContainer.getDistanceThing());
 	}
 

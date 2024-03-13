@@ -42,4 +42,8 @@ public class Intake extends SubsystemBase{
         return noteSensor.get();
     }
 
+    public double getInternalMotorTemp() {
+        return runInternal.getMotorTemperature();
+    }
+
 }

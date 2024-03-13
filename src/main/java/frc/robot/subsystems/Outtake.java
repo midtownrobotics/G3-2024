@@ -18,6 +18,7 @@ public class Outtake extends SubsystemBase {
 
     private final CANSparkMax rightWheel;
     private final CANSparkMax rollerLeader;
+    private final CANSparkMax rollerFollower;
     private final CANSparkMax pivotOuttake;
     private final CANSparkMax leftWheel;
     private final SparkPIDController pivotPID;
@@ -28,6 +29,7 @@ public class Outtake extends SubsystemBase {
     public Outtake(CANSparkMax rightWheel, CANSparkMax leftWheel, CANSparkMax rollerLeader, CANSparkMax rollerFollower, CANSparkMax pivotOuttake, DigitalInput pivotDIO){
         this.rightWheel = rightWheel;
         this.rollerLeader = rollerLeader;
+        this.rollerFollower = rollerFollower;
         this.leftWheel = leftWheel;
         this.pivotOuttake = pivotOuttake;
         this.pivotEncoder = new DutyCycleEncoder(pivotDIO);
@@ -101,6 +103,22 @@ public class Outtake extends SubsystemBase {
 
     public double getSpeed() {
         return speed;
+    }
+
+    public double getRightWheelMotorTemp() {
+        return rightWheel.getMotorTemperature();
+    }
+    
+    public double getLeftWheelMotorTemp() {
+        return leftWheel.getMotorTemperature();
+    }
+
+    public double getRollerLeaderMotorTemp() {
+        return rollerLeader.getMotorTemperature();
+    }
+
+    public double getRollerFollowerMotorTemp() {
+        return rollerFollower.getMotorTemperature();
     }
 
 }
