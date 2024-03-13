@@ -6,6 +6,8 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import frc.robot.Constants.ClimberConstants;
+
 public class Climber extends SubsystemBase {
     
     private final CANSparkMax leftWinch;
@@ -27,8 +29,16 @@ public class Climber extends SubsystemBase {
     }
 
     public void winch(double left, double right){
-        leftWinch.set(left);
-        rightWinch.set(right);
+        if (leftWinch.getOutputCurrent() >= ClimberConstants.CLIMBER_STOP_CURRENT){
+            leftWinch.set(0);
+        } else {
+            leftWinch.set(left);
+        }
+        if (rightWinch.getOutputCurrent() >= ClimberConstants.CLIMBER_STOP_CURRENT){
+            rightWinch.set(0);
+        } else {
+            rightWinch.set(right);
+        }
     }
 
     public boolean getLeftSensor() {

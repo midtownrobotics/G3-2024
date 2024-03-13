@@ -118,4 +118,8 @@ public final class Constants {
 	public static final class NeoMotorConstants {
 		public static final double FREE_SPEED_RPM = 5676;
 	}
+
+	public static final class ClimberConstants {
+		public static final double CLIMBER_STOP_CURRENT = 0;
+	}
 }
