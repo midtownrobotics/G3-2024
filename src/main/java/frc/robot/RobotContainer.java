@@ -31,7 +31,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DrivetrainConstants;
-import frc.robot.commands.BoostSpeed;
 import frc.robot.commands.ChangeSpeed;
 import frc.robot.commands.Climb;
 import frc.robot.commands.DoNothing;
@@ -98,8 +97,6 @@ public class RobotContainer {
 
 	private final ShuffleboardTab autonTab = Shuffleboard.getTab("Auton");
 	private final SendableChooser<Auton> autonChooser = new SendableChooser<>();
-
-	public static boolean doSpeedBoost = false;
 	
 
 	/**
@@ -127,7 +124,8 @@ public class RobotContainer {
 				MathUtil.applyDeadband((driver.getLeftY() * Math.abs(driver.getLeftY()))*control_limiter, JOYSTICK_Y1_AXIS_THRESHOLD),
 				MathUtil.applyDeadband((driver.getLeftX() * Math.abs(driver.getLeftX()))*control_limiter, JOYSTICK_X1_AXIS_THRESHOLD),
 				-MathUtil.applyDeadband((driver.getRightX() * Math.abs(driver.getRightX()))*control_limiter, JOYSTICK_X2_AXIS_THRESHOLD),
-		 		true, false, doSpeedBoost), drivetrain));
+		 		true
+				, false), drivetrain));
 		climber.setDefaultCommand(new Climb(climber, operator));
 		outtake.setDefaultCommand(new RunFlywheel(outtake));
 		
@@ -166,7 +164,6 @@ public class RobotContainer {
 	 */
 	private void configureButtonBindings() {
 		driver.x().whileTrue(new RunCommand(() -> drivetrain.setX(), drivetrain));
-		driver.b().onTrue(new BoostSpeed());
 		operator.povUp().whileTrue(new PivotOuttake(outtake, .75));
 		operator.povDown().whileTrue(new PivotOuttake(outtake, -.75));
 		operator.rightBumper().whileTrue(new RunIntake(intake, outtake, 1));
@@ -204,7 +201,7 @@ public class RobotContainer {
 					new IntakeOuttake(intake, outtake, .75).withTimeout(2),
 					new ChangeSpeed(outtake, 0).withTimeout(0.1),
 					new RunFlywheel(outtake).withTimeout(0.1),
-					new RunIntake(intake, outtake, .67).alongWith(new RunCommand(() -> drivetrain.drive(-.5, 0, 0, true), drivetrain).withTimeout(2)).withTimeout(2)
+					new RunIntake(intake, outtake, .67).alongWith(new RunCommand(() -> drivetrain.drive(-.5, 0, 0), drivetrain).withTimeout(2)).withTimeout(2)
 				);
 			default:
 				break;
