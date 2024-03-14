@@ -2,6 +2,7 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/Auton/Auton Mode Chooser": "String Chooser",
       "/SmartDashboard/Swerve Odometry": "Field2d"
     }
   },

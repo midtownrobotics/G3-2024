@@ -16,13 +16,17 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.ctre.phoenix.sensors.Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
-
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.utils.SwerveUtils;
 import frc.robot.Ports;
@@ -58,6 +62,15 @@ public class SwerveDrivetrain extends SubsystemBase {
 	static final double TURN_DERIVATIVE_GAIN = 0.0; // 0.0001
 	
 	static final int DEGREE_THRESHOLD = 10; // 3;
+
+	private GenericEntry FLDT;
+	private GenericEntry FLTT;
+	private GenericEntry FRDT;
+	private GenericEntry FRTT;
+	private GenericEntry RRDT;
+	private GenericEntry RRTT;
+	private GenericEntry RLDT;
+	private GenericEntry RLTT;
 	
 	private final static int TURN_ON_TARGET_MINIMUM_COUNT = 10; // number of times/iterations we need to be on target to really be on target
 	// end turn settings	
@@ -149,6 +162,20 @@ public class SwerveDrivetrain extends SubsystemBase {
 		
 		turnPidController.enableContinuousInput(-180, 180); // because -180 degrees is the same as 180 degrees (needs input range to be defined first)
 		turnPidController.setTolerance(DEGREE_THRESHOLD); // n degree error tolerated
+
+		ShuffleboardTab tempTab = Shuffleboard.getTab("Motor Tempuratures");
+		// Front Left
+		this.FLDT = tempTab.add("FL D Temp", 0).getEntry();
+		this.FLTT = tempTab.add("FL T Temp", 0).getEntry();
+		// Front Right
+		this.FRDT = tempTab.add("FR D Temp", 0).getEntry();
+		this.FRTT = tempTab.add("FR T Temp", 0).getEntry();
+		// Rear Left
+		this.RLDT = tempTab.add("RL D Temp", 0).getEntry();
+		this.RLTT = tempTab.add("RL T Temp", 0).getEntry();
+		// Rear Right
+		this.RRDT = tempTab.add("RR D Temp", 0).getEntry();
+		this.RRTT = tempTab.add("RR T Temp", 0).getEntry();
 	}
 
 	@Override
@@ -164,6 +191,19 @@ public class SwerveDrivetrain extends SubsystemBase {
 			});
 
 		calculateTurnAngleUsingPidController();
+
+		// Sets the tempuratures for the motors
+		FLDT.setDouble(m_frontLeft.getTurningTemp());
+		FLTT.setDouble(m_frontLeft.getTurningTemp());
+
+		FRDT.setDouble(m_frontRight.getTurningTemp());
+		FRTT.setDouble(m_frontRight.getTurningTemp());
+
+		RLDT.setDouble(m_rearLeft.getTurningTemp());
+		RLTT.setDouble(m_rearLeft.getTurningTemp());
+
+		RRDT.setDouble(m_rearRight.getTurningTemp());
+		RRTT.setDouble(m_rearRight.getTurningTemp());
 	}
 
 	/**

@@ -4,7 +4,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -25,6 +28,13 @@ public class Robot extends TimedRobot {
 	 * This function is run when the robot is first started up and should be used for any
 	 * initialization code.
 	 */
+	
+	private GenericEntry IT;
+	private GenericEntry CRT;
+	private GenericEntry CLT;
+	private GenericEntry SRT;
+	private GenericEntry SLT;
+
 	@Override
 	public void robotInit() {
 		// Port forwarders for LimeLight
@@ -41,6 +51,15 @@ public class Robot extends TimedRobot {
 		m_robotContainer = new RobotContainer();
 
 		SmartDashboard.putData("Swerve Odometry", m_robotContainer.getField());		
+
+		ShuffleboardTab tempTab = Shuffleboard.getTab("Motor Tempuratures");
+
+		IT = tempTab.add("Intake T", 0).getEntry();
+		CRT = tempTab.add("Climber R T", 0).getEntry();
+		CLT = tempTab.add("Climber L T", 0).getEntry();
+		SRT = tempTab.add("Shooter R T", 0).getEntry();
+		SLT = tempTab.add("Shooter L T", 0).getEntry();
+
 	}
 
 	/**
@@ -154,17 +173,15 @@ public class Robot extends TimedRobot {
 
 
 		// Temps
+
 		// Intake
-		SmartDashboard.putNumber("Intake Temp", m_robotContainer.getIntake().getInternalMotorTemp());
+		IT.setDouble(m_robotContainer.getIntake().getInternalMotorTemp());
 		// Climber
-		SmartDashboard.putNumber("RightCTemp", m_robotContainer.getClimber().getRightMotorTemp());
-		SmartDashboard.putNumber("LeftCTemp", m_robotContainer.getClimber().getLeftMotorTemp());
+		CRT.setDouble(m_robotContainer.getClimber().getRightMotorTemp());
+		CLT.setDouble(m_robotContainer.getClimber().getLeftMotorTemp());
 		// Shooter
-		SmartDashboard.putNumber("ShooterRTemp", m_robotContainer.getOuttake().getRightWheelMotorTemp());
-		SmartDashboard.putNumber("ShooterLTemp", m_robotContainer.getOuttake().getLeftWheelMotorTemp());
-
-
-		
+		SRT.setDouble(m_robotContainer.getOuttake().getRightWheelMotorTemp());
+		SLT.setDouble(m_robotContainer.getOuttake().getLeftWheelMotorTemp());
 
 
 		// SmartDashboard.putNumber("distance", m_robotContainer.getDistanceThing());
