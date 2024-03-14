@@ -77,9 +77,9 @@ public class Robot extends TimedRobot {
 			}
 		}
 
-		double rumbleTimeSeconds = 1;
+		double rumbleTimeSeconds = 0.25;
 
-		if (timer == rumbleTimeSeconds * 1000 / 20) {
+		if (timer >= (rumbleTimeSeconds * 1000 / 20)) {
 			m_intakeBeamBreak.stop();
 		}
 
