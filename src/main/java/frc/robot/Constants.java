@@ -121,4 +121,8 @@ public final class Constants {
 		public static final int INTAKE_CURRENT_LIMIT = 20;
 		public static final int STANDARD_NEO_CURRENT_LIMIT = 60;
 	}
+
+	public static final class OpCheckConstants {
+		public static final boolean OP_CHECK_MODE = false;
+	}
 }

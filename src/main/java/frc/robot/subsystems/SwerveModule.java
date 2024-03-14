@@ -221,4 +221,12 @@ public class SwerveModule {
 		return m_desiredState;
 	}
 
+	public void setRotation(double rot) {
+		m_turningAbsoluteEncoder.setPosition(rot, 0);
+	}
+
+	public void setDriveSpeed(double speed) {
+		m_drivingSparkMax.set(speed);
+	}
+
 }
