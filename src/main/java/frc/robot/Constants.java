@@ -26,8 +26,7 @@ public final class Constants {
 	public static final class DrivetrainConstants {
 		// Driving Parameters - Note that these are not the maximum capable speeds of
 		// the robot, rather the allowed maximum speeds
-		public static final double MAX_SPEED_METERS_PER_SECOND = 3.00; // SET FOR TESTING
-		public static final double MAX_SPEED_METERS_PER_SECOND_BOOSTED = 4.95; // NORMAl SPEED (USED TO BE SET TO ABOVE)
+		public static final double MAX_SPEED_METERS_PER_SECOND = 4.95;
 		public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = 10; // (Max 14.58) radians per second
 
 		public static final double DIRECTION_SLEW_RATE = 1.2; // radians per second

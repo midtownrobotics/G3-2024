@@ -192,12 +192,12 @@ public class SwerveDrivetrain extends SubsystemBase {
 			pose);
 	}
 
-	public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean speedBoost) {
-		drive(xSpeed, ySpeed, rot, fieldRelative, false, speedBoost);
+	public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
+		drive(xSpeed, ySpeed, rot, fieldRelative, false);
 	}
 
-	public void drive(double xSpeed, double ySpeed, double rot, boolean speedBoost) {
-		drive(xSpeed, ySpeed, rot, true, speedBoost);
+	public void drive(double xSpeed, double ySpeed, double rot) {
+		drive(xSpeed, ySpeed, rot, true);
 	}
 
 	/**
@@ -210,7 +210,7 @@ public class SwerveDrivetrain extends SubsystemBase {
 	 *                      field.
 	 * @param rateLimit     Whether to enable rate limiting for smoother control.
 	 */
-	public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit, boolean speedBoost) {
+	public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
 		
 		double xSpeedCommanded;
 		double ySpeedCommanded;
@@ -266,17 +266,8 @@ public class SwerveDrivetrain extends SubsystemBase {
 		}
 
 		// Convert the commanded speeds into the correct units for the drivetrain
-		double maxSpeed;
-
-		if (speedBoost) {
-			maxSpeed = DrivetrainConstants.MAX_SPEED_METERS_PER_SECOND_BOOSTED;
-		} else {
-			maxSpeed = DrivetrainConstants.MAX_SPEED_METERS_PER_SECOND;
-		}
-
-		double xSpeedDelivered = xSpeedCommanded * maxSpeed;
-		double ySpeedDelivered = ySpeedCommanded * maxSpeed;
-
+		double xSpeedDelivered = xSpeedCommanded * DrivetrainConstants.MAX_SPEED_METERS_PER_SECOND;
+		double ySpeedDelivered = ySpeedCommanded * DrivetrainConstants.MAX_SPEED_METERS_PER_SECOND;
 		double rotDelivered = m_currentRotation * DrivetrainConstants.MAX_ANGULAR_SPEED_RADIANS_PER_SECOND;
 
 		var swerveModuleStates = DrivetrainConstants.DRIVE_KINEMATICS.toSwerveModuleStates(
@@ -285,7 +276,7 @@ public class SwerveDrivetrain extends SubsystemBase {
 				: new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
 
 		SwerveDriveKinematics.desaturateWheelSpeeds(
-			swerveModuleStates, maxSpeed);
+			swerveModuleStates, DrivetrainConstants.MAX_SPEED_METERS_PER_SECOND);
 
 		m_frontLeft.setDesiredState(swerveModuleStates[0]);
 		m_frontRight.setDesiredState(swerveModuleStates[1]);
@@ -337,7 +328,7 @@ public class SwerveDrivetrain extends SubsystemBase {
 
 	public void stop()
 	{
-		drive(0, 0, 0, true, false, false);
+		drive(0, 0, 0, true, false);
 
 		isTurning = false;
 	}
