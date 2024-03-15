@@ -196,7 +196,6 @@ public class SwerveDrivetrain extends SubsystemBase {
 		drive(xSpeed, ySpeed, rot, fieldRelative, false);
 	}
 
-	// TODO: Sort out second reference here
 	public void drive(double xSpeed, double ySpeed, double rot) {
 		drive(xSpeed, ySpeed, rot, true);
 	}
@@ -485,19 +484,19 @@ public class SwerveDrivetrain extends SubsystemBase {
 	}
 
 	public void setFrontLeftRotation(double rot){
-		m_frontLeft.setRotation(rot);
+		m_frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(rot)));
 	}
 
 	public void setFrontRightRotation(double rot){
-		m_frontRight.setRotation(rot);
+		m_frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(rot)));
 	}
 
 	public void setRearLeftRotation(double rot){
-		m_rearLeft.setRotation(rot);
+		m_rearLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(rot)));
 	}
 
 	public void setRearRightRotation(double rot){
-		m_rearRight.setRotation(rot);
+		m_rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(rot)));
 	}
 }
 
