@@ -64,8 +64,8 @@ public class Robot extends TimedRobot {
 
 		ShuffleboardTab gameTab = Shuffleboard.getTab("Game");
 
-		noteSensorShuffleBox = gameTab.add("Note Detected", false).getEntry();
-		speedBoostShuffleBox = gameTab.add("Boosting Speed", false).getEntry();
+		noteSensorShuffleBox = gameTab.add("Note Detected", false).withSize(2, 2).getEntry();
+		speedBoostShuffleBox = gameTab.add("Boosting Speed", false).withSize(2, 2).getEntry();
 
 	}
 

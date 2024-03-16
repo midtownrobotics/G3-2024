@@ -99,7 +99,7 @@ public class RobotContainer {
 	private final ShuffleboardTab autonTab = Shuffleboard.getTab("Auton");
 	private final SendableChooser<Auton> autonChooser = new SendableChooser<>();
 
-	public static boolean doSpeedBoost = false;
+	public static boolean doSpeedBoost = true;
 	
 
 	/**
@@ -166,7 +166,7 @@ public class RobotContainer {
 	 */
 	private void configureButtonBindings() {
 		driver.x().whileTrue(new RunCommand(() -> drivetrain.setX(), drivetrain));
-		driver.b().onTrue(new BoostSpeed());
+		driver.a().whileTrue(new BoostSpeed());
 		operator.povUp().whileTrue(new PivotOuttake(outtake, .75));
 		operator.povDown().whileTrue(new PivotOuttake(outtake, -.75));
 		operator.rightBumper().whileTrue(new RunIntake(intake, outtake, 1));
