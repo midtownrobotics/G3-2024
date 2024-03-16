@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.SPI;
 
 import frc.robot.Constants.DrivetrainConstants;
 import frc.utils.SwerveUtils;
+import frc.robot.Constants;
 import frc.robot.Ports;
 
 /**
@@ -203,9 +204,9 @@ public class SwerveDrivetrain extends SubsystemBase {
 	}
 
 	public void drivePID(double xSpeed, double ySpeed, double rot) {
-		double error = rot + pigeon.getRate() / 360;
+		double error = rot*Constants.DrivetrainConstants.MAX_ANGULAR_SPEED_RADIANS_PER_SECOND/(Math.PI*2) + pigeon.getRate() / 360;
 		double kP = 0.1;
-		drive(xSpeed, ySpeed, kP * error);
+		drive(xSpeed, ySpeed, kP * error + rot);
 	}
 
 	public void driveBoosted() {
