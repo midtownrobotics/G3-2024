@@ -113,4 +113,12 @@ public class Outtake extends SubsystemBase {
         return speed;
     }
 
+    public void rightFlyWheel(double speed) {
+        rightWheel.set(speed);
+    }
+
+    public void leftFlyWheel(double speed){
+        leftWheel.set(speed);
+    }
+
 }

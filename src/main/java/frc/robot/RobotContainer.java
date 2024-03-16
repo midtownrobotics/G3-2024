@@ -40,6 +40,9 @@ import frc.robot.commands.PivotOuttake;
 import frc.robot.commands.RunFlywheel;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.RunOuttake;
+import frc.robot.commands.opcheck.FaceDriveTrainForward;
+import frc.robot.commands.opcheck.RunDriveMotor;
+import frc.robot.commands.opcheck.RunTurnMotor;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Outtake;
@@ -109,6 +112,7 @@ public class RobotContainer {
 		autonChooser.setDefaultOption("Straight Taxi", Auton.STRAIGHT_TAXI);
 		autonChooser.addOption("Shoot", Auton.SHOOT);
 		autonChooser.addOption("Shoot & Straight Taxi", Auton.SHOOT_STRAIGHT_TAXI);
+		autonChooser.addOption("Op Check For Cart", Auton.OP_CHECK_CART);
 		autonTab.add("Auton Mode Chooser", autonChooser);
 
 		// Configure the button bindings
@@ -206,7 +210,42 @@ public class RobotContainer {
 					new RunIntake(intake, outtake, .67).alongWith(new RunCommand(() -> drivetrain.drive(-.5, 0, 0), drivetrain).withTimeout(2)).withTimeout(2)
 				);
 			case OP_CHECK_CART:
-				autoCommand = new SequentialCommandGroup();
+				autoCommand = new SequentialCommandGroup(
+					new FaceDriveTrainForward(drivetrain).withTimeout(.5),
+					// Spins each Drive motor forward
+					new RunDriveMotor(drivetrain, 1, 1).withTimeout(.5),
+					new RunDriveMotor(drivetrain, 2, 1).withTimeout(.5),
+					new RunDriveMotor(drivetrain, 3, 1).withTimeout(.5),
+					new RunDriveMotor(drivetrain, 4, 1).withTimeout(.5),
+					// Spins each motor backwards
+					new RunDriveMotor(drivetrain, 1, -1).withTimeout(.5),
+					new RunDriveMotor(drivetrain, 2, -1).withTimeout(.5),
+					new RunDriveMotor(drivetrain, 3, -1).withTimeout(.5),
+					new RunDriveMotor(drivetrain, 4, -1).withTimeout(.5),
+					// Spins each turn motor clockwise
+					// Front Left
+					new RunTurnMotor(drivetrain, 1, 90).withTimeout(.5),
+					new RunTurnMotor(drivetrain, 1, 180).withTimeout(.5),
+					new RunTurnMotor(drivetrain, 1, 270).withTimeout(.5),
+					new RunTurnMotor(drivetrain, 1, 0).withTimeout(.5),
+					// Front Right
+					new RunTurnMotor(drivetrain, 2, 90).withTimeout(.5),
+					new RunTurnMotor(drivetrain, 2, 180).withTimeout(.5),
+					new RunTurnMotor(drivetrain, 2, 270).withTimeout(.5),
+					new RunTurnMotor(drivetrain, 2, 0).withTimeout(.5),
+					// Rear Left
+					new RunTurnMotor(drivetrain, 3, 90).withTimeout(.5),
+					new RunTurnMotor(drivetrain, 3, 180).withTimeout(.5),
+					new RunTurnMotor(drivetrain, 3, 270).withTimeout(.5),
+					new RunTurnMotor(drivetrain, 3, 0).withTimeout(.5),
+					// Rear Left
+					new RunTurnMotor(drivetrain, 4, 90).withTimeout(.5),
+					new RunTurnMotor(drivetrain, 4, 180).withTimeout(.5),
+					new RunTurnMotor(drivetrain, 4, 270).withTimeout(.5),
+					new RunTurnMotor(drivetrain, 4, 0).withTimeout(.5)
+					// Shooter
+
+				);
 			case OP_CHECK_GROUND:
 
 			default:
