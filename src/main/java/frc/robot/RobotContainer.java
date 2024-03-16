@@ -99,7 +99,7 @@ public class RobotContainer {
 	private final ShuffleboardTab autonTab = Shuffleboard.getTab("Auton");
 	private final SendableChooser<Auton> autonChooser = new SendableChooser<>();
 
-	public static boolean doSpeedBoost = true;
+	public static boolean doSpeedBoost = false;
 	
 
 	/**
