@@ -7,8 +7,6 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import frc.robot.Constants.NeoMotorConstants;
-
 public class Intake extends SubsystemBase{
 
     private final CANSparkMax runExternal;
@@ -21,15 +19,9 @@ public class Intake extends SubsystemBase{
         this.runInternal = runInternal;
         this.externalPivot = externalpivot;
         this.noteSensor = noteSensor;
-
         runExternal.restoreFactoryDefaults();
         runInternal.restoreFactoryDefaults();
-
-        runExternal.setSmartCurrentLimit(NeoMotorConstants.INTAKE_CURRENT_LIMIT);
-        runInternal.setSmartCurrentLimit(NeoMotorConstants.INTAKE_CURRENT_LIMIT);
-
         runInternal.setInverted(true);
-
         externalPivot.set(Value.kForward);
     }
 
@@ -48,6 +40,10 @@ public class Intake extends SubsystemBase{
 
     public boolean getNoteSensor() {
         return noteSensor.get();
+    }
+
+    public double getInternalMotorTemp() {
+        return runInternal.getMotorTemperature();
     }
 
 }

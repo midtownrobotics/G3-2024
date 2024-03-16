@@ -221,4 +221,12 @@ public class SwerveModule {
 		return m_desiredState;
 	}
 
+	public double getDrivingTemp() {
+		return m_drivingSparkMax.getMotorTemperature();
+	}
+
+	public double getTurningTemp() {
+		return m_turningSparkMax.getMotorTemperature();
+	}
+
 }
