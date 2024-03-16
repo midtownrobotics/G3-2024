@@ -15,10 +15,11 @@ public class BoostSpeed extends Command {
         LocalDateTime now = LocalDateTime.now();
         
         SmartDashboard.putString("boost", dtf.format(now));
-        if (RobotContainer.doSpeedBoost) {
-            RobotContainer.doSpeedBoost = false;
-        } else {
-            RobotContainer.doSpeedBoost = true;
-        }
+        RobotContainer.doSpeedBoost = true;
+    }
+
+    @Override
+    public void end(boolean inInterupped) {
+        RobotContainer.doSpeedBoost = false;
     }
 }

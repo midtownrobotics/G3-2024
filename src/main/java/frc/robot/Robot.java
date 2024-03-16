@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -36,6 +37,8 @@ public class Robot extends TimedRobot {
 	private GenericEntry SLT;
 	private GenericEntry noteSensorShuffleBox;
 	private GenericEntry speedBoostShuffleBox;
+	private GenericEntry shooterLeftSpeedShuffleBox;
+	private GenericEntry shooterRightSpeedShuffleBox;
 
 	@Override
 	public void robotInit() {
@@ -64,8 +67,10 @@ public class Robot extends TimedRobot {
 
 		ShuffleboardTab gameTab = Shuffleboard.getTab("Game");
 
-		noteSensorShuffleBox = gameTab.add("Note Detected", false).withSize(2, 2).getEntry();
-		speedBoostShuffleBox = gameTab.add("Boosting Speed", false).withSize(2, 2).getEntry();
+		noteSensorShuffleBox = gameTab.add("Note Detected", false).withSize(2, 2).withPosition(0, 0).getEntry();
+		speedBoostShuffleBox = gameTab.add("Boosting Speed", false).withSize(2, 2).withPosition(2, 0).getEntry();
+		shooterLeftSpeedShuffleBox = gameTab.add("Shooter Left Speed", 0).withWidget(BuiltInWidgets.kDial).withSize(2, 2).withPosition(4, 0).getEntry();
+		shooterRightSpeedShuffleBox = gameTab.add("Shooter Right Speed", 0).withWidget(BuiltInWidgets.kDial).withSize(2, 2).withPosition(6, 0).getEntry();
 
 	}
 
@@ -161,7 +166,9 @@ public class Robot extends TimedRobot {
 		//SmartDashboard.putBoolean("Note Sensor", m_robotContainer.getIntake().getNoteSensor());
 
 		noteSensorShuffleBox.setBoolean(m_robotContainer.getIntake().getNoteSensor());
-		speedBoostShuffleBox.setBoolean(m_robotContainer.doSpeedBoost);
+		speedBoostShuffleBox.setBoolean(RobotContainer.doSpeedBoost);
+		shooterLeftSpeedShuffleBox.setDouble(m_robotContainer.getOuttake().getLeftWheelSpeed());
+		shooterRightSpeedShuffleBox.setDouble(m_robotContainer.getOuttake().getRightWheelSpeed());
 	
 		SmartDashboard.putNumber("FrontLeftTurningDesiredState", m_robotContainer.getDrivetrain().getFrontLeftModule().getDesiredState().angle.getRadians());
 		SmartDashboard.putNumber("RearLeftTurningDesiredState", m_robotContainer.getDrivetrain().getRearLeftModule().getDesiredState().angle.getRadians());

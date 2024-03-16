@@ -121,4 +121,12 @@ public class Outtake extends SubsystemBase {
         return rollerFollower.getMotorTemperature();
     }
 
+    public double getRightWheelSpeed() {
+        return rightWheel.getEncoder().getVelocity();
+    }
+
+    public double getLeftWheelSpeed() {
+        return leftWheel.getEncoder().getVelocity();
+    }
+
 }
