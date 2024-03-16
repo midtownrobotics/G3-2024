@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.Map;
+
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -39,6 +41,7 @@ public class Robot extends TimedRobot {
 	private GenericEntry speedBoostShuffleBox;
 	private GenericEntry shooterLeftSpeedShuffleBox;
 	private GenericEntry shooterRightSpeedShuffleBox;
+	private GenericEntry shooterOnOffShuffleBox;
 
 	@Override
 	public void robotInit() {
@@ -67,10 +70,13 @@ public class Robot extends TimedRobot {
 
 		ShuffleboardTab gameTab = Shuffleboard.getTab("Game");
 
-		noteSensorShuffleBox = gameTab.add("Note Detected", false).withSize(2, 2).withPosition(0, 0).getEntry();
-		speedBoostShuffleBox = gameTab.add("Boosting Speed", false).withSize(2, 2).withPosition(2, 0).getEntry();
-		shooterLeftSpeedShuffleBox = gameTab.add("Shooter Left Speed", 0).withWidget(BuiltInWidgets.kDial).withSize(2, 2).withPosition(4, 0).getEntry();
-		shooterRightSpeedShuffleBox = gameTab.add("Shooter Right Speed", 0).withWidget(BuiltInWidgets.kDial).withSize(2, 2).withPosition(6, 0).getEntry();
+		noteSensorShuffleBox = gameTab.add("Note Detected", false).withSize(2, 2).withPosition(7, 2).getEntry();
+		speedBoostShuffleBox = gameTab.add("Boosting Speed", false).withSize(2, 2).withPosition(9, 2).getEntry();
+		shooterLeftSpeedShuffleBox = gameTab.add("Shooter Left Speed", 0).withWidget(BuiltInWidgets.kDial).withSize(2, 2).withProperties(Map.of("min", 0, "max", 8000)).withPosition(7, 0).getEntry();
+		shooterRightSpeedShuffleBox = gameTab.add("Shooter Right Speed", 0).withWidget(BuiltInWidgets.kDial).withSize(2, 2).withProperties(Map.of("min", 0, "max", 8000)).withPosition(9, 0).getEntry();
+		shooterOnOffShuffleBox = gameTab.add("Shooter On Off", false).withSize(2, 2).withPosition(5, 0).getEntry();
+
+		gameTab.addCamera("Camera", "limelight", "http://10.16.48.11:5800").withSize(5, 5);
 
 	}
 
@@ -169,6 +175,7 @@ public class Robot extends TimedRobot {
 		speedBoostShuffleBox.setBoolean(RobotContainer.doSpeedBoost);
 		shooterLeftSpeedShuffleBox.setDouble(m_robotContainer.getOuttake().getLeftWheelSpeed());
 		shooterRightSpeedShuffleBox.setDouble(m_robotContainer.getOuttake().getRightWheelSpeed());
+		shooterOnOffShuffleBox.setBoolean(m_robotContainer.getOuttake().getSpeed() > 0.5);
 	
 		SmartDashboard.putNumber("FrontLeftTurningDesiredState", m_robotContainer.getDrivetrain().getFrontLeftModule().getDesiredState().angle.getRadians());
 		SmartDashboard.putNumber("RearLeftTurningDesiredState", m_robotContainer.getDrivetrain().getRearLeftModule().getDesiredState().angle.getRadians());
