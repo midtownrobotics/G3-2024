@@ -110,7 +110,7 @@ public class RobotContainer {
 		autonChooser.setDefaultOption("Straight Taxi", Auton.STRAIGHT_TAXI);
 		autonChooser.addOption("Shoot", Auton.SHOOT);
 		autonChooser.addOption("Shoot & Straight Taxi", Auton.SHOOT_STRAIGHT_TAXI);
-		autonTab.add("Auton Mode Chooser", autonChooser);
+		autonTab.add("Auton Mode Chooser", autonChooser).withSize(2, 1);
 
 		// Configure the button bindings
 

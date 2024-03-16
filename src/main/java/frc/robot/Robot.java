@@ -34,6 +34,8 @@ public class Robot extends TimedRobot {
 	private GenericEntry CLT;
 	private GenericEntry SRT;
 	private GenericEntry SLT;
+	private GenericEntry noteSensorShuffleBox;
+	private GenericEntry speedBoostShuffleBox;
 
 	@Override
 	public void robotInit() {
@@ -59,6 +61,11 @@ public class Robot extends TimedRobot {
 		CLT = tempTab.add("Climber L T", 0).getEntry();
 		SRT = tempTab.add("Shooter R T", 0).getEntry();
 		SLT = tempTab.add("Shooter L T", 0).getEntry();
+
+		ShuffleboardTab gameTab = Shuffleboard.getTab("Game");
+
+		noteSensorShuffleBox = gameTab.add("Note Detected", false).getEntry();
+		speedBoostShuffleBox = gameTab.add("Boosting Speed", false).getEntry();
 
 	}
 
@@ -151,7 +158,10 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("FR Abs", m_robotContainer.getDrivetrain().getFrontRightModule().getTurningAbsoluteEncoder().getAbsolutePosition());
 		SmartDashboard.putNumber("RR Abs", m_robotContainer.getDrivetrain().getRearRightModule().getTurningAbsoluteEncoder().getAbsolutePosition());
 
-		SmartDashboard.putBoolean("Note Sensor", m_robotContainer.getIntake().getNoteSensor());
+		//SmartDashboard.putBoolean("Note Sensor", m_robotContainer.getIntake().getNoteSensor());
+
+		noteSensorShuffleBox.setBoolean(m_robotContainer.getIntake().getNoteSensor());
+		speedBoostShuffleBox.setBoolean(m_robotContainer.doSpeedBoost);
 	
 		SmartDashboard.putNumber("FrontLeftTurningDesiredState", m_robotContainer.getDrivetrain().getFrontLeftModule().getDesiredState().angle.getRadians());
 		SmartDashboard.putNumber("RearLeftTurningDesiredState", m_robotContainer.getDrivetrain().getRearLeftModule().getDesiredState().angle.getRadians());
