@@ -166,7 +166,7 @@ public class RobotContainer {
 	 */
 	private void configureButtonBindings() {
 		driver.x().whileTrue(new RunCommand(() -> drivetrain.setX(), drivetrain));
-		driver.a().whileTrue(new BoostSpeed());
+		driver.leftTrigger(.1).whileTrue(new BoostSpeed());
 		operator.povUp().whileTrue(new PivotOuttake(outtake, .75));
 		operator.povDown().whileTrue(new PivotOuttake(outtake, -.75));
 		operator.rightBumper().whileTrue(new RunIntake(intake, outtake, 1));
