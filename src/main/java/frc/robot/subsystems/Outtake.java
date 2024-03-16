@@ -13,6 +13,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.NeoMotorConstants;
 
 public class Outtake extends SubsystemBase {
 
@@ -44,6 +45,10 @@ public class Outtake extends SubsystemBase {
         leftWheel.setInverted(true);
         rollerLeader.setInverted(true);
         rollerFollower.follow(rollerLeader, false);
+        rightWheel.setSmartCurrentLimit(NeoMotorConstants.STANDARD_NEO_CURRENT_LIMIT);
+        leftWheel.setSmartCurrentLimit(NeoMotorConstants.STANDARD_NEO_CURRENT_LIMIT);
+        rollerLeader.setSmartCurrentLimit(NeoMotorConstants.ROLLER_FEED_CURRENT_LIMIT);
+        rollerFollower.setSmartCurrentLimit(NeoMotorConstants.ROLLER_FEED_CURRENT_LIMIT);
         pivotPID = pivotOuttake.getPIDController();
         pivotPID.setP(0.1);
         pivotPID.setI(0);
