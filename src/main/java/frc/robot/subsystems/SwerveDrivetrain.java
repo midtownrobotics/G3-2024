@@ -20,6 +20,7 @@ import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.ctre.phoenix.sensors.Pigeon2;
+import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 
@@ -90,7 +91,8 @@ public class SwerveDrivetrain extends SubsystemBase {
 	// The gyro sensor
 	private final AHRS m_gyro = new AHRS(SPI.Port.kMXP); // usign SPI by default, which is what we want.
 
-	public final Pigeon2 pigeon = new Pigeon2(5);
+	// public final Pigeon2 pigeon = new Pigeon2(5);
+	public final WPI_Pigeon2 pigeon = new WPI_Pigeon2(5);
 
 	// Slew rate filter variables for controlling lateral acceleration
 	private double m_currentRotation = 0.0;
@@ -201,9 +203,13 @@ public class SwerveDrivetrain extends SubsystemBase {
 	}
 
 	public void drivePID(double xSpeed, double ySpeed, double rot) {
-		double error = rot + pigeon.getYaw() / 360;
+		double error = rot + pigeon.getRate() / 360;
 		double kP = 0.1;
 		drive(xSpeed, ySpeed, kP * error);
+	}
+
+	public void driveBoosted() {
+		
 	}
 
 	/**
