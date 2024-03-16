@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import frc.robot.Constants.NeoMotorConstants;
+
 public class Outtake extends SubsystemBase {
 
     private final CANSparkMax rightWheel;
@@ -35,12 +37,20 @@ public class Outtake extends SubsystemBase {
         leftWheel.restoreFactoryDefaults();
         rollerLeader.restoreFactoryDefaults();
         rollerFollower.restoreFactoryDefaults();
+
         rightWheel.setIdleMode(IdleMode.kCoast);
         leftWheel.setIdleMode(IdleMode.kCoast);
         rollerLeader.setIdleMode(IdleMode.kCoast);
         rollerFollower.setIdleMode(IdleMode.kCoast);
+
+        rightWheel.setSmartCurrentLimit(NeoMotorConstants.STANDARD_NEO_CURRENT_LIMIT);
+        leftWheel.setSmartCurrentLimit(NeoMotorConstants.STANDARD_NEO_CURRENT_LIMIT);
+        rollerLeader.setSmartCurrentLimit(NeoMotorConstants.ROLLER_FEED_CURRENT_LIMIT);
+        rollerFollower.setSmartCurrentLimit(NeoMotorConstants.ROLLER_FEED_CURRENT_LIMIT);
+
         leftWheel.setInverted(true);
         rollerLeader.setInverted(true);
+
         rollerFollower.follow(rollerLeader, false);
         pivotPID = pivotOuttake.getPIDController();
         pivotPID.setP(0.1);
