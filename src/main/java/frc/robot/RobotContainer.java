@@ -7,10 +7,13 @@ package frc.robot;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -29,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.commands.BoostSpeed;
@@ -98,6 +102,7 @@ public class RobotContainer {
 
 	private final ShuffleboardTab autonTab = Shuffleboard.getTab("Auton");
 	private final SendableChooser<Auton> autonChooser = new SendableChooser<>();
+	private final GenericEntry intakeTimer;
 
 	public static boolean doSpeedBoost = false;
 	
@@ -106,6 +111,8 @@ public class RobotContainer {
 	 * The container for the robot. Contains subsystems, OI devices, and commands.
 	 */
 	public RobotContainer() {
+
+		intakeTimer = Shuffleboard.getTab("External").add("Intake Timer", 0).withWidget(BuiltInWidgets.kTextView).getEntry();
 
 		autonChooser.setDefaultOption("Straight Taxi", Auton.STRAIGHT_TAXI);
 		autonChooser.addOption("Shoot", Auton.SHOOT);
@@ -169,7 +176,7 @@ public class RobotContainer {
 		driver.a().whileTrue(new BoostSpeed());
 		operator.povUp().whileTrue(new PivotOuttake(outtake, .75));
 		operator.povDown().whileTrue(new PivotOuttake(outtake, -.75));
-		operator.rightBumper().whileTrue(new RunIntake(intake, outtake, 1));
+		operator.rightBumper().whileTrue(new SequentialCommandGroup(new RunIntake(intake, outtake, -1).withTimeout(intakeTimer.getDouble(0)), new RunIntake(intake, outtake, 1)));
 		operator.leftBumper().whileTrue(new RunIntake(intake, outtake, -1));
 		operator.leftTrigger(.1).whileTrue(new RunOuttake(outtake, -1));
 		operator.rightTrigger(.1).whileTrue(new IntakeOuttake(intake, outtake, .75));
