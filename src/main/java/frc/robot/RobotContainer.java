@@ -40,13 +40,18 @@ import frc.robot.commands.PivotOuttake;
 import frc.robot.commands.RunFlywheel;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.RunOuttake;
-import frc.robot.commands.opcheck.FaceDriveTrainForward;
-import frc.robot.commands.opcheck.RunDriveMotor;
-import frc.robot.commands.opcheck.RunTurnMotor;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Outtake;
 import frc.robot.subsystems.SwerveDrivetrain;
+// Opchecks
+import frc.robot.commands.opcheck.FaceDriveTrainForward;
+import frc.robot.commands.opcheck.RunDriveMotor;
+import frc.robot.commands.opcheck.RunTurnMotor;
+import frc.robot.commands.opcheck.RunLeftOuttake;
+import frc.robot.commands.opcheck.RunRightOuttake;
+import frc.robot.commands.opcheck.RunFeeders;
+import frc.robot.commands.opcheck.RunIntakes;
 
 
 /*
@@ -242,9 +247,19 @@ public class RobotContainer {
 					new RunTurnMotor(drivetrain, 4, 90).withTimeout(.5),
 					new RunTurnMotor(drivetrain, 4, 180).withTimeout(.5),
 					new RunTurnMotor(drivetrain, 4, 270).withTimeout(.5),
-					new RunTurnMotor(drivetrain, 4, 0).withTimeout(.5)
+					new RunTurnMotor(drivetrain, 4, 0).withTimeout(.5),
 					// Shooter
-
+					new RunRightOuttake(outtake, false).withTimeout(.5),
+					new RunLeftOuttake(outtake, false).withTimeout(.5),
+					new RunRightOuttake(outtake, true).withTimeout(.5),
+					new RunLeftOuttake(outtake, true).withTimeout(.5),
+					// Add Auto Climber Check Once Limit Current Is Done
+					// Feeders
+					new RunFeeders(outtake, 1).withTimeout(.5),
+					new RunFeeders(outtake, -1).withTimeout(.5),
+					// Intake
+					new RunIntakes(intake, 1).withTimeout(.5),
+					new RunIntakes(intake, -1).withTimeout(.5)
 				);
 			case OP_CHECK_GROUND:
 

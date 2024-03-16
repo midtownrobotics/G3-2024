@@ -121,4 +121,8 @@ public class Outtake extends SubsystemBase {
         leftWheel.set(speed);
     }
 
+    public void runFeeders(double speed){
+        rollerLeader.set(speed);
+    }
+
 }
