@@ -180,7 +180,7 @@ public class RobotContainer {
 		operator.leftBumper().whileTrue(new RunIntake(intake, outtake, -1));
 		operator.leftTrigger(.1).whileTrue(new RunOuttake(outtake, -1));
 		operator.rightTrigger(.1).whileTrue(new IntakeOuttake(intake, outtake, .75));
-		operator.a().whileTrue(new ChangeSpeed(outtake, 1));
+		operator.a().whileTrue(new ChangeSpeed(outtake, Robot.shooterSpeedSlider.getDouble(0)));
 		operator.b().whileTrue(new ChangeSpeed(outtake, 0));
 	}
 
