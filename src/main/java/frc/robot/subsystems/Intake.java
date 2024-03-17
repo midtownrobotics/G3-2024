@@ -23,8 +23,8 @@ public class Intake extends SubsystemBase{
         runExternal.restoreFactoryDefaults();
         runInternal.restoreFactoryDefaults();
 
-        runExternal.setSmartCurrentLimit(NeoMotorConstants.INTAKE_CURRENT_LIMIT);
-        runInternal.setSmartCurrentLimit(NeoMotorConstants.INTAKE_CURRENT_LIMIT);
+        runExternal.setSmartCurrentLimit(NeoMotorConstants.INTAKE_CURRENT_LIMIT_EXTERNAL);
+        runInternal.setSmartCurrentLimit(NeoMotorConstants.INTAKE_CURRENT_LIMIT_INTERNAL);
 
         runInternal.setInverted(true);
 
