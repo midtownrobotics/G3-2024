@@ -84,7 +84,7 @@ public class Robot extends TimedRobot {
 		shooterRightSpeedShuffleBox = gameTab.add("Shooter Right Speed", 0).withWidget(BuiltInWidgets.kDial).withSize(2, 2).withProperties(Map.of("min", 0, "max", 8000)).withPosition(9, 0).getEntry();
 		shooterOnOffShuffleBox = gameTab.add("Shooter On Off", false).withSize(2, 2).withPosition(5, 0).getEntry();
 
-		gameTab.addCamera("Camera", "limelight", "http://10.16.48.11:5800").withSize(5, 5);
+		//gameTab.addCamera("Camera", "limelight", "http://10.16.48.11:5800").withSize(5, 5);
 
 	}
 

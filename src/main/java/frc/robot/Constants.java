@@ -119,7 +119,7 @@ public final class Constants {
 		public static final double FREE_SPEED_RPM = 5676;
 		//Can't have numbers in varable names in java
 		public static final int ROLLER_FEED_CURRENT_LIMIT = 25;
-		public static final int INTAKE_CURRENT_LIMIT = 20;
+		public static final int INTAKE_CURRENT_LIMIT = 30;
 		public static final int STANDARD_NEO_CURRENT_LIMIT = 60;
 	}
 
