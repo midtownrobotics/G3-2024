@@ -68,6 +68,8 @@ public class Outtake extends SubsystemBase {
 
     public void flywheel(double power){
         String mode = Robot.modeChooser.getSelected().toString();
+
+        power = Robot.shooterSpeedSlider.getDouble(0);
                 
         rightWheel.set(power);
 
