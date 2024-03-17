@@ -84,7 +84,7 @@ public class RobotContainer {
 	private final SwerveDrivetrain drivetrain = new SwerveDrivetrain();
 	private final Climber climber = new Climber(CAN50, CAN51, DIO0, DIO1);
 	private final Outtake outtake = new Outtake(CAN33, CAN32, CAN30, CAN31, CAN34, DIO2);
-	private final Intake intake = new Intake(CAN41, CAN40, PCM01, DIO6);
+	private final Intake intake = new Intake(CAN40, CAN41, PCM01, DIO6);
 	public void resetSpeed() {
 		outtake.setSpeed(0);
 	}
