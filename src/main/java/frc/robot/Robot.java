@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -49,6 +50,14 @@ public class Robot extends TimedRobot {
 	private GenericEntry shooterLeftSpeedShuffleBox;
 	private GenericEntry shooterRightSpeedShuffleBox;
 	private GenericEntry shooterOnOffShuffleBox;
+	public static GenericEntry shooterSpeedSlider;
+
+	public static enum modeChoices {
+		AMP,
+		SPEAKER
+	}
+
+	public static SendableChooser<modeChoices> modeChooser = new SendableChooser<>();
 
 	@Override
 	public void robotInit() {
@@ -85,6 +94,14 @@ public class Robot extends TimedRobot {
 		shooterOnOffShuffleBox = gameTab.add("Shooter On Off", false).withSize(2, 2).withPosition(5, 0).getEntry();
 
 		gameTab.addCamera("Camera", "limelight", "http://10.16.48.11:5800").withSize(5, 5);
+
+		ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter");
+
+		modeChooser.setDefaultOption("Amp", modeChoices.AMP);
+		modeChooser.addOption("Speaker", modeChoices.SPEAKER);
+		shooterTab.add("Mode", modeChooser).withSize(2, 1);
+
+		shooterSpeedSlider = shooterTab.add("Speed", 0).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
 
 	}
 
@@ -202,6 +219,8 @@ public class Robot extends TimedRobot {
 		shooterLeftSpeedShuffleBox.setDouble(m_robotContainer.getOuttake().getLeftWheelSpeed());
 		shooterRightSpeedShuffleBox.setDouble(m_robotContainer.getOuttake().getRightWheelSpeed());
 		shooterOnOffShuffleBox.setBoolean(m_robotContainer.getOuttake().getSpeed() > 0.5);
+		
+		SmartDashboard.putString("Mode", modeChooser.getSelected().toString());
 	
 		SmartDashboard.putNumber("FrontLeftTurningDesiredState", m_robotContainer.getDrivetrain().getFrontLeftModule().getDesiredState().angle.getRadians());
 		SmartDashboard.putNumber("RearLeftTurningDesiredState", m_robotContainer.getDrivetrain().getRearLeftModule().getDesiredState().angle.getRadians());

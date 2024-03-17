@@ -13,6 +13,8 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.NeoMotorConstants;
 
 public class Outtake extends SubsystemBase {
@@ -65,8 +67,17 @@ public class Outtake extends SubsystemBase {
     }
 
     public void flywheel(double power){
+        String mode = Robot.modeChooser.getSelected().toString();
+
+        power = Robot.shooterSpeedSlider.getDouble(0);
+        
         rightWheel.set(power);
-        leftWheel.set(power * .35);
+
+        if(mode == "AMP") {
+            leftWheel.set(power);
+        } else {
+            leftWheel.set(power * .35);
+        }
     }
 
     public void roller(double power){
