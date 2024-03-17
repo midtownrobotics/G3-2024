@@ -26,7 +26,7 @@ public class Intake extends SubsystemBase{
         runExternal.setSmartCurrentLimit(NeoMotorConstants.INTAKE_CURRENT_LIMIT);
         runInternal.setSmartCurrentLimit(NeoMotorConstants.INTAKE_CURRENT_LIMIT);
 
-        runInternal.setInverted(false);
+        runInternal.setInverted(true);
 
         externalPivot.set(Value.kForward);
     }
