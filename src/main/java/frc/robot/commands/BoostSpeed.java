@@ -11,10 +11,10 @@ public class BoostSpeed extends Command {
 
     @Override
     public void initialize() {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
+        //DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        //LocalDateTime now = LocalDateTime.now();
         
-        SmartDashboard.putString("boost", dtf.format(now));
+        //SmartDashboard.putString("boost", dtf.format(now));
         RobotContainer.doSpeedBoost = true;
     }
 
