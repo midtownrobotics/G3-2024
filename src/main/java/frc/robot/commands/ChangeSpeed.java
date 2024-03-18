@@ -18,9 +18,7 @@ public class ChangeSpeed extends Command{
     @Override
     public void initialize() {
         outtake.setSpeed(speed);
-        if (mode != "stop") {
-            outtake.setMode(mode);
-        }
+        outtake.setMode(mode);
     }
 
 }
