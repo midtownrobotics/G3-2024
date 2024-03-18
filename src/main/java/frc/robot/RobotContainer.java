@@ -84,7 +84,7 @@ public class RobotContainer {
 	private final SwerveDrivetrain drivetrain = new SwerveDrivetrain();
 	private final Climber climber = new Climber(CAN50, CAN51, DIO0, DIO1);
 	private final Outtake outtake = new Outtake(CAN33, CAN32, CAN30, CAN31, CAN34, DIO2);
-	private final Intake intake = new Intake(CAN40, CAN41, PCM01, DIO6);
+	private final Intake intake = new Intake(CAN41, CAN40, PCM01, DIO6);
 	public void resetSpeed() {
 		outtake.setSpeed(0);
 	}
@@ -180,13 +180,14 @@ public class RobotContainer {
 		operator.leftBumper().whileTrue(new RunIntake(intake, outtake, -1));
 		operator.leftTrigger(.1).whileTrue(new RunOuttake(outtake, -1));
 		operator.rightTrigger(.1).whileTrue(new IntakeOuttake(intake, outtake, .75));
-		operator.a().whileTrue(new ChangeSpeed(outtake, 1));
-		operator.b().whileTrue(new ChangeSpeed(outtake, 0));
+		operator.a().whileTrue(new ChangeSpeed(outtake, 1, "speaker"));
+		operator.x().whileTrue(new ChangeSpeed(outtake, 0.18, "amp"));
+		operator.b().whileTrue(new ChangeSpeed(outtake, 0, "stop"));
 	}
 
 	/**
 	 * Use this to pass the autonomous command to the main {@link Robot} class.
-	 *
+	 * 
 	 * @return the command to run in autonomous
 	 */
 	public Command getAutonomousCommand() {
@@ -194,10 +195,10 @@ public class RobotContainer {
 		switch (autonChooser.getSelected()) {
 			case SHOOT:
 				autoCommand = new SequentialCommandGroup(
-					new ChangeSpeed(outtake, 1).withTimeout(0.1),
+					new ChangeSpeed(outtake, 1, "speaker").withTimeout(0.1),
 					new RunFlywheel(outtake).withTimeout(2),
 					new IntakeOuttake(intake, outtake, .75).withTimeout(1),
-					new ChangeSpeed(outtake, 0).withTimeout(0.1),
+					new ChangeSpeed(outtake, 0, "speaker").withTimeout(0.1),
 					new RunFlywheel(outtake).withTimeout(0.1)
 				);
 				break;
@@ -206,10 +207,10 @@ public class RobotContainer {
 				break;
 			case SHOOT_STRAIGHT_TAXI:
 				autoCommand = new SequentialCommandGroup(
-					new ChangeSpeed(outtake, 1).withTimeout(0.1),
+					new ChangeSpeed(outtake, 1, "speaker").withTimeout(0.1),
 					new RunFlywheel(outtake).withTimeout(2),
 					new IntakeOuttake(intake, outtake, .75).withTimeout(2),
-					new ChangeSpeed(outtake, 0).withTimeout(0.1),
+					new ChangeSpeed(outtake, 0, "speaker").withTimeout(0.1),
 					new RunFlywheel(outtake).withTimeout(0.1),
 					new RunIntake(intake, outtake, .67).alongWith(new RunCommand(() -> drivetrain.drive(-.5, 0, 0, false), drivetrain).withTimeout(2)).withTimeout(2)
 				);

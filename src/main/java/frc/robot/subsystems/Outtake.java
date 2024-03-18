@@ -28,6 +28,7 @@ public class Outtake extends SubsystemBase {
     private final DutyCycleEncoder pivotEncoder;
     private double speed;
     private boolean intakeOuttake;
+    private String mode;
 
     public Outtake(CANSparkMax rightWheel, CANSparkMax leftWheel, CANSparkMax rollerLeader, CANSparkMax rollerFollower, CANSparkMax pivotOuttake, DigitalInput pivotDIO){
         this.rightWheel = rightWheel;
@@ -67,15 +68,13 @@ public class Outtake extends SubsystemBase {
     }
 
     public void flywheel(double power){
-        String mode = Robot.modeChooser.getSelected().toString();
-
         power = Robot.shooterSpeedSlider.getDouble(0);
-                
+
         rightWheel.set(power);
 
-        if(mode == "AMP") {
+        if(mode == "amp" || mode == "stop") {
             leftWheel.set(power);
-        } else {
+        } else if (mode == "speaker") {
             leftWheel.set(power * .35);
         }
     }
@@ -115,6 +114,10 @@ public class Outtake extends SubsystemBase {
 
     public void setSpeed(double change) {
         speed = change;
+    }
+
+    public void setMode(String newMode) {
+        mode = newMode;
     }
 
     public double getSpeed() {
