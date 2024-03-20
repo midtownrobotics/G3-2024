@@ -45,6 +45,7 @@ import frc.robot.commands.PivotOuttake;
 import frc.robot.commands.RunFlywheel;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.RunOuttake;
+import frc.robot.commands.SpeedPID;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Outtake;
@@ -183,6 +184,7 @@ public class RobotContainer {
 		operator.a().whileTrue(new ChangeSpeed(outtake, 1, "speaker"));
 		operator.x().whileTrue(new ChangeSpeed(outtake, 0.18, "amp"));
 		operator.b().whileTrue(new ChangeSpeed(outtake, 0, "stop"));
+		operator.y().whileTrue(new SpeedPID(outtake));
 	}
 
 	/**

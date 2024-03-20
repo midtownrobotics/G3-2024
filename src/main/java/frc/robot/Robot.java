@@ -101,7 +101,7 @@ public class Robot extends TimedRobot {
 		modeChooser.addOption("Speaker", modeChoices.SPEAKER);
 		shooterTab.add("Mode", modeChooser).withSize(2, 1);
 
-		shooterSpeedSlider = shooterTab.add("Speed", 0).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
+		shooterSpeedSlider = shooterTab.add("Speed", 0).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 10000)).getEntry();
 
 	}
 

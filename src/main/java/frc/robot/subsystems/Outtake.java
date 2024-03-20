@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.NeoMotorConstants;
+import frc.robot.Robot.modeChoices;
 
 public class Outtake extends SubsystemBase {
 
@@ -62,10 +63,10 @@ public class Outtake extends SubsystemBase {
         pivotOuttake.getEncoder().setPositionConversionFactor(360/4096);
         rightPID = rightWheel.getPIDController();
         leftPID = leftWheel.getPIDController();
-        rightPID.setP(0.1);
+        rightPID.setP(0.001);
         rightPID.setI(0);
         rightPID.setD(0);
-        leftPID.setP(0.1);
+        leftPID.setP(0.001);
         leftPID.setI(0);
         leftPID.setD(0);
         rightPID.setOutputRange(0, 1);
@@ -76,6 +77,20 @@ public class Outtake extends SubsystemBase {
     public void run(double power){
         flywheel(power);
         roller(power);
+    }
+
+    public void pidWheel() {
+        pidWheel(Robot.shooterSpeedSlider.getDouble(0));
+    }
+
+    public void pidWheel(double power) {
+        rightPID.setReference(power, ControlType.kVelocity);
+        if (Robot.modeChooser.getSelected() == modeChoices.AMP) {
+            leftPID.setReference(power, ControlType.kVelocity);
+        } else {
+            leftPID.setReference(power * .35, ControlType.kVelocity);
+        }
+        
     }
 
     public void flywheel(double power){
