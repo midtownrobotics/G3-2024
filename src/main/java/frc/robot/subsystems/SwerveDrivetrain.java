@@ -103,7 +103,7 @@ public class SwerveDrivetrain extends SubsystemBase {
 	// The gyro sensor
 	private final AHRS m_gyro = new AHRS(SPI.Port.kMXP); // usign SPI by default, which is what we want.
 
-	public final Pigeon2 pigeon = new Pigeon2(5);
+	public final Pigeon2 pigeon = new Pigeon2(5, "Sensors");
 
 	// Slew rate filter variables for controlling lateral acceleration
 	private double m_currentRotation = 0.0;
