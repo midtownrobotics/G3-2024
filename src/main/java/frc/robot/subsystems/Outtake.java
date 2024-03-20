@@ -94,9 +94,7 @@ public class Outtake extends SubsystemBase {
     }
 
     public void flywheel(double power){
-
         rightWheel.set(power);
-
         if(mode == "amp" || mode == "stop") {
             leftWheel.set(power);
         } else if (mode == "speaker") {
