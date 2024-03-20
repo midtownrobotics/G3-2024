@@ -120,24 +120,6 @@ public class Robot extends TimedRobot {
 		// block in order for anything in the Command-based framework to work.
 		// m_robotContainer.getDistanceThing();
 		CommandScheduler.getInstance().run();
-
-		timer ++;
-
-		noteSensorBoolean = m_robotContainer.getIntake().getNoteSensor();
-
-		if (noteSensorBoolean != noteSensorBooleanLast) {
-			noteSensorBooleanLast = noteSensorBoolean;
-			if (noteSensorBoolean) {
-				m_intakeBeamBreak.onTrue();
-				timer = 0;
-			}
-		}
-
-		double rumbleTimeSeconds = 0.25;
-
-		if (timer >= (rumbleTimeSeconds * 1000 / 20)) {
-			m_intakeBeamBreak.stop();
-		}
 	}
 
 	/** This function is called once each time the robot enters Disabled mode. */
@@ -186,6 +168,24 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 
 		updateToSmartDash();
+
+		timer ++;
+
+		noteSensorBoolean = m_robotContainer.getIntake().getNoteSensor();
+
+		if (noteSensorBoolean != noteSensorBooleanLast) {
+			noteSensorBooleanLast = noteSensorBoolean;
+			if (noteSensorBoolean) {
+				m_intakeBeamBreak.onTrue();
+				timer = 0;
+			}
+		}
+
+		double rumbleTimeSeconds = 0.25;
+
+		if (timer >= (rumbleTimeSeconds * 1000 / 20)) {
+			m_intakeBeamBreak.stop();
+		}
 	}
 
 	public void updateToSmartDash()
