@@ -12,8 +12,12 @@ import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.NeoMotorConstants;
+import frc.robot.Robot.modeChoices;
 
 public class Outtake extends SubsystemBase {
 
@@ -23,9 +27,11 @@ public class Outtake extends SubsystemBase {
     private final CANSparkMax pivotOuttake;
     private final CANSparkMax leftWheel;
     private final SparkPIDController pivotPID;
+    private final SparkPIDController rightPID;
+    private final SparkPIDController leftPID;
     private final DutyCycleEncoder pivotEncoder;
     private double speed;
-    private boolean intakeOuttake;
+    private String mode;
 
     public Outtake(CANSparkMax rightWheel, CANSparkMax leftWheel, CANSparkMax rollerLeader, CANSparkMax rollerFollower, CANSparkMax pivotOuttake, DigitalInput pivotDIO){
         this.rightWheel = rightWheel;
@@ -55,8 +61,17 @@ public class Outtake extends SubsystemBase {
         pivotPID.setD(0);
         pivotPID.setOutputRange(-1, 1);
         pivotOuttake.getEncoder().setPositionConversionFactor(360/4096);
+        rightPID = rightWheel.getPIDController();
+        leftPID = leftWheel.getPIDController();
+        rightPID.setP(0.001);
+        rightPID.setI(0);
+        rightPID.setD(0);
+        leftPID.setP(0.001);
+        leftPID.setI(0);
+        leftPID.setD(0);
+        rightPID.setOutputRange(0, 1);
+        leftPID.setOutputRange(0, 1);
         speed = 0;
-        intakeOuttake = false;
     }
 
     public void run(double power){
@@ -64,9 +79,27 @@ public class Outtake extends SubsystemBase {
         roller(power);
     }
 
+    public void pidWheel() {
+        pidWheel(Robot.shooterSpeedSlider.getDouble(0));
+    }
+
+    public void pidWheel(double power) {
+        rightPID.setReference(power, ControlType.kVelocity);
+        if (Robot.modeChooser.getSelected() == modeChoices.AMP) {
+            leftPID.setReference(power, ControlType.kVelocity);
+        } else {
+            leftPID.setReference(power * .35, ControlType.kVelocity);
+        }
+        
+    }
+
     public void flywheel(double power){
         rightWheel.set(power);
-        leftWheel.set(power * .35);
+        if(mode == "amp" || mode == "stop") {
+            leftWheel.set(power);
+        } else if (mode == "speaker") {
+            leftWheel.set(power * .35);
+        }
     }
 
     public void roller(double power){
@@ -104,6 +137,10 @@ public class Outtake extends SubsystemBase {
 
     public void setSpeed(double change) {
         speed = change;
+    }
+
+    public void setMode(String newMode) {
+        mode = newMode;
     }
 
     public double getSpeed() {

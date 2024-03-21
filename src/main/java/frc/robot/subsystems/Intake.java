@@ -22,11 +22,12 @@ public class Intake extends SubsystemBase{
         this.noteSensor = noteSensor;
         runExternal.restoreFactoryDefaults();
         runInternal.restoreFactoryDefaults();
+        runExternal.setInverted(true);
 
         runExternal.setSmartCurrentLimit(NeoMotorConstants.INTAKE_CURRENT_LIMIT_EXTERNAL);
         runInternal.setSmartCurrentLimit(NeoMotorConstants.INTAKE_CURRENT_LIMIT_INTERNAL);
 
-        runInternal.setInverted(true);
+        runInternal.setInverted(false);
 
         externalPivot.set(Value.kForward);
     }
