@@ -13,11 +13,13 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.NeoMotorConstants;
 
 public class Outtake extends SubsystemBase {
 
     private final CANSparkMax rightWheel;
     private final CANSparkMax rollerLeader;
+    private final CANSparkMax rollerFollower;
     private final CANSparkMax pivotOuttake;
     private final CANSparkMax leftWheel;
     private final SparkPIDController pivotPID;
@@ -28,6 +30,7 @@ public class Outtake extends SubsystemBase {
     public Outtake(CANSparkMax rightWheel, CANSparkMax leftWheel, CANSparkMax rollerLeader, CANSparkMax rollerFollower, CANSparkMax pivotOuttake, DigitalInput pivotDIO){
         this.rightWheel = rightWheel;
         this.rollerLeader = rollerLeader;
+        this.rollerFollower = rollerFollower;
         this.leftWheel = leftWheel;
         this.pivotOuttake = pivotOuttake;
         this.pivotEncoder = new DutyCycleEncoder(pivotDIO);
@@ -42,6 +45,10 @@ public class Outtake extends SubsystemBase {
         leftWheel.setInverted(true);
         rollerLeader.setInverted(true);
         rollerFollower.follow(rollerLeader, false);
+        rightWheel.setSmartCurrentLimit(NeoMotorConstants.STANDARD_NEO_CURRENT_LIMIT);
+        leftWheel.setSmartCurrentLimit(NeoMotorConstants.STANDARD_NEO_CURRENT_LIMIT);
+        rollerLeader.setSmartCurrentLimit(NeoMotorConstants.ROLLER_FEED_CURRENT_LIMIT);
+        rollerFollower.setSmartCurrentLimit(NeoMotorConstants.ROLLER_FEED_CURRENT_LIMIT);
         pivotPID = pivotOuttake.getPIDController();
         pivotPID.setP(0.1);
         pivotPID.setI(0);
@@ -101,6 +108,30 @@ public class Outtake extends SubsystemBase {
 
     public double getSpeed() {
         return speed;
+    }
+
+    public double getRightWheelMotorTemp() {
+        return rightWheel.getMotorTemperature();
+    }
+    
+    public double getLeftWheelMotorTemp() {
+        return leftWheel.getMotorTemperature();
+    }
+
+    public double getRollerLeaderMotorTemp() {
+        return rollerLeader.getMotorTemperature();
+    }
+
+    public double getRollerFollowerMotorTemp() {
+        return rollerFollower.getMotorTemperature();
+    }
+
+    public double getRightWheelSpeed() {
+        return rightWheel.getEncoder().getVelocity();
+    }
+
+    public double getLeftWheelSpeed() {
+        return leftWheel.getEncoder().getVelocity();
     }
 
 }
