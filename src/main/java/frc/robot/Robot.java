@@ -49,6 +49,9 @@ public class Robot extends TimedRobot {
 	private GenericEntry shooterLeftSpeedShuffleBox;
 	private GenericEntry shooterRightSpeedShuffleBox;
 	private GenericEntry shooterOnOffShuffleBox;
+	public static GenericEntry pivotP;
+	public static GenericEntry pivotD;
+	public static GenericEntry pivotAngle;
 
 	@Override
 	public void robotInit() {
@@ -75,6 +78,12 @@ public class Robot extends TimedRobot {
 		CLT = tempTab.add("Climber L T", 0).getEntry();
 		SRT = tempTab.add("Shooter R T", 0).getEntry();
 		SLT = tempTab.add("Shooter L T", 0).getEntry();
+
+		ShuffleboardTab pivotTab = Shuffleboard.getTab("Pivot");
+
+		pivotP = pivotTab.add("Pivot P", 0).getEntry();
+		pivotD = pivotTab.add("Pivot D", 0).getEntry();
+		pivotAngle = pivotTab.add("Pivot Angle", 0).getEntry();
 
 		ShuffleboardTab gameTab = Shuffleboard.getTab("Game");
 

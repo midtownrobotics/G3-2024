@@ -183,6 +183,7 @@ public class RobotContainer {
 		operator.rightTrigger(.1).whileTrue(new IntakeOuttake(intake, outtake, .75));
 		operator.a().whileTrue(new ChangeSpeed(outtake, 1));
 		operator.b().whileTrue(new ChangeSpeed(outtake, 0));
+		operator.y().whileTrue(new RunCommand(() -> outtake.setPivot(), outtake));
 	}
 
 	/**

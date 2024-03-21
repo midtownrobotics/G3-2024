@@ -13,6 +13,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.Constants.NeoMotorConstants;
 
 public class Outtake extends SubsystemBase {
@@ -86,7 +87,9 @@ public class Outtake extends SubsystemBase {
     }
 
     public void setPivot() {
-        // pivotPID.
+        pivotPID.setP(Robot.pivotP.getDouble(0));
+        pivotPID.setD(Robot.pivotD.getDouble(0));
+        setPivot(Robot.pivotAngle.getDouble(0));
     }
 
     public void run() {
