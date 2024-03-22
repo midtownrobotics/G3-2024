@@ -4,24 +4,34 @@
       "window": {
         "visible": true
       }
+    },
+    "Other Devices": {
+      "SPARK MAX [16]": {
+        "header": {
+          "open": true
+        }
+      }
     }
   },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
       "/Shuffleboard/Auton/Auton Mode Chooser": "String Chooser",
+      "/Shuffleboard/Game/Auton Mode Chooser": "String Chooser",
       "/SmartDashboard/Swerve Odometry": "Field2d"
     }
   },
   "NetworkTables": {
-    "Persistent Values": {
-      "open": false
-    },
-    "Retained Values": {
-      "open": false
-    },
-    "Transitory Values": {
-      "open": false
+    "retained": {
+      "Shuffleboard": {
+        "Game": {
+          "Auton Mode Chooser": {
+            "open": true
+          },
+          "open": true
+        },
+        "open": true
+      }
     }
   },
   "NetworkTables Info": {

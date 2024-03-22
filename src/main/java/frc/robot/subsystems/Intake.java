@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import frc.robot.Constants.NeoMotorConstants;
 
 public class Intake extends SubsystemBase{
@@ -21,20 +20,20 @@ public class Intake extends SubsystemBase{
         this.runInternal = runInternal;
         this.externalPivot = externalpivot;
         this.noteSensor = noteSensor;
-
         runExternal.restoreFactoryDefaults();
         runInternal.restoreFactoryDefaults();
+        runExternal.setInverted(true);
 
-        runExternal.setSmartCurrentLimit(NeoMotorConstants.INTAKE_CURRENT_LIMIT);
-        runInternal.setSmartCurrentLimit(NeoMotorConstants.INTAKE_CURRENT_LIMIT);
+        runExternal.setSmartCurrentLimit(NeoMotorConstants.INTAKE_CURRENT_LIMIT_EXTERNAL);
+        runInternal.setSmartCurrentLimit(NeoMotorConstants.INTAKE_CURRENT_LIMIT_INTERNAL);
 
-        runInternal.setInverted(true);
+        runInternal.setInverted(false);
 
         externalPivot.set(Value.kForward);
     }
 
     public void run(double power){
-        runExternal.set(power/2);
+        runExternal.set(power);
         runInternal.set(power);
     }
 
@@ -48,6 +47,10 @@ public class Intake extends SubsystemBase{
 
     public boolean getNoteSensor() {
         return noteSensor.get();
+    }
+
+    public double getInternalMotorTemp() {
+        return runInternal.getMotorTemperature();
     }
 
 }

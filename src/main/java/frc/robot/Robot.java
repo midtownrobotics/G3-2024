@@ -4,10 +4,19 @@
 
 package frc.robot;
 
+import java.util.Map;
+
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+// import edu.wpi.first.net.PortForwarder;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.IntakeBeamBreak;
 
 /**
@@ -21,15 +30,35 @@ public class Robot extends TimedRobot {
 
 	private RobotContainer m_robotContainer;
 	private IntakeBeamBreak m_intakeBeamBreak;
-	public boolean noteSensorBoolean;
-	private boolean noteSensorBooleanLast = false;
 
-	private int timer = 0;
+	private double timer;
+	public boolean noteSensorBoolean;
+	private boolean noteSensorBooleanLast;
 
 	/**
 	 * This function is run when the robot is first started up and should be used for any
 	 * initialization code.
 	 */
+	
+	private GenericEntry IT;
+	private GenericEntry CRT;
+	private GenericEntry CLT;
+	private GenericEntry SRT;
+	private GenericEntry SLT;
+	private GenericEntry noteSensorShuffleBox;
+	private GenericEntry speedBoostShuffleBox;
+	private GenericEntry shooterLeftSpeedShuffleBox;
+	private GenericEntry shooterRightSpeedShuffleBox;
+	private GenericEntry shooterOnOffShuffleBox;
+	public static GenericEntry shooterSpeedSlider;
+
+	public static enum modeChoices {
+		AMP,
+		SPEAKER
+	}
+
+	public static SendableChooser<modeChoices> modeChooser = new SendableChooser<>();
+
 	@Override
 	public void robotInit() {
 		// Port forwarders for LimeLight
@@ -47,6 +76,33 @@ public class Robot extends TimedRobot {
 		m_intakeBeamBreak = new IntakeBeamBreak();
 
 		SmartDashboard.putData("Swerve Odometry", m_robotContainer.getField());		
+
+		ShuffleboardTab tempTab = Shuffleboard.getTab("Motor Tempuratures");
+
+		IT = tempTab.add("Intake T", 0).getEntry();
+		CRT = tempTab.add("Climber R T", 0).getEntry();
+		CLT = tempTab.add("Climber L T", 0).getEntry();
+		SRT = tempTab.add("Shooter R T", 0).getEntry();
+		SLT = tempTab.add("Shooter L T", 0).getEntry();
+
+		ShuffleboardTab gameTab = Shuffleboard.getTab("Game");
+
+		noteSensorShuffleBox = gameTab.add("Note Detected", false).withSize(2, 2).withPosition(6, 2).getEntry();
+		speedBoostShuffleBox = gameTab.add("Boosting Speed", false).withSize(2, 2).withPosition(8, 2).getEntry();
+		shooterLeftSpeedShuffleBox = gameTab.add("Shooter Left Speed", 0).withWidget(BuiltInWidgets.kDial).withSize(2, 2).withProperties(Map.of("min", 0, "max", 8000)).withPosition(6, 0).getEntry();
+		shooterRightSpeedShuffleBox = gameTab.add("Shooter Right Speed", 0).withWidget(BuiltInWidgets.kDial).withSize(2, 2).withProperties(Map.of("min", 0, "max", 8000)).withPosition(8, 0).getEntry();
+		shooterOnOffShuffleBox = gameTab.add("Shooter On Off", false).withSize(2, 2).withPosition(4, 0).getEntry();
+
+		gameTab.addCamera("Camera", "Camera", "http://10.16.48.11:5800/").withPosition(0, 0).withSize(4, 4);
+
+		ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter");
+
+		modeChooser.setDefaultOption("Amp", modeChoices.AMP);
+		modeChooser.addOption("Speaker", modeChoices.SPEAKER);
+		shooterTab.add("Mode", modeChooser).withSize(2, 1);
+
+		shooterSpeedSlider = shooterTab.add("Speed", 0).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 10000)).getEntry();
+
 	}
 
 	/**
@@ -64,25 +120,6 @@ public class Robot extends TimedRobot {
 		// block in order for anything in the Command-based framework to work.
 		// m_robotContainer.getDistanceThing();
 		CommandScheduler.getInstance().run();
-
-		timer ++;
-
-		noteSensorBoolean = m_robotContainer.getIntake().getNoteSensor();
-
-		if (noteSensorBoolean != noteSensorBooleanLast) {
-			noteSensorBooleanLast = noteSensorBoolean;
-			if (noteSensorBoolean) {
-				m_intakeBeamBreak.onTrue();
-				timer = 0;
-			}
-		}
-
-		double rumbleTimeSeconds = 0.25;
-
-		if (timer >= (rumbleTimeSeconds * 1000 / 20)) {
-			m_intakeBeamBreak.stop();
-		}
-
 	}
 
 	/** This function is called once each time the robot enters Disabled mode. */
@@ -131,6 +168,24 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 
 		updateToSmartDash();
+
+		timer ++;
+
+		noteSensorBoolean = m_robotContainer.getIntake().getNoteSensor();
+
+		if (noteSensorBoolean != noteSensorBooleanLast) {
+			noteSensorBooleanLast = noteSensorBoolean;
+			if (noteSensorBoolean) {
+				m_intakeBeamBreak.onTrue();
+				timer = 0;
+			}
+		}
+
+		double rumbleTimeSeconds = 0.25;
+
+		if (timer >= (rumbleTimeSeconds * 1000 / 20)) {
+			m_intakeBeamBreak.stop();
+		}
 	}
 
 	public void updateToSmartDash()
@@ -157,7 +212,15 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("FR Abs", m_robotContainer.getDrivetrain().getFrontRightModule().getTurningAbsoluteEncoder().getAbsolutePosition());
 		SmartDashboard.putNumber("RR Abs", m_robotContainer.getDrivetrain().getRearRightModule().getTurningAbsoluteEncoder().getAbsolutePosition());
 
-		SmartDashboard.putBoolean("Note Sensor", m_robotContainer.getIntake().getNoteSensor());
+		//SmartDashboard.putBoolean("Note Sensor", m_robotContainer.getIntake().getNoteSensor());
+
+		noteSensorShuffleBox.setBoolean(m_robotContainer.getIntake().getNoteSensor());
+		speedBoostShuffleBox.setBoolean(RobotContainer.doSpeedBoost);
+		shooterLeftSpeedShuffleBox.setDouble(m_robotContainer.getOuttake().getLeftWheelSpeed() * (61/36));
+		shooterRightSpeedShuffleBox.setDouble(m_robotContainer.getOuttake().getRightWheelSpeed() * (61/36));
+		shooterOnOffShuffleBox.setBoolean(m_robotContainer.getOuttake().getSpeed() > 0.5);
+		
+		SmartDashboard.putString("Mode", modeChooser.getSelected().toString());
 	
 		SmartDashboard.putNumber("FrontLeftTurningDesiredState", m_robotContainer.getDrivetrain().getFrontLeftModule().getDesiredState().angle.getRadians());
 		SmartDashboard.putNumber("RearLeftTurningDesiredState", m_robotContainer.getDrivetrain().getRearLeftModule().getDesiredState().angle.getRadians());
@@ -176,6 +239,19 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("yaw", m_robotContainer.getDrivetrain().pigeon.getYaw());
 
 		SmartDashboard.putNumber("Pivot Encoder", m_robotContainer.getOuttake().getPivot() * (360/4096));
+
+
+		// Temps
+
+		// Intake
+		IT.setDouble(m_robotContainer.getIntake().getInternalMotorTemp());
+		// Climber
+		CRT.setDouble(m_robotContainer.getClimber().getRightMotorTemp());
+		CLT.setDouble(m_robotContainer.getClimber().getLeftMotorTemp());
+		// Shooter
+		SRT.setDouble(m_robotContainer.getOuttake().getRightWheelMotorTemp());
+		SLT.setDouble(m_robotContainer.getOuttake().getLeftWheelMotorTemp());
+
 
 		// SmartDashboard.putNumber("distance", m_robotContainer.getDistanceThing());
 	}

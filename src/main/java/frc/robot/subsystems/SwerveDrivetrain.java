@@ -16,13 +16,17 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.ctre.phoenix.sensors.Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
-
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.utils.SwerveUtils;
 import frc.robot.Ports;
@@ -37,10 +41,10 @@ public class SwerveDrivetrain extends SubsystemBase {
 	// public static final double REAR_LEFT_VIRTUAL_OFFSET_RADIANS = -0.934; // adjust as needed so that virtual (turn) position of wheel is zero when straight
 	// public static final double REAR_RIGHT_VIRTUAL_OFFSET_RADIANS = +1.021; // adjust as needed so that virtual (turn) position of wheel is zero when straight
 
-	public static final double FRONT_LEFT_VIRTUAL_OFFSET_RADIANS = -3.03; // adjust as needed so that virtual (turn) position of wheel is zero when straight
-	public static final double FRONT_RIGHT_VIRTUAL_OFFSET_RADIANS = 2.69-Math.PI; // adjust as needed so that virtual (turn) position of wheel is zero when straight
-	public static final double REAR_LEFT_VIRTUAL_OFFSET_RADIANS = -2.33+Math.PI; // adjust as needed so that virtual (turn) position of wheel is zero when straight
-	public static final double REAR_RIGHT_VIRTUAL_OFFSET_RADIANS = Math.PI/2+Math.PI/16; // adjust as needed so that virtual (turn) position of wheel is zero when straight
+	public static final double FRONT_LEFT_VIRTUAL_OFFSET_RADIANS = -3.03+Math.PI; // adjust as needed so that virtual (turn) position of wheel is zero when straight
+	public static final double FRONT_RIGHT_VIRTUAL_OFFSET_RADIANS = 2.69; // adjust as needed so that virtual (turn) position of wheel is zero when straight
+	public static final double REAR_LEFT_VIRTUAL_OFFSET_RADIANS = -2.33; // adjust as needed so that virtual (turn) position of wheel is zero when straight
+	public static final double REAR_RIGHT_VIRTUAL_OFFSET_RADIANS = Math.PI/2+Math.PI/16-Math.PI; // adjust as needed so that virtual (turn) position of wheel is zero when straight
     static final int GYRO_ORIENTATION = 1; // might be able to merge with kGyroReversed
 
 	public static final double FIELD_LENGTH_INCHES = 54*12+1; // 54ft 1in
@@ -58,6 +62,15 @@ public class SwerveDrivetrain extends SubsystemBase {
 	static final double TURN_DERIVATIVE_GAIN = 0.0; // 0.0001
 	
 	static final int DEGREE_THRESHOLD = 10; // 3;
+
+	private GenericEntry FLDT;
+	private GenericEntry FLTT;
+	private GenericEntry FRDT;
+	private GenericEntry FRTT;
+	private GenericEntry RRDT;
+	private GenericEntry RRTT;
+	private GenericEntry RLDT;
+	private GenericEntry RLTT;
 	
 	private final static int TURN_ON_TARGET_MINIMUM_COUNT = 10; // number of times/iterations we need to be on target to really be on target
 	// end turn settings	
@@ -90,7 +103,7 @@ public class SwerveDrivetrain extends SubsystemBase {
 	// The gyro sensor
 	private final AHRS m_gyro = new AHRS(SPI.Port.kMXP); // usign SPI by default, which is what we want.
 
-	public final Pigeon2 pigeon = new Pigeon2(5);
+	public final Pigeon2 pigeon = new Pigeon2(5, "Sensors");
 
 	// Slew rate filter variables for controlling lateral acceleration
 	private double m_currentRotation = 0.0;
@@ -149,6 +162,20 @@ public class SwerveDrivetrain extends SubsystemBase {
 		
 		turnPidController.enableContinuousInput(-180, 180); // because -180 degrees is the same as 180 degrees (needs input range to be defined first)
 		turnPidController.setTolerance(DEGREE_THRESHOLD); // n degree error tolerated
+
+		ShuffleboardTab tempTab = Shuffleboard.getTab("Motor Tempuratures");
+		// Front Left
+		this.FLDT = tempTab.add("FL D Temp", 0).getEntry();
+		this.FLTT = tempTab.add("FL T Temp", 0).getEntry();
+		// Front Right
+		this.FRDT = tempTab.add("FR D Temp", 0).getEntry();
+		this.FRTT = tempTab.add("FR T Temp", 0).getEntry();
+		// Rear Left
+		this.RLDT = tempTab.add("RL D Temp", 0).getEntry();
+		this.RLTT = tempTab.add("RL T Temp", 0).getEntry();
+		// Rear Right
+		this.RRDT = tempTab.add("RR D Temp", 0).getEntry();
+		this.RRTT = tempTab.add("RR T Temp", 0).getEntry();
 	}
 
 	@Override
@@ -164,6 +191,19 @@ public class SwerveDrivetrain extends SubsystemBase {
 			});
 
 		calculateTurnAngleUsingPidController();
+
+		// Sets the tempuratures for the motors
+		FLDT.setDouble(m_frontLeft.getTurningTemp());
+		FLTT.setDouble(m_frontLeft.getTurningTemp());
+
+		FRDT.setDouble(m_frontRight.getTurningTemp());
+		FRTT.setDouble(m_frontRight.getTurningTemp());
+
+		RLDT.setDouble(m_rearLeft.getTurningTemp());
+		RLTT.setDouble(m_rearLeft.getTurningTemp());
+
+		RRDT.setDouble(m_rearRight.getTurningTemp());
+		RRTT.setDouble(m_rearRight.getTurningTemp());
 	}
 
 	/**
@@ -192,12 +232,12 @@ public class SwerveDrivetrain extends SubsystemBase {
 			pose);
 	}
 
-	public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
-		drive(xSpeed, ySpeed, rot, fieldRelative, false);
+	public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean speedBoost) {
+		drive(xSpeed, ySpeed, rot, fieldRelative, false, speedBoost);
 	}
 
-	public void drive(double xSpeed, double ySpeed, double rot) {
-		drive(xSpeed, ySpeed, rot, true);
+	public void drive(double xSpeed, double ySpeed, double rot, boolean speedBoost) {
+		drive(xSpeed, ySpeed, rot, true, speedBoost);
 	}
 
 	/**
@@ -210,7 +250,7 @@ public class SwerveDrivetrain extends SubsystemBase {
 	 *                      field.
 	 * @param rateLimit     Whether to enable rate limiting for smoother control.
 	 */
-	public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
+	public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit, boolean speedBoost) {
 		
 		double xSpeedCommanded;
 		double ySpeedCommanded;
@@ -266,8 +306,17 @@ public class SwerveDrivetrain extends SubsystemBase {
 		}
 
 		// Convert the commanded speeds into the correct units for the drivetrain
-		double xSpeedDelivered = xSpeedCommanded * DrivetrainConstants.MAX_SPEED_METERS_PER_SECOND;
-		double ySpeedDelivered = ySpeedCommanded * DrivetrainConstants.MAX_SPEED_METERS_PER_SECOND;
+		double maxSpeed;
+
+		if (speedBoost) {
+			maxSpeed = DrivetrainConstants.MAX_SPEED_METERS_PER_SECOND_BOOSTED;
+		} else {
+			maxSpeed = DrivetrainConstants.MAX_SPEED_METERS_PER_SECOND;
+		}
+
+		double xSpeedDelivered = xSpeedCommanded * maxSpeed;
+		double ySpeedDelivered = ySpeedCommanded * maxSpeed;
+
 		double rotDelivered = m_currentRotation * DrivetrainConstants.MAX_ANGULAR_SPEED_RADIANS_PER_SECOND;
 
 		var swerveModuleStates = DrivetrainConstants.DRIVE_KINEMATICS.toSwerveModuleStates(
@@ -276,7 +325,7 @@ public class SwerveDrivetrain extends SubsystemBase {
 				: new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
 
 		SwerveDriveKinematics.desaturateWheelSpeeds(
-			swerveModuleStates, DrivetrainConstants.MAX_SPEED_METERS_PER_SECOND);
+			swerveModuleStates, maxSpeed);
 
 		m_frontLeft.setDesiredState(swerveModuleStates[0]);
 		m_frontRight.setDesiredState(swerveModuleStates[1]);
@@ -328,7 +377,7 @@ public class SwerveDrivetrain extends SubsystemBase {
 
 	public void stop()
 	{
-		drive(0, 0, 0, true, false);
+		drive(0, 0, 0, true, false, false);
 
 		isTurning = false;
 	}
@@ -505,3 +554,10 @@ public class SwerveDrivetrain extends SubsystemBase {
 
 
 //fortnite vbux
+}
+
+//                          _______
+//                         | -   - |
+//                         | |   | |
+//erik is birth today day! |_\ - /_|
+//fortnite vbux              \___/
