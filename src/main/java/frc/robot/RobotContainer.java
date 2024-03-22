@@ -178,7 +178,7 @@ public class RobotContainer {
 		driver.a().whileTrue(new RunCommand(() -> drivetrain.zeroHeading(), drivetrain));
 		operator.povUp().whileTrue(new PivotOuttake(outtake, .75));
 		operator.povDown().whileTrue(new PivotOuttake(outtake, -.75));
-		operator.rightBumper().whileTrue(new SequentialCommandGroup(new RunIntake(intake, outtake, -1).withTimeout(intakeTimer.getDouble(0)), new RunIntake(intake, outtake, 1)));
+		operator.rightBumper().whileTrue(new RunIntake(intake, outtake, 1));
 		operator.leftBumper().whileTrue(new RunIntake(intake, outtake, -1));
 		operator.leftTrigger(.1).whileTrue(new RunOuttake(outtake, -1));
 		operator.rightTrigger(.1).whileTrue(new IntakeOuttake(intake, outtake, .75));
