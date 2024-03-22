@@ -8,6 +8,7 @@ public class RunIntake extends Command {
     private final Intake intake;
     private final Outtake outtake;
     private final double power;
+    private int timer;
  
     public RunIntake(Intake intake, Outtake outtake, double power) {
         this.intake = intake;
@@ -16,11 +17,19 @@ public class RunIntake extends Command {
  
         addRequirements(intake);
     }
+
+    @Override
+    public void initialize() {
+        timer = 0;
+    }
  
     @Override
     public void execute() {
         intake.run(power);
         outtake.roller(0.1);
+        if (intake.getNoteSensor()){
+            timer++;
+        }
     }
 
     @Override
@@ -31,6 +40,6 @@ public class RunIntake extends Command {
 
     @Override
     public boolean isFinished() {
-        return intake.getNoteSensor();
+        return intake.getNoteSensor() && timer>10;
     }
 }

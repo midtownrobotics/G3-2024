@@ -179,7 +179,7 @@ public class RobotContainer {
 		operator.rightBumper().whileTrue(new SequentialCommandGroup(new RunIntake(intake, outtake, -1).withTimeout(intakeTimer.getDouble(0)), new RunIntake(intake, outtake, 1)));
 		operator.leftBumper().whileTrue(new RunIntake(intake, outtake, -1));
 		operator.leftTrigger(.1).whileTrue(new RunOuttake(outtake, -1));
-		operator.rightTrigger(.1).whileTrue(new IntakeOuttake(intake, outtake, .75));
+		operator.rightTrigger(.1).whileTrue(new IntakeOuttake(intake, outtake, 1));
 		operator.a().whileTrue(new ChangeSpeed(outtake, 1));
 		operator.b().whileTrue(new ChangeSpeed(outtake, 0));
 	}

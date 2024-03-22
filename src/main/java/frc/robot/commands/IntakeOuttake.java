@@ -18,9 +18,8 @@ public class IntakeOuttake extends Command {
     @Override
     public void initialize() {
         intake.run(power);
-        if (outtake.getSpeed() != 0) {
-            outtake.run();
-        }
+        outtake.flywheel();
+        outtake.roller(power);
     }
 
     @Override
