@@ -52,6 +52,9 @@ public class Robot extends TimedRobot {
 	private GenericEntry shooterOnOffShuffleBox;
 	public static GenericEntry shooterSpeedSlider;
 
+	public static GenericEntry shooterP;
+	public static GenericEntry shooterD;
+
 	public static enum modeChoices {
 		AMP,
 		SPEAKER
@@ -100,6 +103,9 @@ public class Robot extends TimedRobot {
 		modeChooser.setDefaultOption("Amp", modeChoices.AMP);
 		modeChooser.addOption("Speaker", modeChoices.SPEAKER);
 		shooterTab.add("Mode", modeChooser).withSize(2, 1);
+
+		shooterP = shooterTab.add("Shooter P", 0).getEntry();
+		shooterD = shooterTab.add("Shooter D", 0).getEntry();
 
 		shooterSpeedSlider = shooterTab.add("Speed", 0).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 10000)).getEntry();
 

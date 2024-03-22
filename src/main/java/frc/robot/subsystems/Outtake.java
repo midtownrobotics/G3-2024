@@ -84,6 +84,11 @@ public class Outtake extends SubsystemBase {
     }
 
     public void pidWheel(double power) {
+        rightPID.setP(Robot.shooterP.getDouble(0));
+        rightPID.setD(Robot.shooterD.getDouble(0));
+        leftPID.setP(Robot.shooterP.getDouble(0));
+        leftPID.setD(Robot.shooterD.getDouble(0));
+
         rightPID.setReference(power, ControlType.kVelocity);
         if (Robot.modeChooser.getSelected() == modeChoices.AMP) {
             leftPID.setReference(power, ControlType.kVelocity);
