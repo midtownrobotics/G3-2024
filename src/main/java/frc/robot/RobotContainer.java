@@ -132,9 +132,9 @@ public class RobotContainer {
 			
 		drivetrain.setDefaultCommand(new RunCommand(
 			() -> drivetrain.drive(
-				MathUtil.applyDeadband((driver.getLeftY() * Math.abs(driver.getLeftY()))*control_limiter, JOYSTICK_Y1_AXIS_THRESHOLD),
-				MathUtil.applyDeadband((driver.getLeftX() * Math.abs(driver.getLeftX()))*control_limiter, JOYSTICK_X1_AXIS_THRESHOLD),
-				MathUtil.applyDeadband((driver.getRightX() * Math.abs(driver.getRightX()))*control_limiter, JOYSTICK_X2_AXIS_THRESHOLD),
+				deadzone(driver.getLeftY(), driver.getLeftX(), driver.getRightX(), JOYSTICK_Y1_AXIS_THRESHOLD)*control_limiter,
+				deadzone(driver.getLeftX(), driver.getLeftY(), driver.getRightX(), JOYSTICK_X1_AXIS_THRESHOLD)*control_limiter,
+				deadzone(driver.getRightX(), driver.getLeftY(), driver.getLeftX(), JOYSTICK_X2_AXIS_THRESHOLD)*control_limiter,
 		 		true, false, doSpeedBoost), drivetrain));
 		climber.setDefaultCommand(new Climb(climber, operator));
 		outtake.setDefaultCommand(new RunFlywheel(outtake));
@@ -163,6 +163,14 @@ public class RobotContainer {
 		
 	// }
 
+	public double deadzone(double a, double b, double c, double zone) {
+		if (Math.sqrt(Math.pow(a, 2)+Math.pow(b, 2)+Math.pow(c, 2)) > zone) {
+			return a * Math.abs(a);
+		} else {
+			return 0;
+		}
+	}
+
 	/**
 	 * Use this method to define your button->command mappings. Buttons can be
 	 * created by
@@ -185,7 +193,6 @@ public class RobotContainer {
 		operator.a().whileTrue(new ChangeSpeed(outtake, 1, "speaker"));
 		operator.x().whileTrue(new ChangeSpeed(outtake, 0.18, "amp"));
 		operator.b().whileTrue(new ChangeSpeed(outtake, 0, "stop"));
-		operator.y().whileTrue(new SpeedPID(outtake));
 	}
 
 	/**
