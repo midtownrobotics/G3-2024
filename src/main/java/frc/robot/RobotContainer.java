@@ -5,6 +5,9 @@
 package frc.robot;
 
 import com.revrobotics.CANSparkMax;
+
+import java.util.List;
+
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -12,7 +15,12 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -97,7 +105,8 @@ public class RobotContainer {
 	public static enum Auton {
 		STRAIGHT_TAXI,
 		SHOOT,
-		SHOOT_STRAIGHT_TAXI
+		SHOOT_STRAIGHT_TAXI,
+		TRAJECTORY
 	}
 
 	private final ShuffleboardTab autonTab = Shuffleboard.getTab("Auton");
@@ -214,6 +223,22 @@ public class RobotContainer {
 					new RunFlywheel(outtake).withTimeout(0.1),
 					new RunIntake(intake, outtake, .67).alongWith(new RunCommand(() -> drivetrain.drive(-.5, 0, 0, false), drivetrain).withTimeout(2)).withTimeout(2)
 				);
+				break;
+			case TRAJECTORY:
+				TrajectoryConfig trajectoryConfig =
+				new TrajectoryConfig(AutoConstants.MAX_SPEED_METERS_PER_SECOND, AutoConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
+					.setKinematics(Constants.DrivetrainConstants.DRIVE_KINEMATICS);
+				Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
+					new Pose2d(0, 0, new Rotation2d(0)),
+					List.of(
+						new Translation2d(1, 1),
+						new Translation2d(-1, -1)
+					),
+					new Pose2d(3, 0, new Rotation2d(0)),
+					trajectoryConfig
+				);
+				autoCommand = drivetrain.followTrajectory(trajectory);
+				break;
 			default:
 				break;
 		}

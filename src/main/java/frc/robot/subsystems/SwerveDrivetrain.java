@@ -343,11 +343,7 @@ public class SwerveDrivetrain extends SubsystemBase {
 		m_rearRight.setDesiredState(swerveModuleStates[3]);
 	}
 
-	public Command followTrajectory() {
-		TrajectoryConfig trajectoryConfig =
-			new TrajectoryConfig(AutoConstants.MAX_SPEED_METERS_PER_SECOND, AutoConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
-			.setKinematics(Constants.DrivetrainConstants.DRIVE_KINEMATICS);
-		Trajectory trajectory = TrajectoryGenerator.generateTrajectory(new Pose2d(0, 0, new Rotation2d(0)), List.of(new Translation2d(1, 1), new Translation2d(-1, -1)), new Pose2d(3, 0, new Rotation2d(0)), trajectoryConfig);
+	public Command followTrajectory(Trajectory trajectory) {
 		ProfiledPIDController thetaController = new ProfiledPIDController(AutoConstants.THETA_CONTROLLER_P, 0, 0, AutoConstants.THETA_CONTROLLER_CONSTRAINTS);
 		SwerveControllerCommand autoCommand = new SwerveControllerCommand(trajectory, this::getPose, Constants.DrivetrainConstants.DRIVE_KINEMATICS, new PIDController(AutoConstants.X_CONTROLLER_P, 0, 0), new PIDController(AutoConstants.Y_CONTROLLER_P, 0, 0), thetaController, this::setModuleStates, this);
 		return autoCommand;
