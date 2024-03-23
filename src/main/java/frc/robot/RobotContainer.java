@@ -137,7 +137,7 @@ public class RobotContainer {
 				deadzone(driver.getRightX(), driver.getLeftY(), driver.getLeftX(), JOYSTICK_X2_AXIS_THRESHOLD)*control_limiter,
 		 		true, false, doSpeedBoost), drivetrain));
 		climber.setDefaultCommand(new Climb(climber, operator));
-		outtake.setDefaultCommand(new RunFlywheel(outtake));
+		outtake.setDefaultCommand(new SpeedPID(outtake));
 		
 	}
 
@@ -190,8 +190,8 @@ public class RobotContainer {
 		operator.leftBumper().whileTrue(new RunIntake(intake, outtake, -1));
 		operator.leftTrigger(.1).whileTrue(new RunOuttake(outtake, -1));
 		operator.rightTrigger(.1).whileTrue(new IntakeOuttake(intake, outtake, .75));
-		operator.a().whileTrue(new ChangeSpeed(outtake, 1, "speaker"));
-		operator.x().whileTrue(new ChangeSpeed(outtake, 0.18, "amp"));
+		operator.a().whileTrue(new ChangeSpeed(outtake, 4500, "speaker"));
+		operator.x().whileTrue(new ChangeSpeed(outtake, 700, "amp"));
 		operator.b().whileTrue(new ChangeSpeed(outtake, 0, "stop"));
 	}
 

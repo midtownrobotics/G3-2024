@@ -5,25 +5,20 @@ import frc.robot.subsystems.Outtake;
 
 public class SpeedPID extends Command {
     private final Outtake outtake;
-    private String mode;
-    private double speed;
 
-    public SpeedPID(Outtake outtake, double speed, String mode) {
+    public SpeedPID(Outtake outtake) {
         this.outtake = outtake;
-        this.mode = mode;
-        this.speed = speed;
+        addRequirements(outtake);
     }
 
     @Override
     public void initialize() {
-        outtake.pidWheel(speed);
-        outtake.setMode(mode);
+        outtake.pidWheel(0);
     }
 
     public void execute() {
-        outtake.pidWheel(speed);
+        outtake.pidWheel();
         outtake.setRightSpeed();
-        outtake.setMode(mode);
     }
 
     @Override
