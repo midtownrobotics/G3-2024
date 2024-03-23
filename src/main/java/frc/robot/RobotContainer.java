@@ -185,7 +185,7 @@ public class RobotContainer {
 		operator.leftTrigger(.1).whileTrue(new RunOuttake(outtake, -1));
 		operator.rightTrigger(.1).whileTrue(new IntakeOuttake(intake, outtake, .75));
 		operator.a().whileTrue(new ChangeSpeed(outtake, 1, "speaker"));
-		operator.x().whileTrue(new ChangeSpeed(outtake, 0.18, "amp"));
+		operator.x().whileTrue(new ChangeSpeed(outtake, 0.19, "amp"));
 		operator.b().whileTrue(new ChangeSpeed(outtake, 0, "stop"));
 		operator.y().whileTrue(new SpeedPID(outtake));
 	}
