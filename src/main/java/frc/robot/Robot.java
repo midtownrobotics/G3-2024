@@ -51,6 +51,15 @@ public class Robot extends TimedRobot {
 	private GenericEntry shooterRightSpeedShuffleBox;
 	private GenericEntry shooterOnOffShuffleBox;
 	public static GenericEntry shooterSpeedSlider;
+	private GenericEntry shooterRightTargetBox;
+	private GenericEntry shooterLeftTargetBox;
+
+	public static GenericEntry shooterLP;
+	public static GenericEntry shooterLD;
+	public static GenericEntry shooterRP;
+	public static GenericEntry shooterRD;
+	public static GenericEntry shooterLFF;
+	public static GenericEntry shooterRFF;
 
 	public static enum modeChoices {
 		AMP,
@@ -93,6 +102,9 @@ public class Robot extends TimedRobot {
 		shooterRightSpeedShuffleBox = gameTab.add("Shooter Right Speed", 0).withWidget(BuiltInWidgets.kDial).withSize(2, 2).withProperties(Map.of("min", 0, "max", 8000)).withPosition(8, 0).getEntry();
 		shooterOnOffShuffleBox = gameTab.add("Shooter On Off", false).withSize(2, 2).withPosition(4, 0).getEntry();
 
+		shooterLeftTargetBox = gameTab.add("Shooter L Targer", 0).withWidget(BuiltInWidgets.kGraph).withPosition(4, 2).getEntry();
+		shooterRightTargetBox = gameTab.add("Shooter R Targer", 0).withWidget(BuiltInWidgets.kGraph).withPosition(5, 2).getEntry();
+
 		gameTab.addCamera("Camera", "Camera", "http://10.16.48.11:5800/").withPosition(0, 0).withSize(4, 4);
 
 		ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter");
@@ -100,6 +112,14 @@ public class Robot extends TimedRobot {
 		modeChooser.setDefaultOption("Amp", modeChoices.AMP);
 		modeChooser.addOption("Speaker", modeChoices.SPEAKER);
 		shooterTab.add("Mode", modeChooser).withSize(2, 1);
+
+		shooterLP = shooterTab.add("L P", 0).getEntry();
+		shooterLD = shooterTab.add("L D", 0).getEntry();
+		shooterRP = shooterTab.add("R P", 0).getEntry();
+		shooterRD = shooterTab.add("R D", 0).getEntry();
+
+		shooterLFF = shooterTab.add("L FF", 0).getEntry();
+		shooterRFF = shooterTab.add("R FF",0).getEntry();
 
 		shooterSpeedSlider = shooterTab.add("Speed", 0).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 10000)).getEntry();
 
@@ -218,6 +238,8 @@ public class Robot extends TimedRobot {
 		speedBoostShuffleBox.setBoolean(RobotContainer.doSpeedBoost);
 		shooterLeftSpeedShuffleBox.setDouble(m_robotContainer.getOuttake().getLeftWheelSpeed() * (61/36));
 		shooterRightSpeedShuffleBox.setDouble(m_robotContainer.getOuttake().getRightWheelSpeed() * (61/36));
+		shooterLeftTargetBox.setDouble(m_robotContainer.getOuttake().getLeftWheelTarget());
+		shooterRightTargetBox.setDouble(m_robotContainer.getOuttake().getRightWheelTarget());
 		shooterOnOffShuffleBox.setBoolean(m_robotContainer.getOuttake().getSpeed() > 0.5);
 		
 		SmartDashboard.putString("Mode", modeChooser.getSelected().toString());

@@ -8,11 +8,17 @@ public class SpeedPID extends Command {
 
     public SpeedPID(Outtake outtake) {
         this.outtake = outtake;
+        addRequirements(outtake);
     }
 
     @Override
     public void initialize() {
+        outtake.pidWheel(0);
+    }
+
+    public void execute() {
         outtake.pidWheel();
+        outtake.setRightSpeed();
     }
 
     @Override
