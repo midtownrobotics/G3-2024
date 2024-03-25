@@ -32,12 +32,12 @@ public class Climber extends SubsystemBase {
     }
 
     public void winch(double left, double right){
-        if (leftWinch.getOutputCurrent() >= ClimberConstants.CLIMBER_STOP_CURRENT){
+        if (leftWinch.getOutputCurrent() >= ClimberConstants.CLIMBER_STOP_CURRENT || leftSensor.get()){
             leftWinch.set(0);
         } else {
             leftWinch.set(left);
         }
-        if (rightWinch.getOutputCurrent() >= ClimberConstants.CLIMBER_STOP_CURRENT){
+        if (rightWinch.getOutputCurrent() >= ClimberConstants.CLIMBER_STOP_CURRENT || rightSensor.get()){
             rightWinch.set(0);
         } else {
             rightWinch.set(right);
