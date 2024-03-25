@@ -19,10 +19,12 @@ public class SpeedPID extends Command {
     public void execute() {
         outtake.pidWheel();
         outtake.setRightSpeed();
+        outtake.setPivot();
     }
 
     @Override
     public void end(boolean interrupted) {
         outtake.pidWheel(0);
+        outtake.pivot(0);
     }
 }

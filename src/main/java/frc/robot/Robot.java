@@ -50,7 +50,8 @@ public class Robot extends TimedRobot {
 	private GenericEntry shooterLeftSpeedShuffleBox;
 	private GenericEntry shooterRightSpeedShuffleBox;
 	private GenericEntry shooterOnOffShuffleBox;
-	public static GenericEntry shooterSpeedSlider;
+	private static ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter");
+	public static GenericEntry shooterSpeedSlider = shooterTab.add("Speed", 800).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 10000)).getEntry();
 	private GenericEntry shooterRightTargetBox;
 	private GenericEntry shooterLeftTargetBox;
 
@@ -101,7 +102,7 @@ public class Robot extends TimedRobot {
 
 		pivotP = pivotTab.add("Pivot P", 0).getEntry();
 		pivotD = pivotTab.add("Pivot D", 0).getEntry();
-		pivotAngle = pivotTab.add("Pivot Angle", 0).getEntry();
+		pivotAngle = pivotTab.add("Pivot Angle", 0.872).getEntry();
 
 		ShuffleboardTab gameTab = Shuffleboard.getTab("Game");
 
@@ -116,8 +117,6 @@ public class Robot extends TimedRobot {
 
 		gameTab.addCamera("Camera", "Camera", "http://10.16.48.11:5800/").withPosition(0, 0).withSize(4, 4);
 
-		ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter");
-
 		modeChooser.setDefaultOption("Amp", modeChoices.AMP);
 		modeChooser.addOption("Speaker", modeChoices.SPEAKER);
 		shooterTab.add("Mode", modeChooser).withSize(2, 1);
@@ -129,8 +128,6 @@ public class Robot extends TimedRobot {
 
 		shooterLFF = shooterTab.add("L FF", 0).getEntry();
 		shooterRFF = shooterTab.add("R FF",0).getEntry();
-
-		shooterSpeedSlider = shooterTab.add("Speed", 0).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 10000)).getEntry();
 
 	}
 
@@ -242,6 +239,8 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("RR Abs", m_robotContainer.getDrivetrain().getRearRightModule().getTurningAbsoluteEncoder().getAbsolutePosition());
 
 		//SmartDashboard.putBoolean("Note Sensor", m_robotContainer.getIntake().getNoteSensor());
+		SmartDashboard.putNumber("Shooter Angle", m_robotContainer.getOuttake().getPivot());
+		SmartDashboard.putNumber("Shooter Motor", m_robotContainer.getOuttake().getMotorPivot());
 
 		noteSensorShuffleBox.setBoolean(m_robotContainer.getIntake().getNoteSensor());
 		speedBoostShuffleBox.setBoolean(RobotContainer.doSpeedBoost);

@@ -42,6 +42,7 @@ import frc.robot.commands.DoNothing;
 import frc.robot.commands.IntakeOuttake;
 import frc.robot.commands.PivotIntake;
 import frc.robot.commands.PivotOuttake;
+import frc.robot.commands.PivotPID;
 import frc.robot.commands.RunFlywheel;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.RunOuttake;
@@ -140,7 +141,6 @@ public class RobotContainer {
 		 		true, false, doSpeedBoost), drivetrain));
 		climber.setDefaultCommand(new Climb(climber, operator));
 		outtake.setDefaultCommand(new SpeedPID(outtake));
-		
 	}
 
 	// public double getDistanceThing () {
@@ -186,8 +186,8 @@ public class RobotContainer {
 		driver.x().whileTrue(new RunCommand(() -> drivetrain.setX(), drivetrain));
 		driver.leftTrigger(.1).whileTrue(new BoostSpeed());
 		driver.a().whileTrue(new RunCommand(() -> drivetrain.zeroHeading(), drivetrain));
-		operator.povUp().whileTrue(new PivotOuttake(outtake, .75));
-		operator.povDown().whileTrue(new PivotOuttake(outtake, -.75));
+		operator.povUp().whileTrue(new PivotOuttake(outtake, -.5));
+		operator.povDown().whileTrue(new PivotOuttake(outtake, .5));
 		operator.rightBumper().whileTrue(new RunIntake(intake, outtake, 1));
 		operator.leftBumper().whileTrue(new RunIntake(intake, outtake, -1));
 		operator.leftTrigger(.1).whileTrue(new RunOuttake(outtake, -1));

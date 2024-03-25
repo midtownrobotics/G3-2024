@@ -10,6 +10,7 @@ import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
@@ -28,11 +29,12 @@ public class Outtake extends SubsystemBase {
     private final CANSparkMax rollerFollower;
     private final CANSparkMax pivotOuttake;
     private final CANSparkMax leftWheel;
-    private final SparkPIDController pivotPID;
+    private final PIDController pivotPID;
     private final SparkPIDController rightPID;
     private final SparkPIDController leftPID;
     private final DutyCycleEncoder pivotEncoder;
     private double speed;
+    private double angle;
     private String mode;
 
     public Outtake(CANSparkMax rightWheel, CANSparkMax leftWheel, CANSparkMax rollerLeader, CANSparkMax rollerFollower, CANSparkMax pivotOuttake, DigitalInput pivotDIO){
@@ -57,11 +59,10 @@ public class Outtake extends SubsystemBase {
         leftWheel.setSmartCurrentLimit(NeoMotorConstants.STANDARD_NEO_CURRENT_LIMIT);
         rollerLeader.setSmartCurrentLimit(NeoMotorConstants.ROLLER_FEED_CURRENT_LIMIT);
         rollerFollower.setSmartCurrentLimit(NeoMotorConstants.ROLLER_FEED_CURRENT_LIMIT);
-        pivotPID = pivotOuttake.getPIDController();
-        pivotPID.setP(0.1);
+        pivotPID = new PIDController(0, 0, 0);
+        pivotPID.setP(10);
         pivotPID.setI(0);
         pivotPID.setD(0);
-        pivotPID.setOutputRange(-1, 1);
         pivotOuttake.getEncoder().setPositionConversionFactor(360/4096);
         rightPID = rightWheel.getPIDController();
         leftPID = leftWheel.getPIDController();
@@ -73,6 +74,7 @@ public class Outtake extends SubsystemBase {
         leftPID.setD(0.02);
         leftPID.setFF(0.00024);
         speed = 0;
+        angle = 0.9;
     }
 
     public void run(double power){
@@ -125,14 +127,18 @@ public class Outtake extends SubsystemBase {
         return pivotEncoder.getAbsolutePosition();
     }
 
+    public double getMotorPivot() {
+        return pivotOuttake.getEncoder().getPosition();
+    }
+
     public void setPivot(double setpoint) {
-        pivotPID.setReference(setpoint, ControlType.kPosition);
+        double pidAmount = pivotPID.calculate(getPivot(), setpoint);
+        pivotOuttake.set(pidAmount);
+        SmartDashboard.putNumber("PID value", pidAmount);
     }
 
     public void setPivot() {
-        pivotPID.setP(Robot.pivotP.getDouble(0));
-        pivotPID.setD(Robot.pivotD.getDouble(0));
-        setPivot(Robot.pivotAngle.getDouble(0));
+        setPivot(angle);
     }
 
     public void run() {
@@ -150,6 +156,11 @@ public class Outtake extends SubsystemBase {
 
     public void setSpeed(double change) {
         speed = change;
+    }
+
+    public void setSpeed(double change, double angle) {
+        this.angle = angle;
+        setSpeed(change);
     }
 
     public void setMode(String newMode) {
