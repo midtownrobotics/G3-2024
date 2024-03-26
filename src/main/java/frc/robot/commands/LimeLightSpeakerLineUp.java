@@ -35,7 +35,6 @@ public class LimeLightSpeakerLineUp extends Command{
     public void execute() {
         currentX = entryX.getDouble(0);
         currentY = entryY.getDouble(0);
-        swerveDrivetrain.drive(limelightPID.calculate(targetX, currentX), limelightPID.calculate(targetY, currentY), , true);
     }
 
     @Override
