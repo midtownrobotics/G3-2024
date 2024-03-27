@@ -17,4 +17,16 @@ public class Limelight extends SubsystemBase{
     public NetworkTableEntry getY() {
         return networkTable.getEntry("ty");
     }
+
+    public NetworkTableEntry getSkew() {
+        return networkTable.getEntry("ts");
+    }
+
+    public NetworkTableEntry getZ() {
+        return networkTable.getEntry("tz");
+    }
+
+    public NetworkTableEntry targetPoseRobot() {
+        return networkTable.getEntry("targetpose_robotspace");
+    }
 }
