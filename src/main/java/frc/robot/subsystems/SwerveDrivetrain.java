@@ -22,10 +22,13 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Voltage;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 import java.util.List;
 
@@ -37,7 +40,9 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DrivetrainConstants;
+import frc.utils.ModifiedSignalLogger;
 import frc.utils.SwerveUtils;
+import frc.utils.SwerveVoltageRequest;
 import frc.robot.Constants;
 import frc.robot.Ports;
 
@@ -536,6 +541,14 @@ public class SwerveDrivetrain extends SubsystemBase {
 
 		drive(0, 0, output, false, false); // TODO double-check sign
 	}
+
+	private SwerveVoltageRequest driveVoltage = new SwerveVoltageRequest(true);
+	private SysIdRoutine driveSysId = new SysIdRoutine(
+		new SysIdRoutine.Config(null, null, null, ModifiedSignalLogger.logState()),
+		new SysIdRoutine.Mechanism(
+			(Measure<Voltage> volts) -> ,
+			null,
+			this));
 
 	
 
