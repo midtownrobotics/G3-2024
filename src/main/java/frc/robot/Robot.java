@@ -191,13 +191,12 @@ public class Robot extends TimedRobot {
 	public void updateToSmartDash()
 	{
 
-		for (int i = 0; i < m_robotContainer.getLimelight().targetPoseRobot().getDoubleArray(new Double[] {0.0}).length; i++) {
-			SmartDashboard.putNumber(String.format("limelight %d", i), m_robotContainer.getLimelight().targetPoseRobot().getDoubleArray(new Double[] {0.0})[i]);
-		}
 
-		SmartDashboard.putNumber("limelight x", m_robotContainer.getLimelight().getX().getDouble(0.0));
-		SmartDashboard.putNumber("limelight y", m_robotContainer.getLimelight().getY().getDouble(0.0));
-		SmartDashboard.putNumber("limelight z", m_robotContainer.getLimelight().targetPoseRobot().getDoubleArray(new Double[] {0.0})[2]);
+		SmartDashboard.putNumber("limelight x", m_robotContainer.getLimelight().getX());
+		SmartDashboard.putNumber("limelight y", m_robotContainer.getLimelight().getY());
+		SmartDashboard.putNumber("limelight z", m_robotContainer.getLimelight().getZ());
+		SmartDashboard.putNumber("Angle Offset", Math.toDegrees(m_robotContainer.getLimelight().getAngleOffset()));
+
 
 		// SmartDashboard.putNumber("FrontLeftDrivingEncoderPosition", m_robotContainer.getDrivetrain().getFrontLeftModule().getDrivingEncoder().getPosition());
 		// SmartDashboard.putNumber("FrontLeftTurningEncoderPosition", m_robotContainer.getDrivetrain().getFrontLeftModule().getTurningEncoder().getPosition());

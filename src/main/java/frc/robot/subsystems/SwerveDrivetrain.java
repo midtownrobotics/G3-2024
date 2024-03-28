@@ -44,7 +44,7 @@ public class SwerveDrivetrain extends SubsystemBase {
 	public static final double FRONT_LEFT_VIRTUAL_OFFSET_RADIANS = -3.03+Math.PI; // adjust as needed so that virtual (turn) position of wheel is zero when straight
 	public static final double FRONT_RIGHT_VIRTUAL_OFFSET_RADIANS = 2.69; // adjust as needed so that virtual (turn) position of wheel is zero when straight
 	public static final double REAR_LEFT_VIRTUAL_OFFSET_RADIANS = -2.33; // adjust as needed so that virtual (turn) position of wheel is zero when straight
-	public static final double REAR_RIGHT_VIRTUAL_OFFSET_RADIANS = Math.PI/2+Math.PI/16-Math.PI; // adjust as needed so that virtual (turn) position of wheel is zero when straight
+	public static final double REAR_RIGHT_VIRTUAL_OFFSET_RADIANS = Math.PI/4+Math.PI/16-Math.PI; // adjust as needed so that virtual (turn) position of wheel is zero when straight
     static final int GYRO_ORIENTATION = 1; // might be able to merge with kGyroReversed
 
 	public static final double FIELD_LENGTH_INCHES = 54*12+1; // 54ft 1in
@@ -103,7 +103,7 @@ public class SwerveDrivetrain extends SubsystemBase {
 	// The gyro sensor
 	private final AHRS m_gyro = new AHRS(SPI.Port.kMXP); // usign SPI by default, which is what we want.
 
-	public final Pigeon2 pigeon = new Pigeon2(5, "Sensors");
+	public final Pigeon2 pigeon = new Pigeon2(5);
 
 	// Slew rate filter variables for controlling lateral acceleration
 	private double m_currentRotation = 0.0;

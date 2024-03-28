@@ -10,36 +10,33 @@ import edu.wpi.first.math.controller.PIDController;
 public class LimeLightSpeakerLineUp extends Command{
     double targetX;
     double targetY;
-    NetworkTableEntry entryX;
-    NetworkTableEntry entryY;
-    double currentX;
-    double currentY;
     Limelight limelight;
-    SwerveDrivetrain swerveDrivetrain;
-    PIDController limelightPID;
-    PIDController limelightRotationPID;
-    
+    SwerveDrivetrain swerveDrivetrain;    
 
     public LimeLightSpeakerLineUp (double targetX, double targetY, Limelight limelight, SwerveDrivetrain swerveDrivetrain) {
         this.targetX = targetX;
         this.targetY = targetY;
-        entryX = limelight.getX();
-        entryY = limelight.getY();
+        this.limelight = limelight;
+        this.swerveDrivetrain = swerveDrivetrain;
         addRequirements(limelight);
         addRequirements(swerveDrivetrain);
-        limelightPID = new PIDController(Constants.LimeLightPostioningConstants.P, Constants.LimeLightPostioningConstants.I, Constants.LimeLightPostioningConstants.D);
-        limelightRotationPID = new PIDController(Constants.LimeLightPostioningConstants.rotP, Constants.LimeLightPostioningConstants.rotI, Constants.LimeLightPostioningConstants.rotD);
     }
 
     @Override
     public void execute() {
-        currentX = entryX.getDouble(0);
-        currentY = entryY.getDouble(0);
+        swerveDrivetrain.turnAngleUsingPidController(limelight.getAngleOffset());
+        swerveDrivetrain.calculateTurnAngleUsingPidController();
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        swerveDrivetrain.drive(0, 0, 0, false);
     }
 
     @Override
     public boolean isFinished() {
-        return (Math.abs(targetX - currentX) < Constants.LimeLightPostioningConstants.deviation && Math.abs(targetY - currentY) < Constants.LimeLightPostioningConstants.deviation);
+        //return (Math.abs(targetX - limelight.getX()) < Constants.LimeLightPostioningConstants.deviation && Math.abs(targetY - limelight.getY()) < Constants.LimeLightPostioningConstants.deviation);
+        return false;
     }
 
 

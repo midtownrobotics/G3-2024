@@ -10,23 +10,23 @@ public class Limelight extends SubsystemBase{
         this.networkTable = networkTable;
     }
 
-    public NetworkTableEntry getX() {
-        return networkTable.getEntry("tx");
+    public double getX() {
+        return networkTable.getEntry("targetpose_robotspace").getDoubleArray(new Double[] {0.0})[0]*100;
     }
 
-    public NetworkTableEntry getY() {
-        return networkTable.getEntry("ty");
+    public double getY() {
+        return networkTable.getEntry("ty").getDouble(0.0);
     }
 
-    public NetworkTableEntry getSkew() {
-        return networkTable.getEntry("ts");
+    public double getSkew() {
+        return networkTable.getEntry("ts").getDouble(0.0);
     }
 
-    public NetworkTableEntry getZ() {
-        return networkTable.getEntry("tz");
+    public double getZ() {
+        return networkTable.getEntry("targetpose_robotspace").getDoubleArray(new Double[] {0.0})[2]*100;
     }
 
-    public NetworkTableEntry targetPoseRobot() {
-        return networkTable.getEntry("targetpose_robotspace");
+    public double getAngleOffset() {
+        return Math.atan(getX()/getZ());
     }
 }

@@ -40,6 +40,7 @@ import frc.robot.commands.ChangeSpeed;
 import frc.robot.commands.Climb;
 import frc.robot.commands.DoNothing;
 import frc.robot.commands.IntakeOuttake;
+import frc.robot.commands.LimeLightSpeakerLineUp;
 import frc.robot.commands.PivotIntake;
 import frc.robot.commands.PivotOuttake;
 import frc.robot.commands.RunFlywheel;
@@ -200,6 +201,7 @@ public class RobotContainer {
 		operator.x().whileTrue(new ChangeSpeed(outtake, 0.18, "amp"));
 		operator.b().whileTrue(new ChangeSpeed(outtake, 0, "stop"));
 		operator.y().whileTrue(new SpeedPID(outtake));
+		driver.y().whileTrue(new LimeLightSpeakerLineUp(0, 0, limelight, drivetrain));
 	}
 
 	/**

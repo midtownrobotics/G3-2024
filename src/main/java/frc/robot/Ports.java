@@ -67,8 +67,8 @@ public class Ports {
 			public static final int REAR_LEFT_DRIVING = 19;
 			public static final int REAR_LEFT_TURNING = 20;
 
-			public static final int REAR_RIGHT_DRIVING = 16;
-			public static final int REAR_RIGHT_TURNING = 17;
+			public static final int REAR_RIGHT_DRIVING = 61;
+			public static final int REAR_RIGHT_TURNING = 62;
 			;
 			
 			// TODO
