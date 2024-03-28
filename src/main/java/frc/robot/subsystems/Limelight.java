@@ -23,10 +23,13 @@ public class Limelight extends SubsystemBase{
     }
 
     public double getZ() {
-        return networkTable.getEntry("targetpose_robotspace").getDoubleArray(new Double[] {0.0})[2]*100;
+        return networkTable.getEntry("targetpose_robotspace").getDoubleArray(new Double[] {0.0, 0.0, 0.0})[2]*100;
     }
 
     public double getAngleOffset() {
-        return Math.atan(getX()/getZ());
+        if (getX() == 0 && getZ() == 0) {
+            return 0;
+        }
+        return Math.atan2(getX(), getZ());
     }
 }

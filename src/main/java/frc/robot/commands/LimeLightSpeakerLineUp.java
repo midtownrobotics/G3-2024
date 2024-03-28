@@ -6,12 +6,15 @@ import frc.robot.subsystems.SwerveDrivetrain;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import frc.robot.Constants;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 public class LimeLightSpeakerLineUp extends Command{
     double targetX;
     double targetY;
     Limelight limelight;
-    SwerveDrivetrain swerveDrivetrain;    
+    SwerveDrivetrain swerveDrivetrain;
+    double previousAngle;
 
     public LimeLightSpeakerLineUp (double targetX, double targetY, Limelight limelight, SwerveDrivetrain swerveDrivetrain) {
         this.targetX = targetX;
@@ -24,13 +27,19 @@ public class LimeLightSpeakerLineUp extends Command{
 
     @Override
     public void execute() {
-        swerveDrivetrain.turnAngleUsingPidController(limelight.getAngleOffset());
-        swerveDrivetrain.calculateTurnAngleUsingPidController();
+        // swerveDrivetrain.turnAngleUsingPidController(limelight.getAngleOffset());
+        // swerveDrivetrain.calculateTurnAngleUsingPidController();
+        if (limelight.getAngleOffset() == 0){
+            swerveDrivetrain.getRearRightModule().setDesiredState(new SwerveModuleState(0, new Rotation2d(previousAngle)));
+        } else {
+            previousAngle = limelight.getAngleOffset();
+            swerveDrivetrain.getRearRightModule().setDesiredState(new SwerveModuleState(0, new Rotation2d(limelight.getAngleOffset())));
+        }
     }
 
     @Override
     public void end(boolean interrupted) {
-        swerveDrivetrain.drive(0, 0, 0, false);
+        swerveDrivetrain.drive(0, 0, 0, false, false);
     }
 
     @Override
