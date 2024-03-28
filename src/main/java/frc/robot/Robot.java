@@ -87,13 +87,13 @@ public class Robot extends TimedRobot {
 
 		ShuffleboardTab gameTab = Shuffleboard.getTab("Game");
 
-		noteSensorShuffleBox = gameTab.add("Note Detected", false).withSize(2, 2).withPosition(7, 2).getEntry();
-		speedBoostShuffleBox = gameTab.add("Boosting Speed", false).withSize(2, 2).withPosition(9, 2).getEntry();
-		shooterLeftSpeedShuffleBox = gameTab.add("Shooter Left Speed", 0).withWidget(BuiltInWidgets.kDial).withSize(2, 2).withProperties(Map.of("min", 0, "max", 8000)).withPosition(7, 0).getEntry();
-		shooterRightSpeedShuffleBox = gameTab.add("Shooter Right Speed", 0).withWidget(BuiltInWidgets.kDial).withSize(2, 2).withProperties(Map.of("min", 0, "max", 8000)).withPosition(9, 0).getEntry();
-		shooterOnOffShuffleBox = gameTab.add("Shooter On Off", false).withSize(2, 2).withPosition(5, 0).getEntry();
+		noteSensorShuffleBox = gameTab.add("Note Detected", false).withSize(2, 2).withPosition(6, 2).getEntry();
+		speedBoostShuffleBox = gameTab.add("Boosting Speed", false).withSize(2, 2).withPosition(8, 2).getEntry();
+		shooterLeftSpeedShuffleBox = gameTab.add("Shooter Left Speed", 0).withWidget(BuiltInWidgets.kDial).withSize(2, 2).withProperties(Map.of("min", 0, "max", 8000)).withPosition(6, 0).getEntry();
+		shooterRightSpeedShuffleBox = gameTab.add("Shooter Right Speed", 0).withWidget(BuiltInWidgets.kDial).withSize(2, 2).withProperties(Map.of("min", 0, "max", 8000)).withPosition(8, 0).getEntry();
+		shooterOnOffShuffleBox = gameTab.add("Shooter On Off", false).withSize(2, 2).withPosition(4, 0).getEntry();
 
-		//gameTab.addCamera("Camera", "limelight", "http://10.16.48.11:5800").withSize(5, 5);
+		gameTab.addCamera("Camera", "Camera", "http://10.16.48.11:5800/").withPosition(0, 0).withSize(4, 4);
 
 		ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter");
 
@@ -101,7 +101,7 @@ public class Robot extends TimedRobot {
 		modeChooser.addOption("Speaker", modeChoices.SPEAKER);
 		shooterTab.add("Mode", modeChooser).withSize(2, 1);
 
-		shooterSpeedSlider = shooterTab.add("Speed", 0).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
+		shooterSpeedSlider = shooterTab.add("Speed", 0).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 10000)).getEntry();
 
 	}
 
@@ -120,24 +120,6 @@ public class Robot extends TimedRobot {
 		// block in order for anything in the Command-based framework to work.
 		// m_robotContainer.getDistanceThing();
 		CommandScheduler.getInstance().run();
-
-		timer ++;
-
-		noteSensorBoolean = m_robotContainer.getIntake().getNoteSensor();
-
-		if (noteSensorBoolean != noteSensorBooleanLast) {
-			noteSensorBooleanLast = noteSensorBoolean;
-			if (noteSensorBoolean) {
-				m_intakeBeamBreak.onTrue();
-				timer = 0;
-			}
-		}
-
-		double rumbleTimeSeconds = 0.25;
-
-		if (timer >= (rumbleTimeSeconds * 1000 / 20)) {
-			m_intakeBeamBreak.stop();
-		}
 	}
 
 	/** This function is called once each time the robot enters Disabled mode. */
@@ -186,6 +168,24 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 
 		updateToSmartDash();
+
+		timer ++;
+
+		noteSensorBoolean = m_robotContainer.getIntake().getNoteSensor();
+
+		if (noteSensorBoolean != noteSensorBooleanLast) {
+			noteSensorBooleanLast = noteSensorBoolean;
+			if (noteSensorBoolean) {
+				m_intakeBeamBreak.onTrue();
+				timer = 0;
+			}
+		}
+
+		double rumbleTimeSeconds = 0.25;
+
+		if (timer >= (rumbleTimeSeconds * 1000 / 20)) {
+			m_intakeBeamBreak.stop();
+		}
 	}
 
 	public void updateToSmartDash()
@@ -216,8 +216,8 @@ public class Robot extends TimedRobot {
 
 		noteSensorShuffleBox.setBoolean(m_robotContainer.getIntake().getNoteSensor());
 		speedBoostShuffleBox.setBoolean(RobotContainer.doSpeedBoost);
-		shooterLeftSpeedShuffleBox.setDouble(m_robotContainer.getOuttake().getLeftWheelSpeed());
-		shooterRightSpeedShuffleBox.setDouble(m_robotContainer.getOuttake().getRightWheelSpeed());
+		shooterLeftSpeedShuffleBox.setDouble(m_robotContainer.getOuttake().getLeftWheelSpeed() * (61/36));
+		shooterRightSpeedShuffleBox.setDouble(m_robotContainer.getOuttake().getRightWheelSpeed() * (61/36));
 		shooterOnOffShuffleBox.setBoolean(m_robotContainer.getOuttake().getSpeed() > 0.5);
 		
 		SmartDashboard.putString("Mode", modeChooser.getSelected().toString());
