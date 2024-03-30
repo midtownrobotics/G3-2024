@@ -5,22 +5,20 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.SwerveDrivetrain;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import frc.robot.Constants;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.controller.PIDController;
 
 public class LimeLightSpeakerLineUp extends Command{
-    double targetX;
-    double targetY;
     Limelight limelight;
     SwerveDrivetrain swerveDrivetrain;
     double previousAngle;
+    PIDController limelightPID;
 
-    public LimeLightSpeakerLineUp (double targetX, double targetY, Limelight limelight, SwerveDrivetrain swerveDrivetrain) {
-        this.targetX = targetX;
-        this.targetY = targetY;
+    public LimeLightSpeakerLineUp (Limelight limelight, SwerveDrivetrain swerveDrivetrain) {
         this.limelight = limelight;
         this.swerveDrivetrain = swerveDrivetrain;
+        limelightPID = new PIDController(Constants.LimeLightPostioningConstants.P, Constants.LimeLightPostioningConstants.I, Constants.LimeLightPostioningConstants.D);
         addRequirements(limelight);
         addRequirements(swerveDrivetrain);
     }
@@ -28,13 +26,17 @@ public class LimeLightSpeakerLineUp extends Command{
     @Override
     public void execute() {
         // swerveDrivetrain.turnAngleUsingPidController(limelight.getAngleOffset());
-        // swerveDrivetrain.calculateTurnAngleUsingPidController();
+        // swerveDrivetrain.calculateTurnAngleUsingPidController();\
+        /* 
         if (limelight.getAngleOffset() == 0){
             swerveDrivetrain.getRearRightModule().setDesiredState(new SwerveModuleState(0, new Rotation2d(previousAngle)));
         } else {
             previousAngle = limelight.getAngleOffset();
             swerveDrivetrain.getRearRightModule().setDesiredState(new SwerveModuleState(0, new Rotation2d(limelight.getAngleOffset())));
         }
+        */
+        swerveDrivetrain.drive(0, 0, limelightPID.calculate(limelight.getAngleOffset()), isScheduled());
+
     }
 
     @Override

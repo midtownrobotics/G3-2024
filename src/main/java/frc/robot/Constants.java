@@ -137,9 +137,5 @@ public final class Constants {
 		public static final double P = 0;
 		public static final double I = 0;
 		public static final double D = 0;
-		public static final double rotP = 0;
-		public static final double rotI = 0;
-		public static final double rotD = 0;
-
 	}
 }

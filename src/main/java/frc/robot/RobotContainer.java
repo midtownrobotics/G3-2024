@@ -201,7 +201,7 @@ public class RobotContainer {
 		operator.x().whileTrue(new ChangeSpeed(outtake, 0.18, "amp"));
 		operator.b().whileTrue(new ChangeSpeed(outtake, 0, "stop"));
 		operator.y().whileTrue(new SpeedPID(outtake));
-		driver.y().whileTrue(new LimeLightSpeakerLineUp(0, 0, limelight, drivetrain));
+		driver.y().whileTrue(new LimeLightSpeakerLineUp(limelight, drivetrain));
 	}
 
 	/**
