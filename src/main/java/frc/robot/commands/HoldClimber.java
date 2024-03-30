@@ -23,4 +23,9 @@ public class HoldClimber extends Command{
         climber.pidWinch(left, right);
     }
 
+    @Override
+    public void end(boolean interrupted) {
+        
+    }
+
 }

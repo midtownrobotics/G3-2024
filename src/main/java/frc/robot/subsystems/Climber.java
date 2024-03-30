@@ -9,8 +9,11 @@ import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.ClimberConstants;
@@ -24,6 +27,11 @@ public class Climber extends SubsystemBase {
     private final DigitalInput rightSensor;
     private final SparkPIDController leftPID;
     private final SparkPIDController rightPID;
+    
+    private final GenericEntry climberP;
+    private final GenericEntry climberI;
+    private final GenericEntry climberD;
+
 
     public Climber(CANSparkMax leftWinch, CANSparkMax rightWinch, DigitalInput leftSensor, DigitalInput rightSensor) {
         this.leftWinch = leftWinch;
@@ -51,6 +59,10 @@ public class Climber extends SubsystemBase {
         rightPID.setD(0);
         rightPID.setOutputRange(-1, 1);
 
+        climberP = Shuffleboard.getTab("Climber PID").add("P", 0.0).getEntry();
+        climberI = Shuffleboard.getTab("Climber PID").add("I", 0.0).getEntry();
+        climberD = Shuffleboard.getTab("Climber PID").add("D", 0.0).getEntry();
+
     }
 
     public void winch(double left, double right){
@@ -67,6 +79,9 @@ public class Climber extends SubsystemBase {
     }
 
     public void pidWinch(double left, double right){
+        leftPID.setP(climberP.getDouble(0.0));
+        leftPID.setI(climberI.getDouble(0.0));
+        leftPID.setD(climberD.getDouble(0.0));
         leftPID.setReference(left, ControlType.kPosition);
         rightPID.setReference(right, ControlType.kPosition);
     }

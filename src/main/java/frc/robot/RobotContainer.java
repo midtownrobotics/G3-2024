@@ -39,6 +39,7 @@ import frc.robot.commands.BoostSpeed;
 import frc.robot.commands.ChangeSpeed;
 import frc.robot.commands.Climb;
 import frc.robot.commands.DoNothing;
+import frc.robot.commands.HoldClimber;
 import frc.robot.commands.IntakeOuttake;
 import frc.robot.commands.PivotIntake;
 import frc.robot.commands.PivotOuttake;
@@ -195,6 +196,7 @@ public class RobotContainer {
 		operator.a().whileTrue(new ChangeSpeed(outtake, 4500, "speaker"));
 		operator.x().whileTrue(new ChangeSpeed(outtake, 700, "amp"));
 		operator.b().whileTrue(new ChangeSpeed(outtake, 0, "stop"));
+		operator.y().whileTrue(new HoldClimber(climber));
 	}
 
 	/**
