@@ -181,7 +181,7 @@ public class RobotContainer {
 	 * subclasses ({@link
 	 * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling
 	 * passing it to a
-	 * {@link JoystickButton}.
+	 * {@link JoystickButton}
 	 */
 	private void configureButtonBindings() {
 		driver.x().whileTrue(new RunCommand(() -> drivetrain.setX(), drivetrain));
@@ -190,6 +190,7 @@ public class RobotContainer {
 		operator.povUp().whileTrue(new PivotOuttake(outtake, true));
 		operator.povDown().whileTrue(new PivotOuttake(outtake, false));
 		operator.povRight().whileTrue(new IntervalAdjustSpeed(outtake, true));
+		operator.povLeft().whileTrue(new IntervalAdjustSpeed(outtake, false));
 		operator.rightBumper().whileTrue(new RunIntake(intake, outtake, 1));
 		operator.leftBumper().whileTrue(new RunIntake(intake, outtake, -1));
 		operator.leftTrigger(.1).whileTrue(new RunOuttake(outtake, -1));
