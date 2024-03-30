@@ -25,7 +25,7 @@ public class HoldClimber extends Command{
 
     @Override
     public void end(boolean interrupted) {
-        
+        climber.winch(0, 0);
     }
 
 }
