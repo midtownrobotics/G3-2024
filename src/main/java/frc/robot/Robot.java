@@ -249,7 +249,7 @@ public class Robot extends TimedRobot {
 		shooterLeftTargetBox.setDouble(m_robotContainer.getOuttake().getLeftWheelTarget());
 		shooterRightTargetBox.setDouble(m_robotContainer.getOuttake().getRightWheelTarget());
 		shooterOnOffShuffleBox.setBoolean(m_robotContainer.getOuttake().getSpeed() > 0.5);
-		
+		/* 
 		SmartDashboard.putString("Mode", modeChooser.getSelected().toString());
 	
 		SmartDashboard.putNumber("FrontLeftTurningDesiredState", m_robotContainer.getDrivetrain().getFrontLeftModule().getDesiredState().angle.getRadians());
@@ -257,18 +257,19 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("FrontRightTurningDesiredState", m_robotContainer.getDrivetrain().getFrontRightModule().getDesiredState().angle.getRadians());
 		SmartDashboard.putNumber("RearRightTurningDesiredState", m_robotContainer.getDrivetrain().getRearRightModule().getDesiredState().angle.getRadians());
 
-		/* Display 6-axis Processed Angle Data                                      */
+		/* Display 6-axis Processed Angle Data                                      
 		SmartDashboard.putBoolean(  "IMU_Connected",        m_robotContainer.getDrivetrain().getImu().isConnected());
 		SmartDashboard.putBoolean(  "IMU_IsCalibrating",    m_robotContainer.getDrivetrain().getImu().isCalibrating());
 		SmartDashboard.putNumber(   "IMU_Yaw",              m_robotContainer.getDrivetrain().getImu().getYaw());
 		SmartDashboard.putNumber(   "IMU_Pitch",            m_robotContainer.getDrivetrain().getImu().getPitch());
 		SmartDashboard.putNumber(   "IMU_Roll",             m_robotContainer.getDrivetrain().getImu().getRoll());
-
+		*/
 		m_robotContainer.getField().setRobotPose(m_robotContainer.getDrivetrain().getPose());
 		SmartDashboard.putNumber(   "Heading",             m_robotContainer.getDrivetrain().getHeading());
 		SmartDashboard.putNumber("yaw", m_robotContainer.getDrivetrain().pigeon.getYaw());
 
-		SmartDashboard.putNumber("Pivot Encoder", m_robotContainer.getOuttake().getPivot() * (360/4096));
+		SmartDashboard.putNumber("Pivot Encoder", m_robotContainer.getOuttake().getPivot());
+		SmartDashboard.putNumber("Angle", m_robotContainer.getOuttake().getAngle());
 
 
 		// Temps

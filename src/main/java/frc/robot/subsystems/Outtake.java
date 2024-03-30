@@ -36,6 +36,7 @@ public class Outtake extends SubsystemBase {
     private double speed;
     private double angle;
     private String mode;
+    private double setPoint;
 
     public Outtake(CANSparkMax rightWheel, CANSparkMax leftWheel, CANSparkMax rollerLeader, CANSparkMax rollerFollower, CANSparkMax pivotOuttake, DigitalInput pivotDIO){
         this.rightWheel = rightWheel;
@@ -132,8 +133,11 @@ public class Outtake extends SubsystemBase {
     }
 
     public void setPivot(double setpoint) {
-        double pidAmount = pivotPID.calculate(getPivot(), setpoint);
-        pivotOuttake.set(pidAmount);
+        double pidAmount = 0;
+        if (setpoint > .81 && setpoint < .99){
+            pidAmount = pivotPID.calculate(getPivot(), setpoint);
+            pivotOuttake.set(pidAmount);
+        }
         SmartDashboard.putNumber("PID value", pidAmount);
     }
 
@@ -203,4 +207,11 @@ public class Outtake extends SubsystemBase {
         return leftWheel.getAppliedOutput();
     }
 
+    public void setAngle(double angle) {
+        this.angle = angle;
+    }
+
+    public double getAngle() {
+        return angle;
+    }
 }

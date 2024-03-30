@@ -5,16 +5,20 @@ import frc.robot.subsystems.Outtake;
 
 public class PivotOuttake extends Command {
     private final Outtake outtake;
-    private final double power;
+    private final boolean up;
 
-    public PivotOuttake(Outtake outtake, double power) {
+    public PivotOuttake(Outtake outtake, boolean up) {
         this.outtake = outtake;
-        this.power = power;
+        this.up = up;
     }
 
     @Override
     public void initialize() {
-        outtake.pivot(power);
+        if(up) {
+            outtake.setAngle(outtake.getAngle() - .01);
+        } else {
+            outtake.setAngle(outtake.getAngle() + .01);
+        }
     }
 
     @Override
