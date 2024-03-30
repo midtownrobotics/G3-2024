@@ -47,6 +47,7 @@ import frc.robot.commands.RunFlywheel;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.RunOuttake;
 import frc.robot.commands.SpeedPID;
+import frc.robot.commands.IntervalAdjustSpeed;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Outtake;
@@ -188,6 +189,7 @@ public class RobotContainer {
 		driver.a().whileTrue(new RunCommand(() -> drivetrain.zeroHeading(), drivetrain));
 		operator.povUp().whileTrue(new PivotOuttake(outtake, true));
 		operator.povDown().whileTrue(new PivotOuttake(outtake, false));
+		operator.povRight().whileTrue(new IntervalAdjustSpeed(outtake, true));
 		operator.rightBumper().whileTrue(new RunIntake(intake, outtake, 1));
 		operator.leftBumper().whileTrue(new RunIntake(intake, outtake, -1));
 		operator.leftTrigger(.1).whileTrue(new RunOuttake(outtake, -1));
