@@ -130,7 +130,7 @@ public class RobotContainer {
 		configureButtonBindings();
 		
 
-		double control_limiter = 1.0;
+		double control_limiter = 0.5;
 		
 			
 		drivetrain.setDefaultCommand(new RunCommand(
