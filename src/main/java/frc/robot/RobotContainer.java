@@ -42,10 +42,12 @@ import frc.robot.commands.DoNothing;
 import frc.robot.commands.IntakeOuttake;
 import frc.robot.commands.PivotIntake;
 import frc.robot.commands.PivotOuttake;
+import frc.robot.commands.PivotPID;
 import frc.robot.commands.RunFlywheel;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.RunOuttake;
 import frc.robot.commands.SpeedPID;
+import frc.robot.commands.IntervalAdjustSpeed;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Outtake;
@@ -129,7 +131,7 @@ public class RobotContainer {
 		configureButtonBindings();
 		
 
-		double control_limiter = 1.0;
+		double control_limiter = 1;
 		
 			
 		drivetrain.setDefaultCommand(new RunCommand(
@@ -140,7 +142,6 @@ public class RobotContainer {
 		 		true, false, doSpeedBoost), drivetrain));
 		climber.setDefaultCommand(new Climb(climber, operator));
 		outtake.setDefaultCommand(new SpeedPID(outtake));
-		
 	}
 
 	// public double getDistanceThing () {
@@ -180,19 +181,22 @@ public class RobotContainer {
 	 * subclasses ({@link
 	 * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling
 	 * passing it to a
-	 * {@link JoystickButton}.
+	 * {@link JoystickButton}
 	 */
 	private void configureButtonBindings() {
 		driver.x().whileTrue(new RunCommand(() -> drivetrain.setX(), drivetrain));
 		driver.leftTrigger(.1).whileTrue(new BoostSpeed());
 		driver.a().whileTrue(new RunCommand(() -> drivetrain.zeroHeading(), drivetrain));
-		operator.povUp().whileTrue(new PivotOuttake(outtake, .75));
-		operator.povDown().whileTrue(new PivotOuttake(outtake, -.75));
+		operator.povUp().whileTrue(new PivotOuttake(outtake, true));
+		operator.povDown().whileTrue(new PivotOuttake(outtake, false));
+		operator.povRight().whileTrue(new IntervalAdjustSpeed(outtake, true));
+		operator.povLeft().whileTrue(new IntervalAdjustSpeed(outtake, false));
 		operator.rightBumper().whileTrue(new RunIntake(intake, outtake, 1));
 		operator.leftBumper().whileTrue(new RunIntake(intake, outtake, -1));
 		operator.leftTrigger(.1).whileTrue(new RunOuttake(outtake, -1));
 		operator.rightTrigger(.1).whileTrue(new IntakeOuttake(intake, outtake, .75));
 		operator.a().whileTrue(new ChangeSpeed(outtake, 4500, "speaker"));
+		operator.y().whileTrue(new ChangeSpeed(outtake, 4500, "bottom"));
 		operator.x().whileTrue(new ChangeSpeed(outtake, 700, "amp"));
 		operator.b().whileTrue(new ChangeSpeed(outtake, 0, "stop"));
 	}
