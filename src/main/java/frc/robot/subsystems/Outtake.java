@@ -32,7 +32,7 @@ public class Outtake extends SubsystemBase {
     private final CANSparkMax leftWheel;
     private final PIDController pivotPID;
     private final SparkPIDController rightPID;
-    private final SparkPIDController leftPID;
+    private final SparkPIDController  leftPID;
     private final DutyCycleEncoder pivotEncoder;
     private double speed;
     private double angle;
@@ -114,16 +114,28 @@ public class Outtake extends SubsystemBase {
             leftWheel.set(0);
             rightWheel.set(0);
         }
+
+        SmartDashboard.putNumber("P", leftPID.getP());
+        SmartDashboard.putNumber("D", leftPID.getD());
     }
 
     public void pidWheel(double speed) {
-        
-        if (mode == "amp") {
-            leftPID.setReference(speed, ControlType.kVelocity);
-            rightPID.setReference(speed, ControlType.kVelocity);
+
+        if (speed == 0) {
+
+            leftPID.setReference(0, ControlType.kDutyCycle);
+            rightPID.setReference(0, ControlType.kDutyCycle);
+             
         } else {
-            leftPID.setReference(speed * .35, ControlType.kVelocity);
-            rightPID.setReference(speed, ControlType.kVelocity);
+        
+            if (mode == "amp") {
+                leftPID.setReference(speed, ControlType.kVelocity);
+                rightPID.setReference(speed, ControlType.kVelocity);
+            } else {
+                leftPID.setReference(speed * .35, ControlType.kVelocity);
+                rightPID.setReference(speed, ControlType.kVelocity);
+            }
+
         }
         
     }

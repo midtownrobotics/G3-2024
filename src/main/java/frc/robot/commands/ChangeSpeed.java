@@ -42,6 +42,7 @@ public class ChangeSpeed extends Command{
                 break;
             case "stop":
                 outtake.changeStop(true);
+                outtake.setSpeed(0);
                 outtake.setMode("stop");
                 break;
         }
