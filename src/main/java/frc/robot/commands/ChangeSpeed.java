@@ -23,18 +23,28 @@ public class ChangeSpeed extends Command{
     public void initialize() {
         switch (mode) {
             case "amp":
+                outtake.changeStop(false);
                 angle = OuttakeConstants.AMP_ANGLE;
                 outtake.setSpeed(speed, angle);
+                outtake.setMode("amp");
+                break;
+            case "bottom":
+                outtake.changeStop(false);
+                angle = 0.962;
+                outtake.setSpeed(speed, angle);
+                outtake.setMode("speaker");
                 break;
             case "speaker":
+                outtake.changeStop(false);
                 angle = OuttakeConstants.SPEAKER_ANGLE;
                 outtake.setSpeed(speed, angle);
+                outtake.setMode("speaker");
                 break;
             case "stop":
-                outtake.setSpeed(speed);
+                outtake.changeStop(true);
+                outtake.setMode("stop");
                 break;
         }
-        outtake.setMode(mode);
     }
 
 }

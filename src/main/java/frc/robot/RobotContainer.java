@@ -131,7 +131,7 @@ public class RobotContainer {
 		configureButtonBindings();
 		
 
-		double control_limiter = 0.5;
+		double control_limiter = 1;
 		
 			
 		drivetrain.setDefaultCommand(new RunCommand(
@@ -196,6 +196,7 @@ public class RobotContainer {
 		operator.leftTrigger(.1).whileTrue(new RunOuttake(outtake, -1));
 		operator.rightTrigger(.1).whileTrue(new IntakeOuttake(intake, outtake, .75));
 		operator.a().whileTrue(new ChangeSpeed(outtake, 4500, "speaker"));
+		operator.y().whileTrue(new ChangeSpeed(outtake, 4500, "bottom"));
 		operator.x().whileTrue(new ChangeSpeed(outtake, 700, "amp"));
 		operator.b().whileTrue(new ChangeSpeed(outtake, 0, "stop"));
 	}

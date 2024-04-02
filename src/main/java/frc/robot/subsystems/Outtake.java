@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.NeoMotorConstants;
+import frc.robot.Constants.OuttakeConstants;
 import frc.robot.Robot.modeChoices;
 
 public class Outtake extends SubsystemBase {
@@ -37,6 +38,8 @@ public class Outtake extends SubsystemBase {
     private double angle;
     private String mode;
     private double setPoint;
+
+    private boolean stop = false;
 
     public Outtake(CANSparkMax rightWheel, CANSparkMax leftWheel, CANSparkMax rollerLeader, CANSparkMax rollerFollower, CANSparkMax pivotOuttake, DigitalInput pivotDIO){
         this.rightWheel = rightWheel;
@@ -71,11 +74,19 @@ public class Outtake extends SubsystemBase {
         leftPID.setI(0);
         rightPID.setOutputRange(0, 1);
         leftPID.setOutputRange(0, 1);
-        leftPID.setP(0.0004);
-        leftPID.setD(0.02);
-        leftPID.setFF(0.00024);
+        leftPID.setP(OuttakeConstants.FLYWHEEL_SPEED_P);
+        leftPID.setD(OuttakeConstants.FLYWHEEL_SPEED_D);
+        leftPID.setFF(OuttakeConstants.FLYWHEEL_SPEED_FF);
+        rightPID.setP(OuttakeConstants.FLYWHEEL_SPEED_P);
+        rightPID.setD(OuttakeConstants.FLYWHEEL_SPEED_D);
+        rightPID.setFF(OuttakeConstants.FLYWHEEL_SPEED_FF);
         speed = 0;
         angle = 0.9;
+
+    }
+
+    public void changeStop(boolean to) {
+        stop = to;
     }
 
     public void run(double power){
@@ -88,12 +99,20 @@ public class Outtake extends SubsystemBase {
     }
 
     public void setRightSpeed() {
-        double leftPower = leftWheel.getAppliedOutput();
+        // double leftPower = leftWheel.getAppliedOutput();
 
-        if (mode == "amp") {
-            rightWheel.set(leftPower);
-        } else {
-            rightWheel.set(leftPower / .35);
+        // if (mode == "amp") {
+        //     rightWheel.set(leftPower);
+        // } else {
+        //     rightWheel.set(leftPower / .35);
+        // }
+    }
+
+    @Override
+    public void periodic() {
+        if (stop == true) {
+            leftWheel.set(0);
+            rightWheel.set(0);
         }
     }
 
@@ -101,8 +120,10 @@ public class Outtake extends SubsystemBase {
         
         if (mode == "amp") {
             leftPID.setReference(speed, ControlType.kVelocity);
+            rightPID.setReference(speed, ControlType.kVelocity);
         } else {
             leftPID.setReference(speed * .35, ControlType.kVelocity);
+            rightPID.setReference(speed, ControlType.kVelocity);
         }
         
     }
@@ -213,5 +234,9 @@ public class Outtake extends SubsystemBase {
 
     public double getAngle() {
         return angle;
+    }
+
+    public boolean getStop() {
+        return stop;
     }
 }

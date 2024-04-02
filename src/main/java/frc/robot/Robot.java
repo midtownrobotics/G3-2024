@@ -50,6 +50,7 @@ public class Robot extends TimedRobot {
 	private GenericEntry shooterLeftSpeedShuffleBox;
 	private GenericEntry shooterRightSpeedShuffleBox;
 	private GenericEntry shooterOnOffShuffleBox;
+	private GenericEntry shooterAngle;
 	private static ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter");
 	public static GenericEntry shooterSpeedSlider = shooterTab.add("Speed", 800).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 10000)).getEntry();
 	private GenericEntry shooterRightTargetBox;
@@ -71,6 +72,7 @@ public class Robot extends TimedRobot {
 	public static GenericEntry pivotP;
 	public static GenericEntry pivotD;
 	public static GenericEntry pivotAngle;
+	public static GenericEntry stop;
 
 	@Override
 	public void robotInit() {
@@ -103,6 +105,9 @@ public class Robot extends TimedRobot {
 		pivotP = pivotTab.add("Pivot P", 0).getEntry();
 		pivotD = pivotTab.add("Pivot D", 0).getEntry();
 		pivotAngle = pivotTab.add("Pivot Angle", 0.872).getEntry();
+		stop = pivotTab.add("Stop", false).getEntry();
+
+		
 
 		ShuffleboardTab gameTab = Shuffleboard.getTab("Game");
 
@@ -111,9 +116,10 @@ public class Robot extends TimedRobot {
 		shooterLeftSpeedShuffleBox = gameTab.add("Shooter Left Speed", 0).withWidget(BuiltInWidgets.kDial).withSize(2, 2).withProperties(Map.of("min", 0, "max", 8000)).withPosition(6, 0).getEntry();
 		shooterRightSpeedShuffleBox = gameTab.add("Shooter Right Speed", 0).withWidget(BuiltInWidgets.kDial).withSize(2, 2).withProperties(Map.of("min", 0, "max", 8000)).withPosition(8, 0).getEntry();
 		shooterOnOffShuffleBox = gameTab.add("Shooter On Off", false).withSize(2, 2).withPosition(4, 0).getEntry();
+		shooterAngle = gameTab.add("Shooter Angle", 0).getEntry();
 
-		shooterLeftTargetBox = gameTab.add("Shooter L Targer", 0).withWidget(BuiltInWidgets.kGraph).withPosition(4, 2).getEntry();
-		shooterRightTargetBox = gameTab.add("Shooter R Targer", 0).withWidget(BuiltInWidgets.kGraph).withPosition(5, 2).getEntry();
+		shooterLeftTargetBox = gameTab.add("Shooter L Target", 0).withWidget(BuiltInWidgets.kGraph).withPosition(4, 2).getEntry();
+		shooterRightTargetBox = gameTab.add("Shooter R Target", 0).withWidget(BuiltInWidgets.kGraph).withPosition(5, 2).getEntry();
 
 		gameTab.addCamera("Camera", "Camera", "http://10.16.48.11:5800/").withPosition(0, 0).withSize(4, 4);
 
@@ -249,6 +255,8 @@ public class Robot extends TimedRobot {
 		shooterLeftTargetBox.setDouble(m_robotContainer.getOuttake().getLeftWheelTarget());
 		shooterRightTargetBox.setDouble(m_robotContainer.getOuttake().getRightWheelTarget());
 		shooterOnOffShuffleBox.setBoolean(m_robotContainer.getOuttake().getSpeed() > 0.5);
+		shooterAngle.setDouble(m_robotContainer.getOuttake().getAngle());
+		stop.setBoolean(m_robotContainer.getOuttake().getStop());
 		/* 
 		SmartDashboard.putString("Mode", modeChooser.getSelected().toString());
 	

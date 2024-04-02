@@ -131,5 +131,8 @@ public final class Constants {
 	public static final class OuttakeConstants {
 		public static final double SPEAKER_ANGLE = 0.872;
 		public static final double AMP_ANGLE = 0.872;
+		public static final double FLYWHEEL_SPEED_P = 0.0005;
+		public static final double FLYWHEEL_SPEED_D = 0.0005;
+		public static final double FLYWHEEL_SPEED_FF = 0.00024;
 	}
 }
