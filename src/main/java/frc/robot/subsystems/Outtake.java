@@ -10,13 +10,17 @@ import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.NeoMotorConstants;
+import frc.robot.Constants.OuttakeConstants;
 import frc.robot.Robot.modeChoices;
 
 public class Outtake extends SubsystemBase {
@@ -26,12 +30,16 @@ public class Outtake extends SubsystemBase {
     private final CANSparkMax rollerFollower;
     private final CANSparkMax pivotOuttake;
     private final CANSparkMax leftWheel;
-    private final SparkPIDController pivotPID;
+    private final PIDController pivotPID;
     private final SparkPIDController rightPID;
-    private final SparkPIDController leftPID;
+    private final SparkPIDController  leftPID;
     private final DutyCycleEncoder pivotEncoder;
     private double speed;
+    private double angle;
     private String mode;
+    private double setPoint;
+
+    private boolean stop = false;
 
     public Outtake(CANSparkMax rightWheel, CANSparkMax leftWheel, CANSparkMax rollerLeader, CANSparkMax rollerFollower, CANSparkMax pivotOuttake, DigitalInput pivotDIO){
         this.rightWheel = rightWheel;
@@ -55,23 +63,30 @@ public class Outtake extends SubsystemBase {
         leftWheel.setSmartCurrentLimit(NeoMotorConstants.STANDARD_NEO_CURRENT_LIMIT);
         rollerLeader.setSmartCurrentLimit(NeoMotorConstants.ROLLER_FEED_CURRENT_LIMIT);
         rollerFollower.setSmartCurrentLimit(NeoMotorConstants.ROLLER_FEED_CURRENT_LIMIT);
-        pivotPID = pivotOuttake.getPIDController();
-        pivotPID.setP(0.1);
+        pivotPID = new PIDController(0, 0, 0);
+        pivotPID.setP(10);
         pivotPID.setI(0);
         pivotPID.setD(0);
-        pivotPID.setOutputRange(-1, 1);
         pivotOuttake.getEncoder().setPositionConversionFactor(360/4096);
         rightPID = rightWheel.getPIDController();
         leftPID = leftWheel.getPIDController();
-        rightPID.setP(0.001);
         rightPID.setI(0);
-        rightPID.setD(0);
-        leftPID.setP(0.001);
         leftPID.setI(0);
-        leftPID.setD(0);
         rightPID.setOutputRange(0, 1);
         leftPID.setOutputRange(0, 1);
+        leftPID.setP(OuttakeConstants.FLYWHEEL_SPEED_P);
+        leftPID.setD(OuttakeConstants.FLYWHEEL_SPEED_D);
+        leftPID.setFF(OuttakeConstants.FLYWHEEL_SPEED_FF);
+        rightPID.setP(OuttakeConstants.FLYWHEEL_SPEED_P);
+        rightPID.setD(OuttakeConstants.FLYWHEEL_SPEED_D);
+        rightPID.setFF(OuttakeConstants.FLYWHEEL_SPEED_FF);
         speed = 0;
+        angle = 0.9;
+
+    }
+
+    public void changeStop(boolean to) {
+        stop = to;
     }
 
     public void run(double power){
@@ -80,15 +95,47 @@ public class Outtake extends SubsystemBase {
     }
 
     public void pidWheel() {
-        pidWheel(Robot.shooterSpeedSlider.getDouble(0));
+        pidWheel(speed);
     }
 
-    public void pidWheel(double power) {
-        rightPID.setReference(power, ControlType.kVelocity);
-        if (Robot.modeChooser.getSelected() == modeChoices.AMP) {
-            leftPID.setReference(power, ControlType.kVelocity);
+    public void setRightSpeed() {
+        // double leftPower = leftWheel.getAppliedOutput();
+
+        // if (mode == "amp") {
+        //     rightWheel.set(leftPower);
+        // } else {
+        //     rightWheel.set(leftPower / .35);
+        // }
+    }
+
+    @Override
+    public void periodic() {
+        if (stop == true) {
+            leftWheel.set(0);
+            rightWheel.set(0);
+        }
+
+        SmartDashboard.putNumber("P", leftPID.getP());
+        SmartDashboard.putNumber("D", leftPID.getD());
+    }
+
+    public void pidWheel(double speed) {
+
+        if (speed == 0) {
+
+            leftPID.setReference(0, ControlType.kDutyCycle);
+            rightPID.setReference(0, ControlType.kDutyCycle);
+             
         } else {
-            leftPID.setReference(power * .35, ControlType.kVelocity);
+        
+            if (mode == "amp") {
+                leftPID.setReference(speed, ControlType.kVelocity);
+                rightPID.setReference(speed, ControlType.kVelocity);
+            } else {
+                leftPID.setReference(speed * .35, ControlType.kVelocity);
+                rightPID.setReference(speed, ControlType.kVelocity);
+            }
+
         }
         
     }
@@ -114,12 +161,21 @@ public class Outtake extends SubsystemBase {
         return pivotEncoder.getAbsolutePosition();
     }
 
+    public double getMotorPivot() {
+        return pivotOuttake.getEncoder().getPosition();
+    }
+
     public void setPivot(double setpoint) {
-        pivotPID.setReference(setpoint, ControlType.kPosition);
+        double pidAmount = 0;
+        if (setpoint > .81 && setpoint < .99){
+            pidAmount = pivotPID.calculate(getPivot(), setpoint);
+            pivotOuttake.set(pidAmount);
+        }
+        SmartDashboard.putNumber("PID value", pidAmount);
     }
 
     public void setPivot() {
-        // pivotPID.
+        setPivot(angle);
     }
 
     public void run() {
@@ -137,6 +193,11 @@ public class Outtake extends SubsystemBase {
 
     public void setSpeed(double change) {
         speed = change;
+    }
+
+    public void setSpeed(double change, double angle) {
+        this.angle = angle;
+        setSpeed(change);
     }
 
     public void setMode(String newMode) {
@@ -183,4 +244,23 @@ public class Outtake extends SubsystemBase {
         return leftWheel.getEncoder().getVelocity();
     }
 
+    public double getRightWheelTarget() {
+        return rightWheel.getAppliedOutput();
+    }
+
+    public double getLeftWheelTarget() {
+        return leftWheel.getAppliedOutput();
+    }
+
+    public void setAngle(double angle) {
+        this.angle = angle;
+    }
+
+    public double getAngle() {
+        return angle;
+    }
+
+    public boolean getStop() {
+        return stop;
+    }
 }

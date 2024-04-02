@@ -29,7 +29,7 @@ public class Intake extends SubsystemBase{
 
         runInternal.setInverted(false);
 
-        externalPivot.set(Value.kForward);
+        externalPivot.set(Value.kForward);  
     }
 
     public void run(double power){

@@ -368,11 +368,11 @@ public class SwerveDrivetrain extends SubsystemBase {
 
 	/** Zeroes the heading of the robot. */
 	public void zeroHeading() {
-		pigeon.setYaw(180);
+		pigeon.setYaw(0);
 	}
 
 	public void oppositeHeading() {
-		pigeon.setYaw(0);
+		pigeon.setYaw(180);
 	}
 
 	public void stop()

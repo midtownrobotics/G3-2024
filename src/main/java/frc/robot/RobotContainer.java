@@ -43,10 +43,12 @@ import frc.robot.commands.IntakeOuttake;
 import frc.robot.commands.LimeLightSpeakerLineUp;
 import frc.robot.commands.PivotIntake;
 import frc.robot.commands.PivotOuttake;
+import frc.robot.commands.PivotPID;
 import frc.robot.commands.RunFlywheel;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.RunOuttake;
 import frc.robot.commands.SpeedPID;
+import frc.robot.commands.IntervalAdjustSpeed;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Outtake;
@@ -111,6 +113,7 @@ public class RobotContainer {
 		STRAIGHT_TAXI,
 		SHOOT,
 		SHOOT_STRAIGHT_TAXI,
+		TWO_NOTE,
 		OP_CHECK_CART,
 		OP_CHECK_GROUND
 	}
@@ -132,8 +135,7 @@ public class RobotContainer {
 		autonChooser.setDefaultOption("Straight Taxi", Auton.STRAIGHT_TAXI);
 		autonChooser.addOption("Shoot", Auton.SHOOT);
 		autonChooser.addOption("Shoot & Straight Taxi", Auton.SHOOT_STRAIGHT_TAXI);
-		autonChooser.addOption("Op Check For Cart", Auton.OP_CHECK_CART);
-		autonTab.add("Auton Mode Chooser", autonChooser);
+		autonTab.add("Auton Mode Chooser", autonChooser).withSize(2, 1);
 
 		// Configure the button bindings
 
@@ -142,18 +144,17 @@ public class RobotContainer {
 		configureButtonBindings();
 		
 
-		double control_limiter = 1.0;
+		double control_limiter = 1;
 		
 			
 		drivetrain.setDefaultCommand(new RunCommand(
 			() -> drivetrain.drive(
-				MathUtil.applyDeadband((driver.getLeftY() * Math.abs(driver.getLeftY()))*control_limiter, JOYSTICK_Y1_AXIS_THRESHOLD),
-				MathUtil.applyDeadband((driver.getLeftX() * Math.abs(driver.getLeftX()))*control_limiter, JOYSTICK_X1_AXIS_THRESHOLD),
-				-MathUtil.applyDeadband((driver.getRightX() * Math.abs(driver.getRightX()))*control_limiter, JOYSTICK_X2_AXIS_THRESHOLD),
-		 		false, false, doSpeedBoost), drivetrain));
+				deadzone(driver.getLeftY(), driver.getLeftX(), driver.getRightX(), JOYSTICK_Y1_AXIS_THRESHOLD)*control_limiter,
+				deadzone(driver.getLeftX(), driver.getLeftY(), driver.getRightX(), JOYSTICK_X1_AXIS_THRESHOLD)*control_limiter,
+				deadzone(driver.getRightX(), driver.getLeftY(), driver.getLeftX(), JOYSTICK_X2_AXIS_THRESHOLD)*control_limiter,
+		 		true, false, doSpeedBoost), drivetrain));
 		climber.setDefaultCommand(new Climb(climber, operator));
-		outtake.setDefaultCommand(new RunFlywheel(outtake));
-		
+		outtake.setDefaultCommand(new SpeedPID(outtake));
 	}
 
 	// public double getDistanceThing () {
@@ -178,6 +179,14 @@ public class RobotContainer {
 		
 	// }
 
+	public double deadzone(double a, double b, double c, double zone) {
+		if (Math.sqrt(Math.pow(a, 2)+Math.pow(b, 2)+Math.pow(c, 2)) > zone) {
+			return a * Math.abs(a);
+		} else {
+			return 0;
+		}
+	}
+
 	/**
 	 * Use this method to define your button->command mappings. Buttons can be
 	 * created by
@@ -185,23 +194,25 @@ public class RobotContainer {
 	 * subclasses ({@link
 	 * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling
 	 * passing it to a
-	 * {@link JoystickButton}.
+	 * {@link JoystickButton}
 	 */
 	private void configureButtonBindings() {
 		driver.x().whileTrue(new RunCommand(() -> drivetrain.setX(), drivetrain));
 		driver.leftTrigger(.1).whileTrue(new BoostSpeed());
 		driver.a().whileTrue(new RunCommand(() -> drivetrain.zeroHeading(), drivetrain));
-		operator.povUp().whileTrue(new PivotOuttake(outtake, .75));
-		operator.povDown().whileTrue(new PivotOuttake(outtake, -.75));
-		operator.rightBumper().whileTrue(new SequentialCommandGroup(new RunIntake(intake, outtake, -1).withTimeout(intakeTimer.getDouble(0)), new RunIntake(intake, outtake, 1)));
+		operator.povUp().whileTrue(new PivotOuttake(outtake, true));
+		operator.povDown().whileTrue(new PivotOuttake(outtake, false));
+		operator.povRight().whileTrue(new IntervalAdjustSpeed(outtake, true));
+		operator.povLeft().whileTrue(new IntervalAdjustSpeed(outtake, false));
+		operator.rightBumper().whileTrue(new RunIntake(intake, outtake, 1));
 		operator.leftBumper().whileTrue(new RunIntake(intake, outtake, -1));
 		operator.leftTrigger(.1).whileTrue(new RunOuttake(outtake, -1));
 		operator.rightTrigger(.1).whileTrue(new IntakeOuttake(intake, outtake, .75));
-		operator.a().whileTrue(new ChangeSpeed(outtake, 1, "speaker"));
-		operator.x().whileTrue(new ChangeSpeed(outtake, 0.18, "amp"));
+		operator.a().whileTrue(new ChangeSpeed(outtake, 4500, "speaker"));
+		operator.y().whileTrue(new ChangeSpeed(outtake, 4500, "bottom"));
+		operator.x().whileTrue(new ChangeSpeed(outtake, 700, "amp"));
 		operator.b().whileTrue(new ChangeSpeed(outtake, 0, "stop"));
 		operator.y().whileTrue(new SpeedPID(outtake));
-		driver.y().whileTrue(new LimeLightSpeakerLineUp(0, 0, limelight, drivetrain));
 	}
 
 	/**
@@ -231,7 +242,19 @@ public class RobotContainer {
 					new IntakeOuttake(intake, outtake, .75).withTimeout(2),
 					new ChangeSpeed(outtake, 0, "speaker").withTimeout(0.1),
 					new RunFlywheel(outtake).withTimeout(0.1),
-					new RunIntake(intake, outtake, .67).alongWith(new RunCommand(() -> drivetrain.drive(-.5, 0, 0, false), drivetrain).withTimeout(2)).withTimeout(2)
+					new RunIntake(intake, outtake, .67).alongWith(new RunCommand(() -> drivetrain.drive(-.5, 0, 0, false), drivetrain).withTimeout(1.9)).withTimeout(1.9)
+				);
+			case TWO_NOTE:
+				autoCommand = new SequentialCommandGroup(
+					new ChangeSpeed(outtake, 1, "speaker").withTimeout(2.1),
+					new RunFlywheel(outtake).withTimeout(2),
+					new IntakeOuttake(intake, outtake, .75).withTimeout(2),
+					new RunIntake(intake, outtake, .67).alongWith(new RunCommand(() -> drivetrain.drive(-.5, 0, 0, false), drivetrain).withTimeout(1.9)).withTimeout(1.9),
+					new RunCommand(() -> drivetrain.drive(0, 0, 0, false), drivetrain).withTimeout(0),
+					new RunCommand(() -> drivetrain.drive(.5, 0, 0, false), drivetrain).alongWith(new RunFlywheel(outtake).withTimeout(2.8)).withTimeout(2.3),	
+					new IntakeOuttake(intake, outtake, .75).withTimeout(2.1),
+					new ChangeSpeed(outtake, 0, "speaker").withTimeout(0.1),
+					new RunFlywheel(outtake).withTimeout(0.1)
 				);
 			case OP_CHECK_CART:
 				autoCommand = new SequentialCommandGroup(
