@@ -286,6 +286,8 @@ public class Robot extends TimedRobot {
 
 		SmartDashboard.putNumber("Pivot Encoder", m_robotContainer.getOuttake().getPivot() * (360/4096));
 
+		SmartDashboard.putNumber("idlookingat", m_robotContainer.getLimelight().getID());
+
 
 		// Temps
 

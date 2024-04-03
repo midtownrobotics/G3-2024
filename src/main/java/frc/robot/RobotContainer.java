@@ -40,7 +40,6 @@ import frc.robot.commands.ChangeSpeed;
 import frc.robot.commands.Climb;
 import frc.robot.commands.DoNothing;
 import frc.robot.commands.IntakeOuttake;
-import frc.robot.commands.LimeLightSpeakerLineUp;
 import frc.robot.commands.PivotIntake;
 import frc.robot.commands.PivotOuttake;
 import frc.robot.commands.PivotPID;
@@ -99,7 +98,7 @@ public class RobotContainer {
 	private final Outtake outtake = new Outtake(CAN33, CAN32, CAN30, CAN31, CAN34, DIO2);
 	private final Intake intake = new Intake(CAN41, CAN40, PCM01, DIO6);
 	NetworkTable networkTable = NetworkTableInstance.getDefault().getTable("limelight");
-	private final Limelight limelight = new Limelight(networkTable);
+	private final Limelight limelight = new Limelight(networkTable, getOuttake());
 	public void resetSpeed() {
 		outtake.setSpeed(0);
 	}
