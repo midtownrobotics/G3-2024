@@ -58,7 +58,7 @@ public class SwerveModule {
 		// Setup encoders and PID controllers for the driving and turning SPARKS MAX.
 		m_drivingEncoder = m_drivingSparkMax.getEncoder();
 		m_turningEncoder = m_turningSparkMax.getEncoder();
-		m_turningAbsoluteEncoder = new CANCoder(turningAnalogPort);
+		m_turningAbsoluteEncoder = new CANCoder(turningAnalogPort, "Sensors");
 		CANCoderConfiguration config = new CANCoderConfiguration();
 		config.sensorCoefficient = 2*Math.PI/4096;
 		config.unitString = "rad";

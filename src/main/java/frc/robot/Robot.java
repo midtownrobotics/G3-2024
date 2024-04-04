@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -49,6 +50,29 @@ public class Robot extends TimedRobot {
 	private GenericEntry shooterLeftSpeedShuffleBox;
 	private GenericEntry shooterRightSpeedShuffleBox;
 	private GenericEntry shooterOnOffShuffleBox;
+	private GenericEntry shooterAngle;
+	private static ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter");
+	public static GenericEntry shooterSpeedSlider = shooterTab.add("Speed", 800).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 10000)).getEntry();
+	private GenericEntry shooterRightTargetBox;
+	private GenericEntry shooterLeftTargetBox;
+
+	public static GenericEntry shooterLP;
+	public static GenericEntry shooterLD;
+	public static GenericEntry shooterRP;
+	public static GenericEntry shooterRD;
+	public static GenericEntry shooterLFF;
+	public static GenericEntry shooterRFF;
+
+	public static enum modeChoices {
+		AMP,
+		SPEAKER
+	}
+
+	public static SendableChooser<modeChoices> modeChooser = new SendableChooser<>();
+	public static GenericEntry pivotP;
+	public static GenericEntry pivotD;
+	public static GenericEntry pivotAngle;
+	public static GenericEntry stop;
 
 	@Override
 	public void robotInit() {
@@ -76,15 +100,40 @@ public class Robot extends TimedRobot {
 		SRT = tempTab.add("Shooter R T", 0).getEntry();
 		SLT = tempTab.add("Shooter L T", 0).getEntry();
 
+		ShuffleboardTab pivotTab = Shuffleboard.getTab("Pivot");
+
+		pivotP = pivotTab.add("Pivot P", 0).getEntry();
+		pivotD = pivotTab.add("Pivot D", 0).getEntry();
+		pivotAngle = pivotTab.add("Pivot Angle", 0.872).getEntry();
+		stop = pivotTab.add("Stop", false).getEntry();
+
+		
+
 		ShuffleboardTab gameTab = Shuffleboard.getTab("Game");
 
-		noteSensorShuffleBox = gameTab.add("Note Detected", false).withSize(2, 2).withPosition(7, 2).getEntry();
-		speedBoostShuffleBox = gameTab.add("Boosting Speed", false).withSize(2, 2).withPosition(9, 2).getEntry();
-		shooterLeftSpeedShuffleBox = gameTab.add("Shooter Left Speed", 0).withWidget(BuiltInWidgets.kDial).withSize(2, 2).withProperties(Map.of("min", 0, "max", 8000)).withPosition(7, 0).getEntry();
-		shooterRightSpeedShuffleBox = gameTab.add("Shooter Right Speed", 0).withWidget(BuiltInWidgets.kDial).withSize(2, 2).withProperties(Map.of("min", 0, "max", 8000)).withPosition(9, 0).getEntry();
-		shooterOnOffShuffleBox = gameTab.add("Shooter On Off", false).withSize(2, 2).withPosition(5, 0).getEntry();
+		noteSensorShuffleBox = gameTab.add("Note Detected", false).withSize(2, 2).withPosition(6, 2).getEntry();
+		speedBoostShuffleBox = gameTab.add("Boosting Speed", false).withSize(2, 2).withPosition(8, 2).getEntry();
+		shooterLeftSpeedShuffleBox = gameTab.add("Shooter Left Speed", 0).withWidget(BuiltInWidgets.kDial).withSize(2, 2).withProperties(Map.of("min", 0, "max", 8000)).withPosition(6, 0).getEntry();
+		shooterRightSpeedShuffleBox = gameTab.add("Shooter Right Speed", 0).withWidget(BuiltInWidgets.kDial).withSize(2, 2).withProperties(Map.of("min", 0, "max", 8000)).withPosition(8, 0).getEntry();
+		shooterOnOffShuffleBox = gameTab.add("Shooter On Off", false).withSize(2, 2).withPosition(4, 0).getEntry();
+		shooterAngle = gameTab.add("Shooter Angle", 0).getEntry();
 
-		//gameTab.addCamera("Camera", "limelight", "http://10.16.48.11:5800").withSize(5, 5);
+		shooterLeftTargetBox = gameTab.add("Shooter L Target", 0).withWidget(BuiltInWidgets.kGraph).withPosition(4, 2).getEntry();
+		shooterRightTargetBox = gameTab.add("Shooter R Target", 0).withWidget(BuiltInWidgets.kGraph).withPosition(5, 2).getEntry();
+
+		gameTab.addCamera("Camera", "Camera", "http://10.16.48.11:5800/").withPosition(0, 0).withSize(4, 4);
+
+		modeChooser.setDefaultOption("Amp", modeChoices.AMP);
+		modeChooser.addOption("Speaker", modeChoices.SPEAKER);
+		shooterTab.add("Mode", modeChooser).withSize(2, 1);
+
+		shooterLP = shooterTab.add("L P", 0).getEntry();
+		shooterLD = shooterTab.add("L D", 0).getEntry();
+		shooterRP = shooterTab.add("R P", 0).getEntry();
+		shooterRD = shooterTab.add("R D", 0).getEntry();
+
+		shooterLFF = shooterTab.add("L FF", 0).getEntry();
+		shooterRFF = shooterTab.add("R FF",0).getEntry();
 
 	}
 
@@ -103,24 +152,6 @@ public class Robot extends TimedRobot {
 		// block in order for anything in the Command-based framework to work.
 		// m_robotContainer.getDistanceThing();
 		CommandScheduler.getInstance().run();
-
-		timer ++;
-
-		noteSensorBoolean = m_robotContainer.getIntake().getNoteSensor();
-
-		if (noteSensorBoolean != noteSensorBooleanLast) {
-			noteSensorBooleanLast = noteSensorBoolean;
-			if (noteSensorBoolean) {
-				m_intakeBeamBreak.onTrue();
-				timer = 0;
-			}
-		}
-
-		double rumbleTimeSeconds = 0.25;
-
-		if (timer >= (rumbleTimeSeconds * 1000 / 20)) {
-			m_intakeBeamBreak.stop();
-		}
 	}
 
 	/** This function is called once each time the robot enters Disabled mode. */
@@ -167,8 +198,26 @@ public class Robot extends TimedRobot {
 	/** This function is called periodically during operator control. */
 	@Override
 	public void teleopPeriodic() {
-
+		
 		updateToSmartDash();
+
+		timer ++;
+
+		noteSensorBoolean = m_robotContainer.getIntake().getNoteSensor();
+
+		if (noteSensorBoolean != noteSensorBooleanLast) {
+			noteSensorBooleanLast = noteSensorBoolean;
+			if (noteSensorBoolean) {
+				m_intakeBeamBreak.onTrue();
+				timer = 0;
+			}
+		}
+
+		double rumbleTimeSeconds = 0.25;
+
+		if (timer >= (rumbleTimeSeconds * 1000 / 20)) {
+			m_intakeBeamBreak.stop();
+		}
 	}
 
 	public void updateToSmartDash()
@@ -196,30 +245,39 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("RR Abs", m_robotContainer.getDrivetrain().getRearRightModule().getTurningAbsoluteEncoder().getAbsolutePosition());
 
 		//SmartDashboard.putBoolean("Note Sensor", m_robotContainer.getIntake().getNoteSensor());
+		SmartDashboard.putNumber("Shooter Angle", m_robotContainer.getOuttake().getPivot());
+		SmartDashboard.putNumber("Shooter Motor", m_robotContainer.getOuttake().getMotorPivot());
 
 		noteSensorShuffleBox.setBoolean(m_robotContainer.getIntake().getNoteSensor());
 		speedBoostShuffleBox.setBoolean(RobotContainer.doSpeedBoost);
-		shooterLeftSpeedShuffleBox.setDouble(m_robotContainer.getOuttake().getLeftWheelSpeed());
-		shooterRightSpeedShuffleBox.setDouble(m_robotContainer.getOuttake().getRightWheelSpeed());
+		shooterLeftSpeedShuffleBox.setDouble(m_robotContainer.getOuttake().getLeftWheelSpeed() * (61/36));
+		shooterRightSpeedShuffleBox.setDouble(m_robotContainer.getOuttake().getRightWheelSpeed() * (61/36));
+		shooterLeftTargetBox.setDouble(m_robotContainer.getOuttake().getLeftWheelTarget());
+		shooterRightTargetBox.setDouble(m_robotContainer.getOuttake().getRightWheelTarget());
 		shooterOnOffShuffleBox.setBoolean(m_robotContainer.getOuttake().getSpeed() > 0.5);
+		shooterAngle.setDouble(m_robotContainer.getOuttake().getAngle());
+		stop.setBoolean(m_robotContainer.getOuttake().getStop());
+		/* 
+		SmartDashboard.putString("Mode", modeChooser.getSelected().toString());
 	
 		SmartDashboard.putNumber("FrontLeftTurningDesiredState", m_robotContainer.getDrivetrain().getFrontLeftModule().getDesiredState().angle.getRadians());
 		SmartDashboard.putNumber("RearLeftTurningDesiredState", m_robotContainer.getDrivetrain().getRearLeftModule().getDesiredState().angle.getRadians());
 		SmartDashboard.putNumber("FrontRightTurningDesiredState", m_robotContainer.getDrivetrain().getFrontRightModule().getDesiredState().angle.getRadians());
 		SmartDashboard.putNumber("RearRightTurningDesiredState", m_robotContainer.getDrivetrain().getRearRightModule().getDesiredState().angle.getRadians());
 
-		/* Display 6-axis Processed Angle Data                                      */
+		/* Display 6-axis Processed Angle Data                                      
 		SmartDashboard.putBoolean(  "IMU_Connected",        m_robotContainer.getDrivetrain().getImu().isConnected());
 		SmartDashboard.putBoolean(  "IMU_IsCalibrating",    m_robotContainer.getDrivetrain().getImu().isCalibrating());
 		SmartDashboard.putNumber(   "IMU_Yaw",              m_robotContainer.getDrivetrain().getImu().getYaw());
 		SmartDashboard.putNumber(   "IMU_Pitch",            m_robotContainer.getDrivetrain().getImu().getPitch());
 		SmartDashboard.putNumber(   "IMU_Roll",             m_robotContainer.getDrivetrain().getImu().getRoll());
-
+		*/
 		m_robotContainer.getField().setRobotPose(m_robotContainer.getDrivetrain().getPose());
 		SmartDashboard.putNumber(   "Heading",             m_robotContainer.getDrivetrain().getHeading());
 		SmartDashboard.putNumber("yaw", m_robotContainer.getDrivetrain().pigeon.getYaw());
 
-		SmartDashboard.putNumber("Pivot Encoder", m_robotContainer.getOuttake().getPivot() * (360/4096));
+		SmartDashboard.putNumber("Pivot Encoder", m_robotContainer.getOuttake().getPivot());
+		SmartDashboard.putNumber("Angle", m_robotContainer.getOuttake().getAngle());
 
 
 		// Temps

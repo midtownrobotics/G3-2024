@@ -6,7 +6,12 @@
       }
     },
     "Other Devices": {
-      "SPARK MAX [16]": {
+      "SPARK MAX [32]": {
+        "header": {
+          "open": true
+        }
+      },
+      "SPARK MAX [33]": {
         "header": {
           "open": true
         }
@@ -18,6 +23,7 @@
       "/FMSInfo": "FMSInfo",
       "/Shuffleboard/Auton/Auton Mode Chooser": "String Chooser",
       "/Shuffleboard/Game/Auton Mode Chooser": "String Chooser",
+      "/Shuffleboard/Shooter/Mode": "String Chooser",
       "/SmartDashboard/Swerve Odometry": "Field2d"
     }
   },

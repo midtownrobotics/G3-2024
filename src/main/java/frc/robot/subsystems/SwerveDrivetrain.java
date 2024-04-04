@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import java.util.List;
 
 import com.ctre.phoenix.sensors.Pigeon2;
+import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -43,6 +44,7 @@ import frc.robot.Constants.DrivetrainConstants;
 import frc.utils.ModifiedSignalLogger;
 import frc.utils.SwerveUtils;
 import frc.utils.SwerveVoltageRequest;
+import frc.robot.Constants;
 import frc.robot.Constants;
 import frc.robot.Ports;
 
@@ -56,10 +58,10 @@ public class SwerveDrivetrain extends SubsystemBase {
 	// public static final double REAR_LEFT_VIRTUAL_OFFSET_RADIANS = -0.934; // adjust as needed so that virtual (turn) position of wheel is zero when straight
 	// public static final double REAR_RIGHT_VIRTUAL_OFFSET_RADIANS = +1.021; // adjust as needed so that virtual (turn) position of wheel is zero when straight
 
-	public static final double FRONT_LEFT_VIRTUAL_OFFSET_RADIANS = -3.03; // adjust as needed so that virtual (turn) position of wheel is zero when straight
-	public static final double FRONT_RIGHT_VIRTUAL_OFFSET_RADIANS = 2.69-Math.PI; // adjust as needed so that virtual (turn) position of wheel is zero when straight
-	public static final double REAR_LEFT_VIRTUAL_OFFSET_RADIANS = -2.33+Math.PI; // adjust as needed so that virtual (turn) position of wheel is zero when straight
-	public static final double REAR_RIGHT_VIRTUAL_OFFSET_RADIANS = Math.PI/2+Math.PI/16; // adjust as needed so that virtual (turn) position of wheel is zero when straight
+	public static final double FRONT_LEFT_VIRTUAL_OFFSET_RADIANS = -3.03+Math.PI; // adjust as needed so that virtual (turn) position of wheel is zero when straight
+	public static final double FRONT_RIGHT_VIRTUAL_OFFSET_RADIANS = 2.69; // adjust as needed so that virtual (turn) position of wheel is zero when straight
+	public static final double REAR_LEFT_VIRTUAL_OFFSET_RADIANS = -2.33; // adjust as needed so that virtual (turn) position of wheel is zero when straight
+	public static final double REAR_RIGHT_VIRTUAL_OFFSET_RADIANS = Math.PI/2+Math.PI/16-Math.PI; // adjust as needed so that virtual (turn) position of wheel is zero when straight
     static final int GYRO_ORIENTATION = 1; // might be able to merge with kGyroReversed
 
 	public static final double FIELD_LENGTH_INCHES = 54*12+1; // 54ft 1in
@@ -118,7 +120,7 @@ public class SwerveDrivetrain extends SubsystemBase {
 	// The gyro sensor
 	private final AHRS m_gyro = new AHRS(SPI.Port.kMXP); // usign SPI by default, which is what we want.
 
-	public final Pigeon2 pigeon = new Pigeon2(5);
+	public final WPI_Pigeon2 pigeon = new WPI_Pigeon2(5, "Sensors");
 
 	// Slew rate filter variables for controlling lateral acceleration
 	private double m_currentRotation = 0.0;
@@ -253,6 +255,21 @@ public class SwerveDrivetrain extends SubsystemBase {
 
 	public void drive(double xSpeed, double ySpeed, double rot, boolean speedBoost) {
 		drive(xSpeed, ySpeed, rot, true, speedBoost);
+	}
+
+	public void drivePID(double xSpeed, double ySpeed, double rot, boolean speedBoost) {
+		SmartDashboard.putNumber("desired rotation", rot*Constants.DrivetrainConstants.MAX_ANGULAR_SPEED_RADIANS_PER_SECOND/(Math.PI*2));
+		SmartDashboard.putNumber("desired heading", pigeon.getRate() / 360);
+		double error = 0;
+		if (xSpeed != 0 || ySpeed != 0 || rot != 0) {
+			error = rot*Constants.DrivetrainConstants.MAX_ANGULAR_SPEED_RADIANS_PER_SECOND/(Math.PI*2) - pigeon.getRate() / 360;
+		}
+		double kP = 1;
+		drive(xSpeed, ySpeed, kP * error + rot, speedBoost);
+	}
+
+	public void driveBoosted() {
+		
 	}
 
 	/**
@@ -401,11 +418,11 @@ public class SwerveDrivetrain extends SubsystemBase {
 
 	/** Zeroes the heading of the robot. */
 	public void zeroHeading() {
-		pigeon.setYaw(180);
+		pigeon.setYaw(0);
 	}
 
 	public void oppositeHeading() {
-		pigeon.setYaw(0);
+		pigeon.setYaw(180);
 	}
 
 	public void stop()
@@ -559,3 +576,11 @@ public class SwerveDrivetrain extends SubsystemBase {
 
 //gray was here
 //fortnite vbux
+
+
+//                          _______
+//                         | -   - |
+//                         | |   | |
+//erik is birth today day! |_\ - /_|
+//fortnite vbux              \___/
+
