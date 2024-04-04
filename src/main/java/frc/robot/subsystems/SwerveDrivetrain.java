@@ -563,7 +563,7 @@ public class SwerveDrivetrain extends SubsystemBase {
 	private SysIdRoutine driveSysId = new SysIdRoutine(
 		new SysIdRoutine.Config(null, null, null, ModifiedSignalLogger.logState()),
 		new SysIdRoutine.Mechanism(
-			(Measure<Voltage> volts) -> ,
+			(Measure<Voltage> volts) -> {},
 			null,
 			this));
 
