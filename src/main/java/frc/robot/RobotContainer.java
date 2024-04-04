@@ -211,7 +211,7 @@ public class RobotContainer {
 		switch (autonChooser.getSelected()) {
 			case SHOOT:
 				autoCommand = new SequentialCommandGroup(
-					new ChangeSpeed(outtake, 1, "speaker").withTimeout(0.1),
+					new ChangeSpeed(outtake, 4500, "speaker").withTimeout(0.1),
 					new SpeedPID(outtake).withTimeout(2),
 					new IntakeOuttake(intake, outtake, .75).withTimeout(1),
 					new ChangeSpeed(outtake, 0, "stop").withTimeout(0.1),
@@ -223,13 +223,14 @@ public class RobotContainer {
 				break;
 			case SHOOT_STRAIGHT_TAXI:
 				autoCommand = new SequentialCommandGroup(
-					new ChangeSpeed(outtake, 1, "speaker").withTimeout(0.1),
+					new ChangeSpeed(outtake, 4500, "speaker").withTimeout(0.1),
 					new SpeedPID(outtake).withTimeout(2),
 					new IntakeOuttake(intake, outtake, .75).withTimeout(2),
-					new ChangeSpeed(outtake, 0, "speaker").withTimeout(0.1),
+					new ChangeSpeed(outtake, 0, "stop").withTimeout(0.1),
 					new SpeedPID(outtake).withTimeout(0.1),
 					new RunIntake(intake, outtake, .67).alongWith(new RunCommand(() -> drivetrain.drive(-.5, 0, 0, false), drivetrain).withTimeout(1.9)).withTimeout(1.9)
 				);
+				break;
 			case TWO_NOTE:
 				autoCommand = new SequentialCommandGroup(
 					new ChangeSpeed(outtake, 4500, "speaker").withTimeout(2.1),
@@ -242,12 +243,13 @@ public class RobotContainer {
 					new ChangeSpeed(outtake, 0, "stop").withTimeout(0.1),
 					new SpeedPID(outtake).withTimeout(0.1)
 				);
+				break;
 			default:
 				break;
 		}
 		return autoCommand;
 	}
-
+w\d
 	public TrajectoryConfig createTrajectoryConfig() {
 		// Create config for trajectory
 		TrajectoryConfig config = new TrajectoryConfig(
