@@ -15,9 +15,9 @@ public class IntervalAdjustSpeed extends Command{
     @Override
     public void initialize() {
         if (up){
-            outtake.setSpeed(outtake.getSpeed() + 50);
+            outtake.setSpeed(outtake.getSpeed() + 25);
         } else {
-            outtake.setSpeed(outtake.getSpeed() - 50);
+            outtake.setSpeed(outtake.getSpeed() - 25);
         }
     }
 }

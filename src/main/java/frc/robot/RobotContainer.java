@@ -232,15 +232,15 @@ public class RobotContainer {
 				);
 			case TWO_NOTE:
 				autoCommand = new SequentialCommandGroup(
-					new ChangeSpeed(outtake, 1, "speaker").withTimeout(2.1),
-					new RunFlywheel(outtake).withTimeout(2),
+					new ChangeSpeed(outtake, 4500, "speaker").withTimeout(2.1),
+					new SpeedPID(outtake).withTimeout(2),
 					new IntakeOuttake(intake, outtake, .75).withTimeout(2),
 					new RunIntake(intake, outtake, .67).alongWith(new RunCommand(() -> drivetrain.drive(-.5, 0, 0, false), drivetrain).withTimeout(1.9)).withTimeout(1.9),
 					new RunCommand(() -> drivetrain.drive(0, 0, 0, false), drivetrain).withTimeout(0),
-					new RunCommand(() -> drivetrain.drive(.5, 0, 0, false), drivetrain).alongWith(new RunFlywheel(outtake).withTimeout(2.8)).withTimeout(2.3),	
+					new RunCommand(() -> drivetrain.drive(.5, 0, 0, false), drivetrain).alongWith(new SpeedPID(outtake).withTimeout(2.8)).withTimeout(2.3),	
 					new IntakeOuttake(intake, outtake, .75).withTimeout(2.1),
-					new ChangeSpeed(outtake, 0, "speaker").withTimeout(0.1),
-					new RunFlywheel(outtake).withTimeout(0.1)
+					new ChangeSpeed(outtake, 0, "stop").withTimeout(0.1),
+					new SpeedPID(outtake).withTimeout(0.1)
 				);
 			default:
 				break;
