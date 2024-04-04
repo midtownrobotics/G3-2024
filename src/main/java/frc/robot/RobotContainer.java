@@ -194,7 +194,7 @@ public class RobotContainer {
 		operator.rightBumper().whileTrue(new RunIntake(intake, outtake, 1));
 		operator.leftBumper().whileTrue(new RunIntake(intake, outtake, -1));
 		operator.leftTrigger(.1).whileTrue(new RunOuttake(outtake, -1));
-		operator.rightTrigger(.1).whileTrue(new IntakeOuttake(intake, outtake, .75));
+		operator.rightTrigger(.1).whileTrue(new SequentialCommandGroup(new IntakeOuttake(intake, outtake, .75, true), new IntakeOuttake(intake, outtake, .75, false).withTimeout(Robot.ampDelay.getDouble(1)), new IntakeOuttake(intake, outtake, .75, false).alongWith(new PivotOuttake(outtake, false))));
 		operator.a().whileTrue(new ChangeSpeed(outtake, 4500, "speaker"));
 		operator.y().whileTrue(new ChangeSpeed(outtake, 4500, "bottom"));
 		operator.x().whileTrue(new ChangeSpeed(outtake, 700, "amp"));
@@ -213,7 +213,7 @@ public class RobotContainer {
 				autoCommand = new SequentialCommandGroup(
 					new ChangeSpeed(outtake, 1, "speaker").withTimeout(0.1),
 					new RunFlywheel(outtake).withTimeout(2),
-					new IntakeOuttake(intake, outtake, .75).withTimeout(1),
+					new IntakeOuttake(intake, outtake, .75, false).withTimeout(1),
 					new ChangeSpeed(outtake, 0, "speaker").withTimeout(0.1),
 					new RunFlywheel(outtake).withTimeout(0.1)
 				);
@@ -225,7 +225,7 @@ public class RobotContainer {
 				autoCommand = new SequentialCommandGroup(
 					new ChangeSpeed(outtake, 1, "speaker").withTimeout(0.1),
 					new RunFlywheel(outtake).withTimeout(2),
-					new IntakeOuttake(intake, outtake, .75).withTimeout(2),
+					new IntakeOuttake(intake, outtake, .75, false).withTimeout(2),
 					new ChangeSpeed(outtake, 0, "speaker").withTimeout(0.1),
 					new RunFlywheel(outtake).withTimeout(0.1),
 					new RunIntake(intake, outtake, .67).alongWith(new RunCommand(() -> drivetrain.drive(-.5, 0, 0, false), drivetrain).withTimeout(1.9)).withTimeout(1.9)
@@ -234,11 +234,11 @@ public class RobotContainer {
 				autoCommand = new SequentialCommandGroup(
 					new ChangeSpeed(outtake, 4500, "speaker").withTimeout(2.1),
 					new SpeedPID(outtake).withTimeout(2),
-					new IntakeOuttake(intake, outtake, .75).withTimeout(2),
+					new IntakeOuttake(intake, outtake, .75, false).withTimeout(2),
 					new RunIntake(intake, outtake, .67).alongWith(new RunCommand(() -> drivetrain.drive(-.5, 0, 0, false), drivetrain).withTimeout(1.9)).withTimeout(1.9),
 					new RunCommand(() -> drivetrain.drive(0, 0, 0, false), drivetrain).withTimeout(0),
 					new RunCommand(() -> drivetrain.drive(.5, 0, 0, false), drivetrain).alongWith(new SpeedPID(outtake).withTimeout(2.8)).withTimeout(2.3),	
-					new IntakeOuttake(intake, outtake, .75).withTimeout(2.1),
+					new IntakeOuttake(intake, outtake, .75, false).withTimeout(2.1),
 					new ChangeSpeed(outtake, 0, "stop").withTimeout(0.1),
 					new SpeedPID(outtake).withTimeout(0.1)
 				);

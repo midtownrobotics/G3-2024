@@ -62,6 +62,7 @@ public class Robot extends TimedRobot {
 	public static GenericEntry shooterRD;
 	public static GenericEntry shooterLFF;
 	public static GenericEntry shooterRFF;
+	public static GenericEntry ampDelay;
 
 	public static enum modeChoices {
 		AMP,
@@ -134,6 +135,8 @@ public class Robot extends TimedRobot {
 
 		shooterLFF = shooterTab.add("L FF", 0).getEntry();
 		shooterRFF = shooterTab.add("R FF",0).getEntry();
+
+		ampDelay = gameTab.add("amp delay", 1).getEntry();
 
 	}
 
