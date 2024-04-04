@@ -197,7 +197,7 @@ public class RobotContainer {
 		operator.rightTrigger(.1).whileTrue(new IntakeOuttake(intake, outtake, .75));
 		operator.a().whileTrue(new ChangeSpeed(outtake, 4500, "speaker"));
 		operator.y().whileTrue(new ChangeSpeed(outtake, 4500, "bottom"));
-		operator.x().whileTrue(new ChangeSpeed(outtake, 700, "amp"));
+		operator.x().whileTrue(new ChangeSpeed(outtake, 350, "amp"));
 		operator.b().whileTrue(new ChangeSpeed(outtake, 0, "stop"));
 	}
 
@@ -249,7 +249,7 @@ public class RobotContainer {
 		}
 		return autoCommand;
 	}
-w\d
+
 	public TrajectoryConfig createTrajectoryConfig() {
 		// Create config for trajectory
 		TrajectoryConfig config = new TrajectoryConfig(
