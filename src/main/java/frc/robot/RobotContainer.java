@@ -50,9 +50,12 @@ import frc.robot.commands.DoNothing;
 import frc.robot.commands.IntakeOuttake;
 import frc.robot.commands.PivotIntake;
 import frc.robot.commands.PivotOuttake;
+import frc.robot.commands.PivotPID;
 import frc.robot.commands.RunFlywheel;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.RunOuttake;
+import frc.robot.commands.SpeedPID;
+import frc.robot.commands.IntervalAdjustSpeed;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Outtake;
@@ -92,7 +95,7 @@ public class RobotContainer {
 	private final SwerveDrivetrain drivetrain = new SwerveDrivetrain();
 	private final Climber climber = new Climber(CAN50, CAN51, DIO0, DIO1);
 	private final Outtake outtake = new Outtake(CAN33, CAN32, CAN30, CAN31, CAN34, DIO2);
-	private final Intake intake = new Intake(CAN40, CAN41, PCM01, DIO6);
+	private final Intake intake = new Intake(CAN41, CAN40, PCM01, DIO6);
 	public void resetSpeed() {
 		outtake.setSpeed(0);
 	}
@@ -106,6 +109,7 @@ public class RobotContainer {
 		STRAIGHT_TAXI,
 		SHOOT,
 		SHOOT_STRAIGHT_TAXI,
+		TWO_NOTE,
 		TRAJECTORY
 	}
 
@@ -126,6 +130,8 @@ public class RobotContainer {
 		autonChooser.setDefaultOption("Straight Taxi", Auton.STRAIGHT_TAXI);
 		autonChooser.addOption("Shoot", Auton.SHOOT);
 		autonChooser.addOption("Shoot & Straight Taxi", Auton.SHOOT_STRAIGHT_TAXI);
+		autonChooser.addOption("Trajectory Test", Auton.TRAJECTORY);
+		autonChooser.addOption("Two Note", Auton.TWO_NOTE);
 		autonTab.add("Auton Mode Chooser", autonChooser).withSize(2, 1);
 
 		// Configure the button bindings
@@ -135,18 +141,17 @@ public class RobotContainer {
 		configureButtonBindings();
 		
 
-		double control_limiter = 1.0;
+		double control_limiter = 1;
 		
 			
 		drivetrain.setDefaultCommand(new RunCommand(
-			() -> drivetrain.drive(
-				MathUtil.applyDeadband((driver.getLeftY() * Math.abs(driver.getLeftY()))*control_limiter, JOYSTICK_Y1_AXIS_THRESHOLD),
-				MathUtil.applyDeadband((driver.getLeftX() * Math.abs(driver.getLeftX()))*control_limiter, JOYSTICK_X1_AXIS_THRESHOLD),
-				-MathUtil.applyDeadband((driver.getRightX() * Math.abs(driver.getRightX()))*control_limiter, JOYSTICK_X2_AXIS_THRESHOLD),
-		 		true, false, doSpeedBoost), drivetrain));
+			() -> drivetrain.drivePID(
+				RobotContainer.deadzone(driver.getLeftY(), driver.getLeftX(), driver.getRightX(), JOYSTICK_Y1_AXIS_THRESHOLD)*control_limiter,
+				RobotContainer.deadzone(driver.getLeftX(), driver.getLeftY(), driver.getRightX(), JOYSTICK_X1_AXIS_THRESHOLD)*control_limiter,
+				RobotContainer.deadzone(driver.getRightX(), driver.getLeftY(), driver.getLeftX(), JOYSTICK_X2_AXIS_THRESHOLD)*control_limiter,
+		 		doSpeedBoost), drivetrain));
 		climber.setDefaultCommand(new Climb(climber, operator));
-		outtake.setDefaultCommand(new RunFlywheel(outtake));
-		
+		outtake.setDefaultCommand(new SpeedPID(outtake));
 	}
 
 	// public double getDistanceThing () {
@@ -171,6 +176,14 @@ public class RobotContainer {
 		
 	// }
 
+	public static double deadzone(double a, double b, double c, double zone) {
+		if (Math.sqrt(Math.pow(a, 2)+Math.pow(b, 2)+Math.pow(c, 2)) > zone) {
+			return a * Math.abs(a);
+		} else {
+			return 0;
+		}
+	}
+
 	/**
 	 * Use this method to define your button->command mappings. Buttons can be
 	 * created by
@@ -178,25 +191,29 @@ public class RobotContainer {
 	 * subclasses ({@link
 	 * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling
 	 * passing it to a
-	 * {@link JoystickButton}.
+	 * {@link JoystickButton}
 	 */
 	private void configureButtonBindings() {
 		driver.x().whileTrue(new RunCommand(() -> drivetrain.setX(), drivetrain));
 		driver.leftTrigger(.1).whileTrue(new BoostSpeed());
 		driver.a().whileTrue(new RunCommand(() -> drivetrain.zeroHeading(), drivetrain));
-		operator.povUp().whileTrue(new PivotOuttake(outtake, .75));
-		operator.povDown().whileTrue(new PivotOuttake(outtake, -.75));
-		operator.rightBumper().whileTrue(new SequentialCommandGroup(new RunIntake(intake, outtake, -1).withTimeout(intakeTimer.getDouble(0)), new RunIntake(intake, outtake, 1)));
+		operator.povUp().whileTrue(new PivotOuttake(outtake, true));
+		operator.povDown().whileTrue(new PivotOuttake(outtake, false));
+		operator.povRight().whileTrue(new IntervalAdjustSpeed(outtake, true));
+		operator.povLeft().whileTrue(new IntervalAdjustSpeed(outtake, false));
+		operator.rightBumper().whileTrue(new RunIntake(intake, outtake, 1));
 		operator.leftBumper().whileTrue(new RunIntake(intake, outtake, -1));
 		operator.leftTrigger(.1).whileTrue(new RunOuttake(outtake, -1));
 		operator.rightTrigger(.1).whileTrue(new IntakeOuttake(intake, outtake, .75));
-		operator.a().whileTrue(new ChangeSpeed(outtake, 1));
-		operator.b().whileTrue(new ChangeSpeed(outtake, 0));
+		operator.a().whileTrue(new ChangeSpeed(outtake, 4500, "speaker"));
+		operator.y().whileTrue(new ChangeSpeed(outtake, 4500, "bottom"));
+		operator.x().whileTrue(new ChangeSpeed(outtake, 700, "amp"));
+		operator.b().whileTrue(new ChangeSpeed(outtake, 0, "stop"));
 	}
 
 	/**
 	 * Use this to pass the autonomous command to the main {@link Robot} class.
-	 *
+	 * 
 	 * @return the command to run in autonomous
 	 */
 	public Command getAutonomousCommand() {
@@ -204,10 +221,10 @@ public class RobotContainer {
 		switch (autonChooser.getSelected()) {
 			case SHOOT:
 				autoCommand = new SequentialCommandGroup(
-					new ChangeSpeed(outtake, 1).withTimeout(0.1),
+					new ChangeSpeed(outtake, 1, "speaker").withTimeout(0.1),
 					new RunFlywheel(outtake).withTimeout(2),
 					new IntakeOuttake(intake, outtake, .75).withTimeout(1),
-					new ChangeSpeed(outtake, 0).withTimeout(0.1),
+					new ChangeSpeed(outtake, 0, "speaker").withTimeout(0.1),
 					new RunFlywheel(outtake).withTimeout(0.1)
 				);
 				break;
@@ -216,28 +233,31 @@ public class RobotContainer {
 				break;
 			case SHOOT_STRAIGHT_TAXI:
 				autoCommand = new SequentialCommandGroup(
-					new ChangeSpeed(outtake, 1).withTimeout(0.1),
+					new ChangeSpeed(outtake, 1, "speaker").withTimeout(0.1),
 					new RunFlywheel(outtake).withTimeout(2),
 					new IntakeOuttake(intake, outtake, .75).withTimeout(2),
-					new ChangeSpeed(outtake, 0).withTimeout(0.1),
+					new ChangeSpeed(outtake, 0, "speaker").withTimeout(0.1),
 					new RunFlywheel(outtake).withTimeout(0.1),
-					new RunIntake(intake, outtake, .67).alongWith(new RunCommand(() -> drivetrain.drive(-.5, 0, 0, false), drivetrain).withTimeout(2)).withTimeout(2)
+					new RunIntake(intake, outtake, .67).alongWith(new RunCommand(() -> drivetrain.drive(-.5, 0, 0, false), drivetrain).withTimeout(1.9)).withTimeout(1.9)
 				);
-				break;
+			case TWO_NOTE:
+				autoCommand = new SequentialCommandGroup(
+					new ChangeSpeed(outtake, 1, "speaker").withTimeout(2.1),
+					new RunFlywheel(outtake).withTimeout(2),
+					new IntakeOuttake(intake, outtake, .75).withTimeout(2),
+					new RunIntake(intake, outtake, .67).alongWith(new RunCommand(() -> drivetrain.drive(-.5, 0, 0, false), drivetrain).withTimeout(1.9)).withTimeout(1.9),
+					new RunCommand(() -> drivetrain.drive(0, 0, 0, false), drivetrain).withTimeout(0),
+					new RunCommand(() -> drivetrain.drive(.5, 0, 0, false), drivetrain).alongWith(new RunFlywheel(outtake).withTimeout(2.8)).withTimeout(2.3),	
+					new IntakeOuttake(intake, outtake, .75).withTimeout(2.1),
+					new ChangeSpeed(outtake, 0, "speaker").withTimeout(0.1),
+					new RunFlywheel(outtake).withTimeout(0.1)
+				);
+			break;
 			case TRAJECTORY:
-				TrajectoryConfig trajectoryConfig =
-				new TrajectoryConfig(AutoConstants.MAX_SPEED_METERS_PER_SECOND, AutoConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
-					.setKinematics(Constants.DrivetrainConstants.DRIVE_KINEMATICS);
-				Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-					new Pose2d(0, 0, new Rotation2d(0)),
-					List.of(
-						new Translation2d(1, 1),
-						new Translation2d(-1, -1)
-					),
-					new Pose2d(3, 0, new Rotation2d(0)),
-					trajectoryConfig
+				autoCommand = new SequentialCommandGroup(
+					drivetrain.followTrajectory(),
+					new RunCommand(() -> drivetrain.drive(0, 0, 0, false), drivetrain)
 				);
-				autoCommand = drivetrain.followTrajectory(trajectory);
 				break;
 			default:
 				break;

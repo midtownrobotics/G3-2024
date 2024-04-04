@@ -22,14 +22,18 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Voltage;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 import java.util.List;
 
 import com.ctre.phoenix.sensors.Pigeon2;
+import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -37,7 +41,10 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DrivetrainConstants;
+import frc.utils.ModifiedSignalLogger;
 import frc.utils.SwerveUtils;
+import frc.utils.SwerveVoltageRequest;
+import frc.robot.Constants;
 import frc.robot.Constants;
 import frc.robot.Ports;
 
@@ -51,10 +58,10 @@ public class SwerveDrivetrain extends SubsystemBase {
 	// public static final double REAR_LEFT_VIRTUAL_OFFSET_RADIANS = -0.934; // adjust as needed so that virtual (turn) position of wheel is zero when straight
 	// public static final double REAR_RIGHT_VIRTUAL_OFFSET_RADIANS = +1.021; // adjust as needed so that virtual (turn) position of wheel is zero when straight
 
-	public static final double FRONT_LEFT_VIRTUAL_OFFSET_RADIANS = -3.03; // adjust as needed so that virtual (turn) position of wheel is zero when straight
-	public static final double FRONT_RIGHT_VIRTUAL_OFFSET_RADIANS = 2.69-Math.PI; // adjust as needed so that virtual (turn) position of wheel is zero when straight
-	public static final double REAR_LEFT_VIRTUAL_OFFSET_RADIANS = -2.33+Math.PI; // adjust as needed so that virtual (turn) position of wheel is zero when straight
-	public static final double REAR_RIGHT_VIRTUAL_OFFSET_RADIANS = Math.PI/2+Math.PI/16; // adjust as needed so that virtual (turn) position of wheel is zero when straight
+	public static final double FRONT_LEFT_VIRTUAL_OFFSET_RADIANS = -3.03+Math.PI; // adjust as needed so that virtual (turn) position of wheel is zero when straight
+	public static final double FRONT_RIGHT_VIRTUAL_OFFSET_RADIANS = 2.69; // adjust as needed so that virtual (turn) position of wheel is zero when straight
+	public static final double REAR_LEFT_VIRTUAL_OFFSET_RADIANS = -2.33; // adjust as needed so that virtual (turn) position of wheel is zero when straight
+	public static final double REAR_RIGHT_VIRTUAL_OFFSET_RADIANS = Math.PI/2+Math.PI/16-Math.PI; // adjust as needed so that virtual (turn) position of wheel is zero when straight
     static final int GYRO_ORIENTATION = 1; // might be able to merge with kGyroReversed
 
 	public static final double FIELD_LENGTH_INCHES = 54*12+1; // 54ft 1in
@@ -113,7 +120,7 @@ public class SwerveDrivetrain extends SubsystemBase {
 	// The gyro sensor
 	private final AHRS m_gyro = new AHRS(SPI.Port.kMXP); // usign SPI by default, which is what we want.
 
-	public final Pigeon2 pigeon = new Pigeon2(5);
+	public final WPI_Pigeon2 pigeon = new WPI_Pigeon2(5, "Sensors");
 
 	// Slew rate filter variables for controlling lateral acceleration
 	private double m_currentRotation = 0.0;
@@ -250,6 +257,21 @@ public class SwerveDrivetrain extends SubsystemBase {
 		drive(xSpeed, ySpeed, rot, true, speedBoost);
 	}
 
+	public void drivePID(double xSpeed, double ySpeed, double rot, boolean speedBoost) {
+		SmartDashboard.putNumber("desired rotation", rot*Constants.DrivetrainConstants.MAX_ANGULAR_SPEED_RADIANS_PER_SECOND/(Math.PI*2));
+		SmartDashboard.putNumber("desired heading", pigeon.getRate() / 360);
+		double error = 0;
+		if (xSpeed != 0 || ySpeed != 0 || rot != 0) {
+			error = rot*Constants.DrivetrainConstants.MAX_ANGULAR_SPEED_RADIANS_PER_SECOND/(Math.PI*2) - pigeon.getRate() / 360;
+		}
+		double kP = 1;
+		drive(xSpeed, ySpeed, kP * error + rot, speedBoost);
+	}
+
+	public void driveBoosted() {
+		
+	}
+
 	/**
 	 * Method to drive the robot using joystick info.
 	 *
@@ -343,9 +365,21 @@ public class SwerveDrivetrain extends SubsystemBase {
 		m_rearRight.setDesiredState(swerveModuleStates[3]);
 	}
 
-	public Command followTrajectory(Trajectory trajectory) {
+	public Command followTrajectory() {
+		TrajectoryConfig trajectoryConfig =
+			new TrajectoryConfig(AutoConstants.MAX_SPEED_METERS_PER_SECOND, AutoConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
+			.setKinematics(Constants.DrivetrainConstants.DRIVE_KINEMATICS);
+		Trajectory trajectory = TrajectoryGenerator.generateTrajectory(new Pose2d(0, 0, new Rotation2d(0)), List.of(new Translation2d(1, 0), new Translation2d(-1, 0)), new Pose2d(0, 0, new Rotation2d(0)), trajectoryConfig);
 		ProfiledPIDController thetaController = new ProfiledPIDController(AutoConstants.THETA_CONTROLLER_P, 0, 0, AutoConstants.THETA_CONTROLLER_CONSTRAINTS);
-		SwerveControllerCommand autoCommand = new SwerveControllerCommand(trajectory, this::getPose, Constants.DrivetrainConstants.DRIVE_KINEMATICS, new PIDController(AutoConstants.X_CONTROLLER_P, 0, 0), new PIDController(AutoConstants.Y_CONTROLLER_P, 0, 0), thetaController, this::setModuleStates, this);
+		SwerveControllerCommand autoCommand = new SwerveControllerCommand(
+			trajectory,
+			this::getPose,
+			Constants.DrivetrainConstants.DRIVE_KINEMATICS,
+			new PIDController(AutoConstants.X_CONTROLLER_P, 0, 0),
+			new PIDController(AutoConstants.Y_CONTROLLER_P, 0, 0),
+			thetaController,
+			this::setModuleStates,
+			this);
 		return autoCommand;
 	}
 
@@ -384,11 +418,11 @@ public class SwerveDrivetrain extends SubsystemBase {
 
 	/** Zeroes the heading of the robot. */
 	public void zeroHeading() {
-		pigeon.setYaw(180);
+		pigeon.setYaw(0);
 	}
 
 	public void oppositeHeading() {
-		pigeon.setYaw(0);
+		pigeon.setYaw(180);
 	}
 
 	public void stop()
@@ -525,6 +559,14 @@ public class SwerveDrivetrain extends SubsystemBase {
 		drive(0, 0, output, false, false); // TODO double-check sign
 	}
 
+	private SwerveVoltageRequest driveVoltage = new SwerveVoltageRequest(true);
+	private SysIdRoutine driveSysId = new SysIdRoutine(
+		new SysIdRoutine.Config(null, null, null, ModifiedSignalLogger.logState()),
+		new SysIdRoutine.Mechanism(
+			(Measure<Voltage> volts) -> {},
+			null,
+			this));
+
 	
 
 }
@@ -534,3 +576,11 @@ public class SwerveDrivetrain extends SubsystemBase {
 
 //gray was here
 //fortnite vbux
+
+
+//                          _______
+//                         | -   - |
+//                         | |   | |
+//erik is birth today day! |_\ - /_|
+//fortnite vbux              \___/
+

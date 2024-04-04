@@ -119,11 +119,20 @@ public final class Constants {
 		public static final double FREE_SPEED_RPM = 5676;
 		//Can't have numbers in varable names in java
 		public static final int ROLLER_FEED_CURRENT_LIMIT = 25;
-		public static final int INTAKE_CURRENT_LIMIT = 30;
+		public static final int INTAKE_CURRENT_LIMIT_INTERNAL = 35;
+		public static final int INTAKE_CURRENT_LIMIT_EXTERNAL = 30;
 		public static final int STANDARD_NEO_CURRENT_LIMIT = 60;
 	}
 
 	public static final class ClimberConstants {
-		public static final double CLIMBER_STOP_CURRENT = 0;
+		public static final double CLIMBER_STOP_CURRENT = 1000;
+	}
+
+	public static final class OuttakeConstants {
+		public static final double SPEAKER_ANGLE = 0.872;
+		public static final double AMP_ANGLE = 0.872;
+		public static final double FLYWHEEL_SPEED_P = 0.0005;
+		public static final double FLYWHEEL_SPEED_D = 0.0005;
+		public static final double FLYWHEEL_SPEED_FF = 0.00024;
 	}
 }
