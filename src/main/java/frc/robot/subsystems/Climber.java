@@ -5,6 +5,8 @@ import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import frc.robot.Constants.ClimberConstants;
 import frc.robot.Constants.NeoMotorConstants;
 
 public class Climber extends SubsystemBase {
@@ -19,23 +21,27 @@ public class Climber extends SubsystemBase {
         this.rightWinch = rightWinch;
         this.leftSensor = leftSensor;
         this.rightSensor = rightSensor;
-
         leftWinch.restoreFactoryDefaults();
         rightWinch.restoreFactoryDefaults();
-
         leftWinch.setIdleMode(IdleMode.kBrake);
         rightWinch.setIdleMode(IdleMode.kBrake);
-
         leftWinch.setInverted(true);
         rightWinch.setInverted(false);
-        
         leftWinch.setSmartCurrentLimit(NeoMotorConstants.STANDARD_NEO_CURRENT_LIMIT);
         rightWinch.setSmartCurrentLimit(NeoMotorConstants.STANDARD_NEO_CURRENT_LIMIT);
     }
 
     public void winch(double left, double right){
-        leftWinch.set(left);
-        rightWinch.set(right);
+        if (leftWinch.getOutputCurrent() >= ClimberConstants.CLIMBER_STOP_CURRENT){
+            leftWinch.set(0);
+        } else {
+            leftWinch.set(left);
+        }
+        if (rightWinch.getOutputCurrent() >= ClimberConstants.CLIMBER_STOP_CURRENT){
+            rightWinch.set(0);
+        } else {
+            rightWinch.set(right);
+        }
     }
 
     public boolean getLeftSensor() {
@@ -44,5 +50,13 @@ public class Climber extends SubsystemBase {
 
     public boolean getRightSensor() {
         return rightSensor.get();
+    }
+
+    public double getRightMotorTemp() {
+        return rightWinch.getMotorTemperature();
+    }
+
+    public double getLeftMotorTemp() {
+        return leftWinch.getMotorTemperature();
     }
 }

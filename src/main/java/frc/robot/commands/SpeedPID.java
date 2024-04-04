@@ -3,26 +3,28 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Outtake;
 
-public class PivotOuttake extends Command {
+public class SpeedPID extends Command {
     private final Outtake outtake;
-    private final boolean up;
 
-    public PivotOuttake(Outtake outtake, boolean up) {
+    public SpeedPID(Outtake outtake) {
         this.outtake = outtake;
-        this.up = up;
+        addRequirements(outtake);
     }
 
     @Override
     public void initialize() {
-        if(up) {
-            outtake.setAngle(outtake.getAngle() - .01);
-        } else {
-            outtake.setAngle(outtake.getAngle() + .01);
-        }
+        outtake.pidWheel(0);
+    }
+
+    public void execute() {
+        outtake.pidWheel();
+        outtake.setRightSpeed();
+        outtake.setPivot();
     }
 
     @Override
     public void end(boolean interrupted) {
+        outtake.pidWheel(0);
         outtake.pivot(0);
     }
 }
