@@ -243,8 +243,13 @@ public class SwerveDrivetrain extends SubsystemBase {
 	}
 
 	public void drivePID(double xSpeed, double ySpeed, double rot, boolean speedBoost) {
-		double error = rot*Constants.DrivetrainConstants.MAX_ANGULAR_SPEED_RADIANS_PER_SECOND/(Math.PI*2) + pigeon.getRate() / 360;
-		double kP = 0.1;
+		SmartDashboard.putNumber("desired rotation", rot*Constants.DrivetrainConstants.MAX_ANGULAR_SPEED_RADIANS_PER_SECOND/(Math.PI*2));
+		SmartDashboard.putNumber("desired heading", pigeon.getRate() / 360);
+		double error = 0;
+		if (xSpeed != 0 || ySpeed != 0 || rot != 0) {
+			error = rot*Constants.DrivetrainConstants.MAX_ANGULAR_SPEED_RADIANS_PER_SECOND/(Math.PI*2) - pigeon.getRate() / 360;
+		}
+		double kP = 1;
 		drive(xSpeed, ySpeed, kP * error + rot, speedBoost);
 	}
 
