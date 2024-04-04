@@ -212,10 +212,10 @@ public class RobotContainer {
 			case SHOOT:
 				autoCommand = new SequentialCommandGroup(
 					new ChangeSpeed(outtake, 1, "speaker").withTimeout(0.1),
-					new RunFlywheel(outtake).withTimeout(2),
+					new SpeedPID(outtake).withTimeout(2),
 					new IntakeOuttake(intake, outtake, .75).withTimeout(1),
-					new ChangeSpeed(outtake, 0, "speaker").withTimeout(0.1),
-					new RunFlywheel(outtake).withTimeout(0.1)
+					new ChangeSpeed(outtake, 0, "stop").withTimeout(0.1),
+					new SpeedPID(outtake).withTimeout(0.1)
 				);
 				break;
 			case STRAIGHT_TAXI:
@@ -224,10 +224,10 @@ public class RobotContainer {
 			case SHOOT_STRAIGHT_TAXI:
 				autoCommand = new SequentialCommandGroup(
 					new ChangeSpeed(outtake, 1, "speaker").withTimeout(0.1),
-					new RunFlywheel(outtake).withTimeout(2),
+					new SpeedPID(outtake).withTimeout(2),
 					new IntakeOuttake(intake, outtake, .75).withTimeout(2),
 					new ChangeSpeed(outtake, 0, "speaker").withTimeout(0.1),
-					new RunFlywheel(outtake).withTimeout(0.1),
+					new SpeedPID(outtake).withTimeout(0.1),
 					new RunIntake(intake, outtake, .67).alongWith(new RunCommand(() -> drivetrain.drive(-.5, 0, 0, false), drivetrain).withTimeout(1.9)).withTimeout(1.9)
 				);
 			case TWO_NOTE:
