@@ -22,6 +22,7 @@ import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.ctre.phoenix.sensors.Pigeon2;
+import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -29,6 +30,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.utils.SwerveUtils;
+import frc.robot.Constants;
 import frc.robot.Ports;
 
 /**
@@ -103,7 +105,7 @@ public class SwerveDrivetrain extends SubsystemBase {
 	// The gyro sensor
 	private final AHRS m_gyro = new AHRS(SPI.Port.kMXP); // usign SPI by default, which is what we want.
 
-	public final Pigeon2 pigeon = new Pigeon2(5, "Sensors");
+	public final WPI_Pigeon2 pigeon = new WPI_Pigeon2(5, "Sensors");
 
 	// Slew rate filter variables for controlling lateral acceleration
 	private double m_currentRotation = 0.0;
@@ -238,6 +240,21 @@ public class SwerveDrivetrain extends SubsystemBase {
 
 	public void drive(double xSpeed, double ySpeed, double rot, boolean speedBoost) {
 		drive(xSpeed, ySpeed, rot, true, speedBoost);
+	}
+
+	public void drivePID(double xSpeed, double ySpeed, double rot, boolean speedBoost) {
+		SmartDashboard.putNumber("desired rotation", rot*Constants.DrivetrainConstants.MAX_ANGULAR_SPEED_RADIANS_PER_SECOND/(Math.PI*2));
+		SmartDashboard.putNumber("desired heading", pigeon.getRate() / 360);
+		double error = 0;
+		if (xSpeed != 0 || ySpeed != 0 || rot != 0) {
+			error = rot*Constants.DrivetrainConstants.MAX_ANGULAR_SPEED_RADIANS_PER_SECOND/(Math.PI*2) - pigeon.getRate() / 360;
+		}
+		double kP = 1;
+		drive(xSpeed, ySpeed, kP * error + rot, speedBoost);
+	}
+
+	public void driveBoosted() {
+		
 	}
 
 	/**
