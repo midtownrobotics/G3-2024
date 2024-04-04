@@ -174,6 +174,10 @@ public class Outtake extends SubsystemBase {
         SmartDashboard.putNumber("PID value", pidAmount);
     }
 
+    public String getMode() {
+        return mode;
+    }
+
     public void setPivot() {
         setPivot(angle);
     }
@@ -181,6 +185,11 @@ public class Outtake extends SubsystemBase {
     public void run() {
         flywheel();
         roller(1);
+    }
+
+    public void runRollerSpeed(double power) {
+        flywheel();
+        roller(power);
     }
 
     public void flywheel() {
