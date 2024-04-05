@@ -115,8 +115,6 @@ public class Outtake extends SubsystemBase {
             rightWheel.set(0);
         }
 
-        SmartDashboard.putNumber("P", leftPID.getP());
-        SmartDashboard.putNumber("D", leftPID.getD());
     }
 
     public void pidWheel(double speed) {
@@ -171,7 +169,6 @@ public class Outtake extends SubsystemBase {
             pidAmount = pivotPID.calculate(getPivot(), setpoint);
             pivotOuttake.set(pidAmount);
         }
-        SmartDashboard.putNumber("PID value", pidAmount);
     }
 
     public String getMode() {
@@ -184,7 +181,15 @@ public class Outtake extends SubsystemBase {
 
     public void run() {
         flywheel();
-        roller(1);
+        double rollerPower = Math.min(1, (Math.max(speed/700.0, .3)));
+        rollerPower *= 12;
+        SmartDashboard.putNumber("roller voltage", rollerPower);
+        rollerVoltage(rollerPower);
+        SmartDashboard.putNumber("roller % output", rollerLeader.getAppliedOutput());
+    }
+
+    public void rollerVoltage(double voltage) {
+        rollerLeader.setVoltage(voltage);
     }
 
     public void runRollerSpeed(double power) {
