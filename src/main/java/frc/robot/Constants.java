@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.geometry.Translation2d;
@@ -106,13 +109,19 @@ public final class Constants {
 		public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = 14.58;
 		public static final double MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED = Math.PI;
 
-		public static final double X_CONTROLLER_P = 1;
+		public static final PIDConstants translationPIDConstants = new PIDConstants(1.0, 0.0, 0.0);
+		public static final PIDConstants rotationPIDConstants = new PIDConstants(1.0, 0.0, 0.0);
+
+
 		public static final double Y_CONTROLLER_P = 1;
 		public static final double THETA_CONTROLLER_P = 1;
 
 		// Constraint for the motion profiled robot angle controller
 		public static final TrapezoidProfile.Constraints THETA_CONTROLLER_CONSTRAINTS = new TrapezoidProfile.Constraints(
 			MAX_ANGULAR_SPEED_RADIANS_PER_SECOND, MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND_SQUARED);
+		
+		public static final HolonomicPathFollowerConfig pathConfig = new HolonomicPathFollowerConfig(
+			translationPIDConstants, rotationPIDConstants, 4.95, DrivetrainConstants.WHEEL_BASE_METERS, new ReplanningConfig(), .02);
 	}
 
 	public static final class NeoMotorConstants {

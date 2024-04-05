@@ -254,7 +254,7 @@ public class RobotContainer {
 				);
 			break;
 			case TRAJECTORY:
-				autoCommand = drivetrain.followPath("/pathplanner/paths/50cm_forward.path");
+				autoCommand = new DoNothing();
 				break;
 			default:
 				break;
