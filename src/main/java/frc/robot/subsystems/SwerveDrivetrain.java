@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 
 import com.ctre.phoenix.sensors.Pigeon2;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
@@ -45,6 +46,8 @@ import com.pathplanner.lib.path.PathPlannerTrajectory;
 
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -202,9 +205,26 @@ public class SwerveDrivetrain extends SubsystemBase {
 		// Rear Right
 		this.RRDT = tempTab.add("RR D Temp", 0).getEntry();
 		this.RRTT = tempTab.add("RR T Temp", 0).getEntry();
-
+		// PathPlanner AutoBuilder
 		AutoBuilder.configureHolonomic(
-			this::getPose, this::resetOdometry, null, null, null, null, null);
+			this::getPose,
+			this::resetOdometry,
+			this::getChassisSpeeds,
+			this::setStatesFromChassisSpeeds,
+			AutoConstants.pathConfig,
+			() -> {
+				Optional<Alliance> alliance = DriverStation.getAlliance();
+				if (alliance.isPresent()) {
+					return alliance.get() == Alliance.Red;
+				}
+				return false;
+			},
+			this);
+	}
+
+	public void setStatesFromChassisSpeeds(ChassisSpeeds chassisSpeeds) {
+		SwerveModuleState[] states = DrivetrainConstants.DRIVE_KINEMATICS.toSwerveModuleStates(chassisSpeeds);
+		setModuleStates(states);
 	}
 
 	@Override
@@ -280,9 +300,6 @@ public class SwerveDrivetrain extends SubsystemBase {
 		drive(xSpeed, ySpeed, kP * error + rot, speedBoost);
 	}
 
-	public void driveBoosted() {
-		
-	}
 
 	/**
 	 * Method to drive the robot using joystick info.
@@ -396,7 +413,7 @@ public class SwerveDrivetrain extends SubsystemBase {
 	}
 
 	public ChassisSpeeds getChassisSpeeds() {
-		return new ChassisSpeeds();
+		return DrivetrainConstants.DRIVE_KINEMATICS.toChassisSpeeds(getFrontLeftModule().getState(), getFrontRightModule().getState(), getRearLeftModule().getState(), getRearRightModule().getState());
 	}
 
 	// public Command followPath(String path) {
@@ -424,10 +441,13 @@ public class SwerveDrivetrain extends SubsystemBase {
 
 	// }
 
-	public Command followPath() {
-		PathPlannerPath path = PathPlannerPath.fromPathFile("50cm_forward");
+	public Command followPath(String pathName) {
+		PathPlannerPath path = PathPlannerPath.fromPathFile(pathName);
 		return AutoBuilder.followPath(path);
+	}
 
+	public Command ppAuto(String autoName) {
+		return new PathPlannerAuto(autoName);
 	}
 
 	/**

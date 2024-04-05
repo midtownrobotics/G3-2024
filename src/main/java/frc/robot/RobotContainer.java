@@ -254,7 +254,7 @@ public class RobotContainer {
 				);
 			break;
 			case TRAJECTORY:
-				autoCommand = new DoNothing();
+				autoCommand = drivetrain.ppAuto("50cm_forward");
 				break;
 			default:
 				break;
