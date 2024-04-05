@@ -91,7 +91,7 @@ public class Outtake extends SubsystemBase {
 
     public void run(double power){
         flywheel(power);
-        roller(power);
+        rollerVoltage(power*12);
     }
 
     public void pidWheel() {
@@ -183,6 +183,9 @@ public class Outtake extends SubsystemBase {
         flywheel();
         double rollerPower = Math.min(1, (Math.max(speed/700.0, .3)));
         rollerPower *= 12;
+        if (speed == 0) {
+            rollerPower = 0;
+        }
         SmartDashboard.putNumber("roller voltage", rollerPower);
         rollerVoltage(rollerPower);
         SmartDashboard.putNumber("roller % output", rollerLeader.getAppliedOutput());
