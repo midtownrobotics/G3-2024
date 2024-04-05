@@ -202,6 +202,9 @@ public class SwerveDrivetrain extends SubsystemBase {
 		// Rear Right
 		this.RRDT = tempTab.add("RR D Temp", 0).getEntry();
 		this.RRTT = tempTab.add("RR T Temp", 0).getEntry();
+
+		AutoBuilder.configureHolonomic(
+			this::getPose, this::resetOdometry, null, null, null, null, null);
 	}
 
 	@Override
@@ -384,12 +387,16 @@ public class SwerveDrivetrain extends SubsystemBase {
 			trajectory,
 			this::getPose,
 			Constants.DrivetrainConstants.DRIVE_KINEMATICS,
-			new PIDController(AutoConstants.X_CONTROLLER_P, 0, 0),
+			new PIDController(AutoConstants.translationPIDConstants.kP, AutoConstants.translationPIDConstants.kI, AutoConstants.translationPIDConstants.kD),
 			new PIDController(AutoConstants.Y_CONTROLLER_P, 0, 0),
 			thetaController,
 			this::setModuleStates,
 			this);
 		return autoCommand;
+	}
+
+	public ChassisSpeeds getChassisSpeeds() {
+		return new ChassisSpeeds();
 	}
 
 	// public Command followPath(String path) {
