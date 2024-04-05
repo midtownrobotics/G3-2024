@@ -63,6 +63,10 @@ public class Outtake extends SubsystemBase {
         leftWheel.setSmartCurrentLimit(NeoMotorConstants.STANDARD_NEO_CURRENT_LIMIT);
         rollerLeader.setSmartCurrentLimit(NeoMotorConstants.ROLLER_FEED_CURRENT_LIMIT);
         rollerFollower.setSmartCurrentLimit(NeoMotorConstants.ROLLER_FEED_CURRENT_LIMIT);
+        rightWheel.burnFlash();
+        leftWheel.burnFlash();
+        rollerLeader.burnFlash();
+        rollerFollower.burnFlash();        
         pivotPID = new PIDController(0, 0, 0);
         pivotPID.setP(10);
         pivotPID.setI(0);
