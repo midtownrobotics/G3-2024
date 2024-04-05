@@ -19,6 +19,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
@@ -30,11 +31,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
+import java.io.FileNotFoundException;
+import java.nio.file.Path;
 import java.util.List;
 
 import com.ctre.phoenix.sensors.Pigeon2;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -369,7 +374,7 @@ public class SwerveDrivetrain extends SubsystemBase {
 		TrajectoryConfig trajectoryConfig =
 			new TrajectoryConfig(AutoConstants.MAX_SPEED_METERS_PER_SECOND, AutoConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
 			.setKinematics(Constants.DrivetrainConstants.DRIVE_KINEMATICS);
-		Trajectory trajectory = TrajectoryGenerator.generateTrajectory(new Pose2d(0, 0, new Rotation2d(0)), List.of(new Translation2d(1, 0), new Translation2d(-1, 0)), new Pose2d(0, 0, new Rotation2d(0)), trajectoryConfig);
+		Trajectory trajectory = TrajectoryGenerator.generateTrajectory(new Pose2d(0, 0, new Rotation2d(0)), List.of(new Translation2d(1, 0)), new Pose2d(1, 0, new Rotation2d(0)), trajectoryConfig);
 		ProfiledPIDController thetaController = new ProfiledPIDController(AutoConstants.THETA_CONTROLLER_P, 0, 0, AutoConstants.THETA_CONTROLLER_CONSTRAINTS);
 		SwerveControllerCommand autoCommand = new SwerveControllerCommand(
 			trajectory,
@@ -381,6 +386,31 @@ public class SwerveDrivetrain extends SubsystemBase {
 			this::setModuleStates,
 			this);
 		return autoCommand;
+	}
+
+	public Command followPath(String path) {
+		TrajectoryConfig trajectoryConfig =
+			new TrajectoryConfig(AutoConstants.MAX_SPEED_METERS_PER_SECOND, AutoConstants.MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
+			.setKinematics(Constants.DrivetrainConstants.DRIVE_KINEMATICS);
+		Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(path);
+		Trajectory trajectory = TrajectoryGenerator.generateTrajectory(new Pose2d(0, 0, new Rotation2d(0)), List.of(new Translation2d(0, 0)), new Pose2d(0, 0, new Rotation2d(0)), trajectoryConfig);
+		try {
+			trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+		} catch (Exception e) {
+			SmartDashboard.putString("pathplanner error", e.getMessage());
+		}
+		ProfiledPIDController thetaController = new ProfiledPIDController(AutoConstants.THETA_CONTROLLER_P, 0, 0, AutoConstants.THETA_CONTROLLER_CONSTRAINTS);
+		SwerveControllerCommand autoCommand = new SwerveControllerCommand(
+			trajectory,
+			this::getPose,
+			Constants.DrivetrainConstants.DRIVE_KINEMATICS,
+			new PIDController(AutoConstants.X_CONTROLLER_P, 0, 0),
+			new PIDController(AutoConstants.Y_CONTROLLER_P, 0, 0),
+			thetaController,
+			this::setModuleStates,
+			this);
+		return autoCommand;
+
 	}
 
 	/**
