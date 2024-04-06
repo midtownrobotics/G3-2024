@@ -60,6 +60,7 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Outtake;
 import frc.robot.subsystems.SwerveDrivetrain;
+import com.pathplanner.lib.auto.NamedCommands;
 
 
 /*
@@ -133,6 +134,10 @@ public class RobotContainer {
 		autonChooser.addOption("Trajectory Test", Auton.TRAJECTORY);
 		autonChooser.addOption("Two Note", Auton.TWO_NOTE);
 		autonTab.add("Auton Mode Chooser", autonChooser).withSize(2, 1);
+
+		NamedCommands.registerCommand("speaker high speed", new ChangeSpeed(outtake, 3100.0, "speaker"));
+        NamedCommands.registerCommand("exampleCommand", );
+        NamedCommands.registerCommand("someOtherCommand", );
 
 		// Configure the button bindings
 
