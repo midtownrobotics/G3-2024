@@ -61,6 +61,8 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Outtake;
 import frc.robot.subsystems.SwerveDrivetrain;
+
+import com.fasterxml.jackson.core.sym.Name;
 import com.pathplanner.lib.auto.NamedCommands;
 
 
@@ -136,9 +138,11 @@ public class RobotContainer {
 		autonChooser.addOption("Two Note", Auton.TWO_NOTE);
 		autonTab.add("Auton Mode Chooser", autonChooser).withSize(2, 1);
 
-		NamedCommands.registerCommand("speaker high speed", new ChangeSpeed(outtake, 3100.0, "speaker"));
-        NamedCommands.registerCommand("exampleCommand", );
-        NamedCommands.registerCommand("someOtherCommand", );
+		NamedCommands.registerCommand("speakerHighSpeed", new ChangeSpeed(outtake, OuttakeConstants.SPEAKER_SPEED, "speaker"));
+		NamedCommands.registerCommand("speakerLowSpeed", new ChangeSpeed(outtake, OuttakeConstants.SPEAKER_SPEED, "bottom"));
+        NamedCommands.registerCommand("speedPID", new SpeedPID(outtake));
+        NamedCommands.registerCommand("intakeOuttake", new IntakeOuttake(intake, outtake, 0.75));
+		NamedCommands.registerCommand("runIntake", new RunIntake(intake, outtake, 0.67));
 
 		// Configure the button bindings
 
@@ -261,7 +265,7 @@ public class RobotContainer {
 				);
 			break;
 			case TRAJECTORY:
-				autoCommand = drivetrain.ppAuto("50cm_forward");
+				autoCommand = drivetrain.ppAuto("2_note");
 				break;
 			default:
 				break;

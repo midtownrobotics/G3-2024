@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Outtake;
@@ -17,6 +18,8 @@ public class IntakeOuttake extends Command {
 
     @Override
     public void initialize() {
+        SmartDashboard.putString("command-auton", "intakeOuttake");
+
         intake.run(power);
         if (outtake.getSpeed() != 0) {
             outtake.run();
