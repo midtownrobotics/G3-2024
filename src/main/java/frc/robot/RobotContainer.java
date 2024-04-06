@@ -146,9 +146,9 @@ public class RobotContainer {
 			
 		drivetrain.setDefaultCommand(new RunCommand(
 			() -> drivetrain.drive(
-				RobotContainer.deadzone(driver.getLeftY(), driver.getLeftX(), driver.getRightX(), JOYSTICK_Y1_AXIS_THRESHOLD)*control_limiter,
-				RobotContainer.deadzone(driver.getLeftX(), driver.getLeftY(), driver.getRightX(), JOYSTICK_X1_AXIS_THRESHOLD)*control_limiter,
-				RobotContainer.deadzone(driver.getRightX(), driver.getLeftY(), driver.getLeftX(), JOYSTICK_X2_AXIS_THRESHOLD)*control_limiter,
+				RobotContainer.deadzone(-driver.getLeftY(), -driver.getLeftX(), driver.getRightX(), JOYSTICK_Y1_AXIS_THRESHOLD)*control_limiter,
+				RobotContainer.deadzone(-driver.getLeftX(), -driver.getLeftY(), driver.getRightX(), JOYSTICK_X1_AXIS_THRESHOLD)*control_limiter,
+				RobotContainer.deadzone(driver.getRightX(), -driver.getLeftY(), -driver.getLeftX(), JOYSTICK_X2_AXIS_THRESHOLD)*control_limiter,
 		 		true, doSpeedBoost), drivetrain));
 		climber.setDefaultCommand(new Climb(climber, operator));
 		outtake.setDefaultCommand(new SpeedPID(outtake));
