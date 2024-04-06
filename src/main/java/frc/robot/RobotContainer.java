@@ -43,6 +43,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DrivetrainConstants;
+import frc.robot.Constants.OuttakeConstants;
 import frc.robot.commands.BoostSpeed;
 import frc.robot.commands.ChangeSpeed;
 import frc.robot.commands.Climb;
@@ -210,9 +211,9 @@ public class RobotContainer {
 		operator.leftBumper().whileTrue(new RunIntake(intake, outtake, -1));
 		operator.leftTrigger(.1).whileTrue(new RunOuttake(outtake, -1));
 		operator.rightTrigger(.1).whileTrue(new IntakeOuttake(intake, outtake, .75));
-		operator.a().whileTrue(new ChangeSpeed(outtake, 4500, "speaker"));
-		operator.y().whileTrue(new ChangeSpeed(outtake, 4500, "bottom"));
-		operator.x().whileTrue(new ChangeSpeed(outtake, 700, "amp"));
+		operator.a().whileTrue(new ChangeSpeed(outtake, OuttakeConstants.SPEAKER_SPEED, "speaker"));
+		operator.y().whileTrue(new ChangeSpeed(outtake, OuttakeConstants.SPEAKER_SPEED, "bottom"));
+		operator.x().whileTrue(new ChangeSpeed(outtake, OuttakeConstants.AMP_SPEED, "amp"));
 		operator.b().whileTrue(new ChangeSpeed(outtake, 0, "stop"));
 	}
 
@@ -226,11 +227,11 @@ public class RobotContainer {
 		switch (autonChooser.getSelected()) {
 			case SHOOT:
 				autoCommand = new SequentialCommandGroup(
-					new ChangeSpeed(outtake, 1, "speaker").withTimeout(0.1),
-					new RunFlywheel(outtake).withTimeout(2),
+					new ChangeSpeed(outtake, OuttakeConstants.SPEAKER_SPEED, "speaker").withTimeout(0.1),
+					new SpeedPID(outtake).withTimeout(2),
 					new IntakeOuttake(intake, outtake, .75).withTimeout(1),
-					new ChangeSpeed(outtake, 0, "speaker").withTimeout(0.1),
-					new RunFlywheel(outtake).withTimeout(0.1)
+					new ChangeSpeed(outtake, 0, "stop").withTimeout(0.1),
+					new SpeedPID(outtake).withTimeout(0.1)
 				);
 				break;
 			case STRAIGHT_TAXI:
@@ -238,24 +239,25 @@ public class RobotContainer {
 				break;
 			case SHOOT_STRAIGHT_TAXI:
 				autoCommand = new SequentialCommandGroup(
-					new ChangeSpeed(outtake, 1, "speaker").withTimeout(0.1),
-					new RunFlywheel(outtake).withTimeout(2),
+					new ChangeSpeed(outtake, OuttakeConstants.SPEAKER_SPEED, "speaker").withTimeout(0.1),
+					new SpeedPID(outtake).withTimeout(2),
 					new IntakeOuttake(intake, outtake, .75).withTimeout(2),
-					new ChangeSpeed(outtake, 0, "speaker").withTimeout(0.1),
-					new RunFlywheel(outtake).withTimeout(0.1),
+					new ChangeSpeed(outtake, 0, "stop").withTimeout(0.1),
+					new SpeedPID(outtake).withTimeout(0.1),
 					new RunIntake(intake, outtake, .67).alongWith(new RunCommand(() -> drivetrain.drive(-.5, 0, 0, false), drivetrain).withTimeout(1.9)).withTimeout(1.9)
 				);
+				break;
 			case TWO_NOTE:
 				autoCommand = new SequentialCommandGroup(
-					new ChangeSpeed(outtake, 1, "speaker").withTimeout(2.1),
-					new RunFlywheel(outtake).withTimeout(2),
+					new ChangeSpeed(outtake, OuttakeConstants.SPEAKER_SPEED, "speaker").withTimeout(2.1),
+					new SpeedPID(outtake).withTimeout(2),
 					new IntakeOuttake(intake, outtake, .75).withTimeout(2),
 					new RunIntake(intake, outtake, .67).alongWith(new RunCommand(() -> drivetrain.drive(-.5, 0, 0, false), drivetrain).withTimeout(1.9)).withTimeout(1.9),
 					new RunCommand(() -> drivetrain.drive(0, 0, 0, false), drivetrain).withTimeout(0),
-					new RunCommand(() -> drivetrain.drive(.5, 0, 0, false), drivetrain).alongWith(new RunFlywheel(outtake).withTimeout(2.8)).withTimeout(2.3),	
+					new RunCommand(() -> drivetrain.drive(.5, 0, 0, false), drivetrain).alongWith(new SpeedPID(outtake).withTimeout(2.8)).withTimeout(2.3),	
 					new IntakeOuttake(intake, outtake, .75).withTimeout(2.1),
-					new ChangeSpeed(outtake, 0, "speaker").withTimeout(0.1),
-					new RunFlywheel(outtake).withTimeout(0.1)
+					new ChangeSpeed(outtake, 0, "stop").withTimeout(0.1),
+					new SpeedPID(outtake).withTimeout(0.1)
 				);
 			break;
 			case TRAJECTORY:

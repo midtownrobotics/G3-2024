@@ -30,7 +30,7 @@ public class ChangeSpeed extends Command{
                 break;
             case "bottom":
                 outtake.changeStop(false);
-                angle = 0.962;
+                angle = OuttakeConstants.LOW_ANGLE;
                 outtake.setSpeed(speed, angle);
                 outtake.setMode("speaker");
                 break;

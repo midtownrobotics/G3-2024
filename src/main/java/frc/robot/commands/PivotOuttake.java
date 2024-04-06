@@ -15,9 +15,9 @@ public class PivotOuttake extends Command {
     @Override
     public void initialize() {
         if(up) {
-            outtake.setAngle(outtake.getAngle() - .01);
+            outtake.setAngle(outtake.getAngle() - .005);
         } else {
-            outtake.setAngle(outtake.getAngle() + .01);
+            outtake.setAngle(outtake.getAngle() + .005);
         }
     }
 

@@ -29,6 +29,9 @@ public class Intake extends SubsystemBase{
 
         runInternal.setInverted(false);
 
+        runExternal.burnFlash();
+        runInternal.burnFlash();
+
         externalPivot.set(Value.kForward);  
     }
 
