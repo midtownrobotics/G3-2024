@@ -115,7 +115,8 @@ public class RobotContainer {
 		SHOOT_STRAIGHT_TAXI,
 		TWO_NOTE,
 		TRAJECTORY,
-		TWO_NOTE_CENTER
+		TWO_NOTE_CENTER,
+		TWO_HALF_NOTE_CENTER
 	}
 
 	private final ShuffleboardTab autonTab = Shuffleboard.getTab("Auton");
@@ -137,6 +138,8 @@ public class RobotContainer {
 		autonChooser.addOption("Shoot & Straight Taxi", Auton.SHOOT_STRAIGHT_TAXI);
 		autonChooser.addOption("Trajectory Test", Auton.TRAJECTORY);
 		autonChooser.addOption("Two Note", Auton.TWO_NOTE);
+		autonChooser.addOption("Two Note Center", Auton.TWO_NOTE_CENTER);
+		autonChooser.addOption("Two & Half Note Center", Auton.TWO_HALF_NOTE_CENTER);
 		autonTab.add("Auton Mode Chooser", autonChooser).withSize(2, 1);
 
 		NamedCommands.registerCommand("speakerHighSpeed", new ChangeSpeed(outtake, OuttakeConstants.SPEAKER_SPEED, "speaker"));
@@ -254,10 +257,12 @@ public class RobotContainer {
 				break;
 			case TWO_NOTE:
 				autoCommand = drivetrain.ppAuto("2_note");
-			break;
+				break;
 			case TWO_NOTE_CENTER:
 				autoCommand = drivetrain.ppAuto("2_note_center");
 				break;
+			case TWO_HALF_NOTE_CENTER:
+				autoCommand = drivetrain.ppAuto("2.5_note_center");
 			default:
 				break;
 		}
