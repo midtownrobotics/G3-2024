@@ -114,7 +114,8 @@ public class RobotContainer {
 		SHOOT,
 		SHOOT_STRAIGHT_TAXI,
 		TWO_NOTE,
-		TRAJECTORY
+		TRAJECTORY,
+		TWO_NOTE_CENTER
 	}
 
 	private final ShuffleboardTab autonTab = Shuffleboard.getTab("Auton");
@@ -254,8 +255,8 @@ public class RobotContainer {
 			case TWO_NOTE:
 				autoCommand = drivetrain.ppAuto("2_note");
 			break;
-			case TRAJECTORY:
-				autoCommand = drivetrain.ppAuto("2_note");
+			case TWO_NOTE_CENTER:
+				autoCommand = drivetrain.ppAuto("2_note_center");
 				break;
 			default:
 				break;
