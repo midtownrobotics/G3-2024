@@ -229,6 +229,18 @@ public class Outtake extends SubsystemBase {
         return speed;
     }
 
+    public void rightFlyWheel(double speed) {
+        rightWheel.set(speed);
+    }
+
+    public void leftFlyWheel(double speed){
+        leftWheel.set(speed);
+    }
+
+    public void runFeeders(double speed){
+        rollerLeader.set(speed);
+    }
+
     public double getRightWheelMotorTemp() {
         return rightWheel.getMotorTemperature();
     }

@@ -46,7 +46,7 @@ public class SwerveDrivetrain extends SubsystemBase {
 	public static final double FRONT_LEFT_VIRTUAL_OFFSET_RADIANS = -3.03+Math.PI; // adjust as needed so that virtual (turn) position of wheel is zero when straight
 	public static final double FRONT_RIGHT_VIRTUAL_OFFSET_RADIANS = 2.69; // adjust as needed so that virtual (turn) position of wheel is zero when straight
 	public static final double REAR_LEFT_VIRTUAL_OFFSET_RADIANS = -2.33; // adjust as needed so that virtual (turn) position of wheel is zero when straight
-	public static final double REAR_RIGHT_VIRTUAL_OFFSET_RADIANS = Math.PI/2+Math.PI/16-Math.PI; // adjust as needed so that virtual (turn) position of wheel is zero when straight
+	public static final double REAR_RIGHT_VIRTUAL_OFFSET_RADIANS = Math.PI/4+Math.PI/16-Math.PI; // adjust as needed so that virtual (turn) position of wheel is zero when straight
     static final int GYRO_ORIENTATION = 1; // might be able to merge with kGyroReversed
 
 	public static final double FIELD_LENGTH_INCHES = 54*12+1; // 54ft 1in
@@ -525,7 +525,48 @@ public class SwerveDrivetrain extends SubsystemBase {
 
 		drive(0, 0, output, false, false); // TODO double-check sign
 	}
+
+	public void setTurnMotorRotation(double rot){
+		m_frontLeft.setRotation(rot);
+		m_frontRight.setRotation(rot);
+		m_rearLeft.setRotation(rot);
+		m_rearRight.setRotation(rot);
+	}
+
+	public void setFrontLeftDriveSpeed(double speed){
+		m_frontLeft.setDriveSpeed(speed);
+	}
+
+	public void setFrontRightDriveSpeed(double speed){
+		m_frontRight.setDriveSpeed(speed);
+	}
+
+	public void setRearLeftDriveSpeed(double speed){
+		m_rearLeft.setDriveSpeed(speed);
+	}
+
+	public void setRearRightDriveSpeed(double speed){
+		m_rearRight.setDriveSpeed(speed);
+	}
+
+	public void setFrontLeftRotation(double rot){
+		m_frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(rot)));
+	}
+
+	public void setFrontRightRotation(double rot){
+		m_frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(rot)));
+	}
+
+	public void setRearLeftRotation(double rot){
+		m_rearLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(rot)));
+	}
+
+	public void setRearRightRotation(double rot){
+		m_rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(rot)));
+	}
 }
+
+
 
 //                          _______
 //                         | -   - |

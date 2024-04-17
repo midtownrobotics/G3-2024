@@ -222,27 +222,35 @@ public class Robot extends TimedRobot {
 
 	public void updateToSmartDash()
 	{
-		SmartDashboard.putNumber("FrontLeftDrivingEncoderPosition", m_robotContainer.getDrivetrain().getFrontLeftModule().getDrivingEncoder().getPosition());
-		SmartDashboard.putNumber("FrontLeftTurningEncoderPosition", m_robotContainer.getDrivetrain().getFrontLeftModule().getTurningEncoder().getPosition());
-		
-		SmartDashboard.putNumber("RearLeftDrivingEncoderPosition", m_robotContainer.getDrivetrain().getRearLeftModule().getDrivingEncoder().getPosition());
-		SmartDashboard.putNumber("RearLeftTurningEncoderPosition", m_robotContainer.getDrivetrain().getRearLeftModule().getTurningEncoder().getPosition());
-		
-		SmartDashboard.putNumber("FrontRightDrivingEncoderPosition", m_robotContainer.getDrivetrain().getFrontRightModule().getDrivingEncoder().getPosition());
-		SmartDashboard.putNumber("FrontRightTurningEncoderPosition", m_robotContainer.getDrivetrain().getFrontRightModule().getTurningEncoder().getPosition());
-		
-		SmartDashboard.putNumber("RearRightDrivingEncoderPosition", m_robotContainer.getDrivetrain().getRearRightModule().getDrivingEncoder().getPosition());
-		SmartDashboard.putNumber("RearRightTurningEncoderPosition", m_robotContainer.getDrivetrain().getRearRightModule().getTurningEncoder().getPosition());
-	
-		SmartDashboard.putNumber("FL Rel", m_robotContainer.getDrivetrain().getFrontLeftModule().getTurningAbsoluteEncoder().getPosition());
-		SmartDashboard.putNumber("RL Rel", m_robotContainer.getDrivetrain().getRearLeftModule().getTurningAbsoluteEncoder().getPosition());
-		SmartDashboard.putNumber("FR Rel", m_robotContainer.getDrivetrain().getFrontRightModule().getTurningAbsoluteEncoder().getPosition());
-		SmartDashboard.putNumber("RR Rel", m_robotContainer.getDrivetrain().getRearRightModule().getTurningAbsoluteEncoder().getPosition());
 
-		SmartDashboard.putNumber("FL Abs", m_robotContainer.getDrivetrain().getFrontLeftModule().getTurningAbsoluteEncoder().getAbsolutePosition());
-		SmartDashboard.putNumber("RL Abs", m_robotContainer.getDrivetrain().getRearLeftModule().getTurningAbsoluteEncoder().getAbsolutePosition());
-		SmartDashboard.putNumber("FR Abs", m_robotContainer.getDrivetrain().getFrontRightModule().getTurningAbsoluteEncoder().getAbsolutePosition());
-		SmartDashboard.putNumber("RR Abs", m_robotContainer.getDrivetrain().getRearRightModule().getTurningAbsoluteEncoder().getAbsolutePosition());
+
+		SmartDashboard.putNumber("limelight x", m_robotContainer.getLimelight().getX());
+		SmartDashboard.putNumber("limelight y", m_robotContainer.getLimelight().getY());
+		SmartDashboard.putNumber("limelight z", m_robotContainer.getLimelight().getZ());
+		SmartDashboard.putNumber("Angle Offset", Math.toDegrees(m_robotContainer.getLimelight().getAngleOffset()));
+
+
+		// SmartDashboard.putNumber("FrontLeftDrivingEncoderPosition", m_robotContainer.getDrivetrain().getFrontLeftModule().getDrivingEncoder().getPosition());
+		// SmartDashboard.putNumber("FrontLeftTurningEncoderPosition", m_robotContainer.getDrivetrain().getFrontLeftModule().getTurningEncoder().getPosition());
+		
+		// SmartDashboard.putNumber("RearLeftDrivingEncoderPosition", m_robotContainer.getDrivetrain().getRearLeftModule().getDrivingEncoder().getPosition());
+		// SmartDashboard.putNumber("RearLeftTurningEncoderPosition", m_robotContainer.getDrivetrain().getRearLeftModule().getTurningEncoder().getPosition());
+		
+		// SmartDashboard.putNumber("FrontRightDrivingEncoderPosition", m_robotContainer.getDrivetrain().getFrontRightModule().getDrivingEncoder().getPosition());
+		// SmartDashboard.putNumber("FrontRightTurningEncoderPosition", m_robotContainer.getDrivetrain().getFrontRightModule().getTurningEncoder().getPosition());
+		
+		// SmartDashboard.putNumber("RearRightDrivingEncoderPosition", m_robotContainer.getDrivetrain().getRearRightModule().getDrivingEncoder().getPosition());
+		// SmartDashboard.putNumber("RearRightTurningEncoderPosition", m_robotContainer.getDrivetrain().getRearRightModule().getTurningEncoder().getPosition());
+	
+		// SmartDashboard.putNumber("FL Rel", m_robotContainer.getDrivetrain().getFrontLeftModule().getTurningAbsoluteEncoder().getPosition());
+		// SmartDashboard.putNumber("RL Rel", m_robotContainer.getDrivetrain().getRearLeftModule().getTurningAbsoluteEncoder().getPosition());
+		// SmartDashboard.putNumber("FR Rel", m_robotContainer.getDrivetrain().getFrontRightModule().getTurningAbsoluteEncoder().getPosition());
+		// SmartDashboard.putNumber("RR Rel", m_robotContainer.getDrivetrain().getRearRightModule().getTurningAbsoluteEncoder().getPosition());
+
+		// SmartDashboard.putNumber("FL Abs", m_robotContainer.getDrivetrain().getFrontLeftModule().getTurningAbsoluteEncoder().getAbsolutePosition());
+		// SmartDashboard.putNumber("RL Abs", m_robotContainer.getDrivetrain().getRearLeftModule().getTurningAbsoluteEncoder().getAbsolutePosition());
+		// SmartDashboard.putNumber("FR Abs", m_robotContainer.getDrivetrain().getFrontRightModule().getTurningAbsoluteEncoder().getAbsolutePosition());
+		// SmartDashboard.putNumber("RR Abs", m_robotContainer.getDrivetrain().getRearRightModule().getTurningAbsoluteEncoder().getAbsolutePosition());
 
 		//SmartDashboard.putBoolean("Note Sensor", m_robotContainer.getIntake().getNoteSensor());
 		SmartDashboard.putNumber("Shooter Angle", m_robotContainer.getOuttake().getPivot());
@@ -260,10 +268,10 @@ public class Robot extends TimedRobot {
 		/* 
 		SmartDashboard.putString("Mode", modeChooser.getSelected().toString());
 	
-		SmartDashboard.putNumber("FrontLeftTurningDesiredState", m_robotContainer.getDrivetrain().getFrontLeftModule().getDesiredState().angle.getRadians());
-		SmartDashboard.putNumber("RearLeftTurningDesiredState", m_robotContainer.getDrivetrain().getRearLeftModule().getDesiredState().angle.getRadians());
-		SmartDashboard.putNumber("FrontRightTurningDesiredState", m_robotContainer.getDrivetrain().getFrontRightModule().getDesiredState().angle.getRadians());
-		SmartDashboard.putNumber("RearRightTurningDesiredState", m_robotContainer.getDrivetrain().getRearRightModule().getDesiredState().angle.getRadians());
+		// SmartDashboard.putNumber("FrontLeftTurningDesiredState", m_robotContainer.getDrivetrain().getFrontLeftModule().getDesiredState().angle.getRadians());
+		// SmartDashboard.putNumber("RearLeftTurningDesiredState", m_robotContainer.getDrivetrain().getRearLeftModule().getDesiredState().angle.getRadians());
+		// SmartDashboard.putNumber("FrontRightTurningDesiredState", m_robotContainer.getDrivetrain().getFrontRightModule().getDesiredState().angle.getRadians());
+		// SmartDashboard.putNumber("RearRightTurningDesiredState", m_robotContainer.getDrivetrain().getRearRightModule().getDesiredState().angle.getRadians());
 
 		/* Display 6-axis Processed Angle Data                                      
 		SmartDashboard.putBoolean(  "IMU_Connected",        m_robotContainer.getDrivetrain().getImu().isConnected());

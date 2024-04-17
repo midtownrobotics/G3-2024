@@ -124,6 +124,10 @@ public final class Constants {
 		public static final int STANDARD_NEO_CURRENT_LIMIT = 60;
 	}
 
+	public static final class OpCheckConstants {
+		public static final boolean OP_CHECK_MODE = false;
+	}
+
 	public static final class ClimberConstants {
 		public static final double CLIMBER_STOP_CURRENT = 1000;
 	}
@@ -137,5 +141,12 @@ public final class Constants {
 		public static final double FLYWHEEL_SPEED_P = 0.0005;
 		public static final double FLYWHEEL_SPEED_D = 0.0005;
 		public static final double FLYWHEEL_SPEED_FF = 0.00024;
+	}
+
+	public static final class LimeLightPostioningConstants {
+		public static final double deviation = 0;
+		public static final double P = 0;
+		public static final double I = 0;
+		public static final double D = 0;
 	}
 }
