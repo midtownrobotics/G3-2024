@@ -130,7 +130,7 @@ public class Outtake extends SubsystemBase {
              
         } else {
         
-            if (mode == "amp") {
+            if (mode.equals("amp")) {
                 leftPID.setReference(speed, ControlType.kVelocity);
                 rightPID.setReference(speed, ControlType.kVelocity);
             } else {
@@ -144,9 +144,9 @@ public class Outtake extends SubsystemBase {
 
     public void flywheel(double power){
         rightWheel.set(power);
-        if(mode == "amp" || mode == "stop") {
+        if(mode.equals("amp") || mode.equals("stop")) {
             leftWheel.set(power);
-        } else if (mode == "speaker") {
+        } else if (mode.equals("speaker")) {
             leftWheel.set(power * .35);
         }
     }
