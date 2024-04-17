@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.NeoMotorConstants;
 
@@ -20,14 +21,17 @@ public class Intake extends SubsystemBase{
         this.runInternal = runInternal;
         this.externalPivot = externalpivot;
         this.noteSensor = noteSensor;
-        runExternal.restoreFactoryDefaults();
-        runInternal.restoreFactoryDefaults();
         runExternal.setInverted(true);
 
         runExternal.setSmartCurrentLimit(NeoMotorConstants.INTAKE_CURRENT_LIMIT_EXTERNAL);
         runInternal.setSmartCurrentLimit(NeoMotorConstants.INTAKE_CURRENT_LIMIT_INTERNAL);
 
         runInternal.setInverted(false);
+
+        SmartDashboard.putBoolean("external inverted?", runExternal.getInverted());
+
+        runExternal.burnFlash();
+        runInternal.burnFlash();
 
         externalPivot.set(Value.kForward);  
     }
