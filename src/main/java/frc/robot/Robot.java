@@ -14,8 +14,6 @@ public class Robot extends TimedRobot {
 
 	private RobotContainer m_robotContainer;
 	private IntakeBeamBreak m_intakeBeamBreak;
-	// Just contains shuffle board functions so they can be in a different file
-	private SmartDashBoardUpdater m_smartDashBoardUpdater;
 
 	private double timer;
 	public boolean noteSensorBoolean;
@@ -31,8 +29,7 @@ public class Robot extends TimedRobot {
 	public void robotInit() {
 		m_robotContainer = new RobotContainer();
 		m_intakeBeamBreak = new IntakeBeamBreak();
-		m_smartDashBoardUpdater = new SmartDashBoardUpdater();
-		m_smartDashBoardUpdater.initSmartDash(m_robotContainer);
+		SmartDashBoardUpdater.initSmartDash(m_robotContainer);
 	}
 
 
@@ -46,7 +43,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void disabledPeriodic() {
-		m_smartDashBoardUpdater.updateToSmartDash(m_robotContainer);
+		SmartDashBoardUpdater.updateToSmartDash(m_robotContainer);
 	}
 
 	@Override
@@ -61,7 +58,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void autonomousPeriodic() {
-		m_smartDashBoardUpdater.updateToSmartDash(m_robotContainer);
+		SmartDashBoardUpdater.updateToSmartDash(m_robotContainer);
 	}
 
 	@Override

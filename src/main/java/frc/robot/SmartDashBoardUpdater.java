@@ -11,21 +11,21 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot.modeChoices;
 
 public class SmartDashBoardUpdater {
-	private GenericEntry IT;
-	private GenericEntry CRT;
-	private GenericEntry CLT;
-	private GenericEntry SRT;
-	private GenericEntry SLT;
-	private GenericEntry noteSensorShuffleBox;
-	private GenericEntry speedBoostShuffleBox;
-	private GenericEntry shooterLeftSpeedShuffleBox;
-	private GenericEntry shooterRightSpeedShuffleBox;
-	private GenericEntry shooterOnOffShuffleBox;
-	private GenericEntry shooterAngle;
+	private static GenericEntry IT;
+	private static GenericEntry CRT;
+	private static GenericEntry CLT;
+	private static GenericEntry SRT;
+	private static GenericEntry SLT;
+	private static GenericEntry noteSensorShuffleBox;
+	private static GenericEntry speedBoostShuffleBox;
+	private static GenericEntry shooterLeftSpeedShuffleBox;
+	private static GenericEntry shooterRightSpeedShuffleBox;
+	private static GenericEntry shooterOnOffShuffleBox;
+	private static GenericEntry shooterAngle;
 	private static ShuffleboardTab shooterTab = Shuffleboard.getTab("Shooter");
 	private static GenericEntry shooterSpeedSlider = shooterTab.add("Speed", 800).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 10000)).getEntry();
-	private GenericEntry shooterRightTargetBox;
-	private GenericEntry shooterLeftTargetBox;
+	private static GenericEntry shooterRightTargetBox;
+	private static GenericEntry shooterLeftTargetBox;
 
 	private static GenericEntry shooterLP;
 	private static GenericEntry shooterLD;
@@ -40,7 +40,7 @@ public class SmartDashBoardUpdater {
 	private static GenericEntry pivotAngle;
 	private static GenericEntry stop;
 
-    public void initSmartDash(RobotContainer m_robotContainer) {
+    public static void initSmartDash(RobotContainer m_robotContainer) {
         SmartDashboard.putData("Swerve Odometry", m_robotContainer.getField());		
 
 		ShuffleboardTab tempTab = Shuffleboard.getTab("Motor Tempuratures");
@@ -88,7 +88,7 @@ public class SmartDashBoardUpdater {
     }
 
 
-    public void updateToSmartDash(RobotContainer m_robotContainer)
+    public static void updateToSmartDash(RobotContainer m_robotContainer)
 	{
 		SmartDashboard.putNumber("FrontLeftDrivingEncoderPosition", m_robotContainer.getDrivetrain().getFrontLeftModule().getDrivingEncoder().getPosition());
 		SmartDashboard.putNumber("FrontLeftTurningEncoderPosition", m_robotContainer.getDrivetrain().getFrontLeftModule().getTurningEncoder().getPosition());
