@@ -23,19 +23,17 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.math.MathUtil;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.OuttakeConstants;
-import frc.robot.commands.BoostSpeed;
 import frc.robot.commands.ChangeSpeed;
-import frc.robot.commands.Climb;
 import frc.robot.commands.DoNothing;
 import frc.robot.commands.IntakeOuttake;
 import frc.robot.commands.PivotOuttake;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.RunOuttake;
 import frc.robot.commands.SpeedPID;
-import frc.robot.commands.IntervalAdjustSpeed;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Outtake;
@@ -128,7 +126,7 @@ public class RobotContainer {
 				RobotContainer.deadzone(driver.getLeftX(), driver.getLeftY(), driver.getRightX(), JOYSTICK_X1_AXIS_THRESHOLD)*control_limiter,
 				RobotContainer.deadzone(driver.getRightX(), driver.getLeftY(), driver.getLeftX(), JOYSTICK_X2_AXIS_THRESHOLD)*control_limiter,
 		 		doSpeedBoost), drivetrain));
-		climber.setDefaultCommand(new Climb(climber, operator));
+		climber.setDefaultCommand(new RunCommand(() -> climber.winch(MathUtil.applyDeadband(operator.getLeftY(), 0.1), MathUtil.applyDeadband(operator.getRightY(), 0.1)), climber));
 		outtake.setDefaultCommand(new SpeedPID(outtake));
 	}
 
@@ -173,16 +171,19 @@ public class RobotContainer {
 	 */
 	private void configureButtonBindings() {
 		driver.x().whileTrue(new RunCommand(() -> drivetrain.setX(), drivetrain));
-		driver.leftTrigger(.1).whileTrue(new BoostSpeed());
+		driver.leftTrigger(.1).onTrue(new RunCommand(() -> doSpeedBoost = true)).onFalse(new RunCommand(() -> doSpeedBoost = false));
 		driver.a().whileTrue(new RunCommand(() -> drivetrain.zeroHeading(), drivetrain));
-		operator.povUp().whileTrue(new PivotOuttake(outtake, true));
-		operator.povDown().whileTrue(new PivotOuttake(outtake, false));
-		operator.povRight().whileTrue(new IntervalAdjustSpeed(outtake, true));
-		operator.povLeft().whileTrue(new IntervalAdjustSpeed(outtake, false));
+
+		operator.povUp().whileTrue(new RunCommand(() -> outtake.setAngle(outtake.getAngle() - .005), outtake));
+		operator.povDown().whileTrue(new RunCommand(() -> outtake.setAngle(outtake.getAngle() + .005), outtake));
+		operator.povRight().whileTrue(new RunCommand(() -> outtake.setSpeed(outtake.getSpeed() + 25), outtake));
+		operator.povLeft().whileTrue(new RunCommand(() -> outtake.setSpeed(outtake.getSpeed() - 25), outtake));
+
 		operator.rightBumper().whileTrue(new RunIntake(intake, outtake, 1));
 		operator.leftBumper().whileTrue(new RunIntake(intake, outtake, -1));
 		operator.leftTrigger(.1).whileTrue(new RunOuttake(outtake, -1));
 		operator.rightTrigger(.1).whileTrue(new IntakeOuttake(intake, outtake, .75));
+
 		operator.a().whileTrue(new ChangeSpeed(outtake, OuttakeConstants.SPEAKER_SPEED, "speaker"));
 		operator.y().whileTrue(new ChangeSpeed(outtake, OuttakeConstants.SPEAKER_SPEED, "bottom"));
 		operator.x().whileTrue(new ChangeSpeed(outtake, OuttakeConstants.AMP_SPEED, "amp"));
