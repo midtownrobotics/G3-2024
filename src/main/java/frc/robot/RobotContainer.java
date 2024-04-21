@@ -41,7 +41,6 @@ import frc.robot.commands.ChangeSpeed;
 import frc.robot.commands.Climb;
 import frc.robot.commands.DoNothing;
 import frc.robot.commands.IntakeOuttake;
-import frc.robot.commands.PivotIntake;
 import frc.robot.commands.PivotOuttake;
 import frc.robot.commands.PivotPID;
 import frc.robot.commands.RunFlywheel;
