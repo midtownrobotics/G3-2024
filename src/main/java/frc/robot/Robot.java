@@ -258,8 +258,8 @@ public class Robot extends TimedRobot {
 
 		noteSensorShuffleBox.setBoolean(m_robotContainer.getIntake().getNoteSensor());
 		speedBoostShuffleBox.setBoolean(RobotContainer.doSpeedBoost);
-		shooterLeftSpeedShuffleBox.setDouble(m_robotContainer.getOuttake().getLeftWheelSpeed() * (61/36));
-		shooterRightSpeedShuffleBox.setDouble(m_robotContainer.getOuttake().getRightWheelSpeed() * (61/36));
+		shooterLeftSpeedShuffleBox.setDouble(m_robotContainer.getOuttake().getLeftWheelSpeed() * (61.0/36));
+		shooterRightSpeedShuffleBox.setDouble(m_robotContainer.getOuttake().getRightWheelSpeed() * (61.0/36));
 		shooterLeftTargetBox.setDouble(m_robotContainer.getOuttake().getLeftWheelTarget());
 		shooterRightTargetBox.setDouble(m_robotContainer.getOuttake().getRightWheelTarget());
 		shooterOnOffShuffleBox.setBoolean(m_robotContainer.getOuttake().getSpeed() > 0.5);

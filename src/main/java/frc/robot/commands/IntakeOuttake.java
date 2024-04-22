@@ -19,7 +19,8 @@ public class IntakeOuttake extends Command {
     public void initialize() {
         intake.run(power);
         if (outtake.getSpeed() != 0) {
-            outtake.run();
+            // outtake.run();
+            outtake.roller(power);
         }
     }
 
