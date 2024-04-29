@@ -225,7 +225,7 @@ public class Robot extends TimedRobot {
 	public void updateToSmartDash()
 	{
 
-		SmartDashboard.putNumber("limelight z", m_robotContainer.getLimelight().getZ());
+		SmartDashboard.putNumber("limelight dist", m_robotContainer.getLimelight().getDistance());
 
 		// SmartDashboard.putNumber("FrontLeftDrivingEncoderPosition", m_robotContainer.getDrivetrain().getFrontLeftModule().getDrivingEncoder().getPosition());
 		// SmartDashboard.putNumber("FrontLeftTurningEncoderPosition", m_robotContainer.getDrivetrain().getFrontLeftModule().getTurningEncoder().getPosition());

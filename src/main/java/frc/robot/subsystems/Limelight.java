@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
 
 public class Limelight extends SubsystemBase{
     NetworkTable networkTable;
@@ -15,7 +14,7 @@ public class Limelight extends SubsystemBase{
     }
 
     public double getX() {
-        return networkTable.getEntry("targetpose_robotspace").getDoubleArray(new Double[] {0.0})[0]*100;
+        return networkTable.getEntry("targetpose_robotspace").getDoubleArray(new Double[] {0.0})[0] * 100;
     }
 
     public double getY() {
@@ -27,7 +26,7 @@ public class Limelight extends SubsystemBase{
     }
 
     public double getZ() {
-        return networkTable.getEntry("targetpose_robotspace").getDoubleArray(new Double[] {0.0, 0.0, 0.0})[2]*100;
+        return networkTable.getEntry("targetpose_robotspace").getDoubleArray(new Double[] {0.0, 0.0, 0.0})[2] * 100;
     }
 
     public double getAngleOffset() {
@@ -35,5 +34,9 @@ public class Limelight extends SubsystemBase{
             return 0;
         }
         return Math.atan2(getX(), getZ());
+    }
+
+    public double getDistance() {
+        return Math.sqrt(Math.pow(getX(), 2) + Math.pow(getZ(), 2));
     }
 }

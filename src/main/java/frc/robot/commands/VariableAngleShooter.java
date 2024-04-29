@@ -21,8 +21,8 @@ public class VariableAngleShooter extends Command{
     @Override
     public void execute() {
         // if (limelight.getTagId() == Constants.OuttakeConstants.SPEAKER_TAG_ID) {
-        //     double Z = limelight.getZ();
-        //     double angle = ShooterUtils.instance.getAngleFromDistance(Z);
+        //     double dist = limelight.getDistance();
+        //     double angle = ShooterUtils.instance.getAngleFromDistance(dist);
         //     outtake.setPivot(angle);
         // }
 
