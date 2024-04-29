@@ -49,11 +49,13 @@ import frc.robot.commands.RunFlywheel;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.RunOuttake;
 import frc.robot.commands.SpeedPID;
+import frc.robot.commands.VariableAngleShooter;
 import frc.robot.commands.IntervalAdjustSpeed;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Outtake;
 import frc.robot.subsystems.SwerveDrivetrain;
+import frc.utils.ShooterUtils;
 import frc.robot.subsystems.Limelight;
 // Opchecks
 import frc.robot.commands.opcheck.FaceDriveTrainForward;
@@ -205,13 +207,15 @@ public class RobotContainer {
 		operator.povRight().whileTrue(new IntervalAdjustSpeed(outtake, true));
 		operator.povLeft().whileTrue(new IntervalAdjustSpeed(outtake, false));
 		operator.rightBumper().whileTrue(new RunIntake(intake, outtake, 1));
-		operator.leftBumper().whileTrue(new RunIntake(intake, outtake, -1));
+		// operator.leftBumper().whileTrue(new RunIntake(intake, outtake, -1));
 		operator.leftTrigger(.1).whileTrue(new RunOuttake(outtake, -1));
 		operator.rightTrigger(.1).whileTrue(new IntakeOuttake(intake, outtake, .75));
 		operator.a().whileTrue(new ChangeSpeed(outtake, OuttakeConstants.SPEAKER_SPEED, "speaker"));
 		operator.y().whileTrue(new ChangeSpeed(outtake, OuttakeConstants.SPEAKER_SPEED, "bottom"));
 		operator.x().whileTrue(new ChangeSpeed(outtake, OuttakeConstants.AMP_SPEED, "amp"));
 		operator.b().whileTrue(new ChangeSpeed(outtake, 0, "stop"));
+
+		operator.leftBumper().whileTrue(new VariableAngleShooter(limelight, outtake));
 	}
 
 	/**
@@ -257,7 +261,7 @@ public class RobotContainer {
 					new SpeedPID(outtake).withTimeout(0.1)
 				);
 				break;
-			default:
+			default:	
 				break;
 		}
 		return autoCommand;

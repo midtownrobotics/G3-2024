@@ -7,6 +7,7 @@ package frc.robot;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
@@ -141,6 +142,7 @@ public final class Constants {
 		public static final double FLYWHEEL_SPEED_P = 0.0005;
 		public static final double FLYWHEEL_SPEED_D = 0.0005;
 		public static final double FLYWHEEL_SPEED_FF = 0.00024;
+		public static final Integer SPEAKER_TAG_ID = 7;
 	}
 
 	public static final class LimeLightPostioningConstants {

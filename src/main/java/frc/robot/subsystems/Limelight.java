@@ -10,6 +10,10 @@ public class Limelight extends SubsystemBase{
         this.networkTable = networkTable;
     }
 
+    public int getTagId() {
+        return (int) networkTable.getEntry("tid").getInteger(0);
+    }
+
     public double getX() {
         return networkTable.getEntry("targetpose_robotspace").getDoubleArray(new Double[] {0.0})[0]*100;
     }

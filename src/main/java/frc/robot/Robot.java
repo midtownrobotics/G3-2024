@@ -135,6 +135,8 @@ public class Robot extends TimedRobot {
 		shooterLFF = shooterTab.add("L FF", 0).getEntry();
 		shooterRFF = shooterTab.add("R FF",0).getEntry();
 
+		SmartDashboard.putNumber("Set Shooter Angle", 0);
+
 	}
 
 	/**
@@ -223,12 +225,7 @@ public class Robot extends TimedRobot {
 	public void updateToSmartDash()
 	{
 
-
-		SmartDashboard.putNumber("limelight x", m_robotContainer.getLimelight().getX());
-		SmartDashboard.putNumber("limelight y", m_robotContainer.getLimelight().getY());
 		SmartDashboard.putNumber("limelight z", m_robotContainer.getLimelight().getZ());
-		SmartDashboard.putNumber("Angle Offset", Math.toDegrees(m_robotContainer.getLimelight().getAngleOffset()));
-
 
 		// SmartDashboard.putNumber("FrontLeftDrivingEncoderPosition", m_robotContainer.getDrivetrain().getFrontLeftModule().getDrivingEncoder().getPosition());
 		// SmartDashboard.putNumber("FrontLeftTurningEncoderPosition", m_robotContainer.getDrivetrain().getFrontLeftModule().getTurningEncoder().getPosition());
