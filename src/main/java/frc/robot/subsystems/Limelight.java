@@ -37,6 +37,7 @@ public class Limelight extends SubsystemBase{
     }
 
     public double getDistance() {
-        return Math.sqrt(Math.pow(getX(), 2) + Math.pow(getZ(), 2));
+        double rawDistance = Math.sqrt(Math.pow(getX(), 2) + Math.pow(getZ(), 2));
+        return rawDistance * Math.cos(Math.toRadians(25));
     }
 }
