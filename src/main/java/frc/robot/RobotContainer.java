@@ -48,6 +48,7 @@ import frc.robot.commands.PivotPID;
 import frc.robot.commands.RunFlywheel;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.RunOuttake;
+import frc.robot.commands.SmartShoot;
 import frc.robot.commands.SpeedPID;
 import frc.robot.commands.VariableAngleShooter;
 import frc.robot.commands.IntervalAdjustSpeed;
@@ -211,10 +212,11 @@ public class RobotContainer {
 		operator.leftTrigger(.1).whileTrue(new RunOuttake(outtake, -1));
 		operator.rightTrigger(.1).whileTrue(new IntakeOuttake(intake, outtake, .75));
 		operator.a().whileTrue(new ChangeSpeed(outtake, OuttakeConstants.SPEAKER_SPEED, "speaker"));
-		operator.y().whileTrue(new ChangeSpeed(outtake, OuttakeConstants.SPEAKER_SPEED, "bottom"));
+		// operator.y().whileTrue(new ChangeSpeed(outtake, OuttakeConstants.SPEAKER_SPEED, "bottom"));
 		operator.x().whileTrue(new ChangeSpeed(outtake, OuttakeConstants.AMP_SPEED, "amp"));
 		operator.b().whileTrue(new ChangeSpeed(outtake, 0, "stop"));
 
+		operator.y().whileTrue(new SmartShoot(outtake, 3100, limelight));
 		operator.leftBumper().whileTrue(new VariableAngleShooter(limelight, outtake));
 	}
 

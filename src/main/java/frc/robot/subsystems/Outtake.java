@@ -141,7 +141,7 @@ public class Outtake extends SubsystemBase {
                 leftPID.setReference(speed, ControlType.kVelocity);
                 rightPID.setReference(speed, ControlType.kVelocity);
             } else {
-                leftPID.setReference(speed * .35, ControlType.kVelocity);
+                leftPID.setReference(speed * 1.3, ControlType.kVelocity); // changed from 0.35 to 1.3 because ankit said this was better
                 rightPID.setReference(speed, ControlType.kVelocity);
             }
 
@@ -154,7 +154,7 @@ public class Outtake extends SubsystemBase {
         if(mode.equals("amp") || mode.equals("stop")) {
             leftWheel.set(power);
         } else if (mode.equals("speaker")) {
-            leftWheel.set(power * .35);
+            leftWheel.set(power * 1.3); // changed from 0.35 to 1.3 because ankit said this was better
         }
     }
 
@@ -277,7 +277,7 @@ public class Outtake extends SubsystemBase {
     }
 
     public double getLeftWheelTarget() {
-        return speed * 0.35;
+        return speed * 1.3; // changed from 0.35 to 1.3 because ankit said this was better
     }
 
     public void setAngle(double angle) {

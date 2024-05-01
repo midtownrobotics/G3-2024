@@ -8,6 +8,11 @@ public class ShooterUtils {
 
     public ShooterUtils() {
         lookupTableShooterAngle = new InterpolatingDoubleTreeMap();
+        lookupTableShooterAngle.put(159.4, 0.88);
+        lookupTableShooterAngle.put(182.0, 0.92);
+        lookupTableShooterAngle.put(199.0, 0.94);
+        lookupTableShooterAngle.put(221.0, 0.97);
+        lookupTableShooterAngle.put(231.0, 0.988);
     }
 
     public double getAngleFromDistance(double distance) {
