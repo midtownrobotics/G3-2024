@@ -123,12 +123,12 @@ public class Outtake extends SubsystemBase {
 
     public void pidWheel(double speed) {
 
-        leftPID.setP(Robot.shooterLP.getDouble(0));
-        leftPID.setD(Robot.shooterLD.getDouble(0));
-        leftPID.setFF(Robot.shooterLFF.getDouble(0));
-        rightPID.setP(Robot.shooterRP.getDouble(0));
-        rightPID.setD(Robot.shooterRD.getDouble(0));
-        rightPID.setFF(Robot.shooterRFF.getDouble(0));
+        // leftPID.setP(Robot.shooterLP.getDouble(0));
+        // leftPID.setD(Robot.shooterLD.getDouble(0));
+        // leftPID.setFF(Robot.shooterLFF.getDouble(0));
+        // rightPID.setP(Robot.shooterRP.getDouble(0));
+        // rightPID.setD(Robot.shooterRD.getDouble(0));
+        // rightPID.setFF(Robot.shooterRFF.getDouble(0));
 
         if (speed == 0) {
 
