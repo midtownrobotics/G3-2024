@@ -55,10 +55,12 @@ import frc.robot.commands.PivotPID;
 import frc.robot.commands.RunFlywheel;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.RunOuttake;
+import frc.robot.commands.SmartShoot;
 import frc.robot.commands.SpeedPID;
 import frc.robot.commands.IntervalAdjustSpeed;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Outtake;
 import frc.robot.subsystems.SwerveDrivetrain;
 
@@ -95,6 +97,8 @@ public class RobotContainer {
 	public static final double JOYSTICK_Y1_AXIS_THRESHOLD = 0.1;
 	public static final double JOYSTICK_X2_AXIS_THRESHOLD = 0.1;
 	public static final double JOYSTICK_Y2_AXIS_THRESHOLD = 0.1;
+
+	private final Limelight limelight = new Limelight(networkTable)
 
 	private final SwerveDrivetrain drivetrain = new SwerveDrivetrain();
 	private final Climber climber = new Climber(CAN50, CAN51, DIO0, DIO1);
@@ -216,9 +220,12 @@ public class RobotContainer {
 		operator.leftTrigger(.1).whileTrue(new RunOuttake(outtake, -1));
 		operator.rightTrigger(.1).whileTrue(new IntakeOuttake(intake, outtake, .75));
 		operator.a().whileTrue(new ChangeSpeed(outtake, OuttakeConstants.SPEAKER_SPEED, "speaker"));
-		operator.y().whileTrue(new ChangeSpeed(outtake, OuttakeConstants.SPEAKER_SPEED, "bottom"));
+		// operator.y().whileTrue(new ChangeSpeed(outtake, OuttakeConstants.SPEAKER_SPEED, "bottom"));
 		operator.x().whileTrue(new ChangeSpeed(outtake, OuttakeConstants.AMP_SPEED, "amp"));
 		operator.b().whileTrue(new ChangeSpeed(outtake, 0, "stop"));
+
+		operator.y().whileTrue(new SmartShoot(outtake, 3100, limelight));
+
 	}
 
 	/**
