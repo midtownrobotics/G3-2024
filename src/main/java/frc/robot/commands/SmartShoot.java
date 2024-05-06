@@ -31,6 +31,9 @@ public class SmartShoot extends Command{
     public void execute() {
         double distance = limelight.getDistance();
         outtake.setSpeed(speed, ShooterUtils.instance.getAngleFromDistance(distance));
+        outtake.pidWheel();
+        outtake.setRightSpeed();
+        outtake.setPivot(); 
     }
 
 }

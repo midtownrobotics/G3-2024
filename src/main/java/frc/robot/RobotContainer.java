@@ -98,7 +98,8 @@ public class RobotContainer {
 	public static final double JOYSTICK_X2_AXIS_THRESHOLD = 0.1;
 	public static final double JOYSTICK_Y2_AXIS_THRESHOLD = 0.1;
 
-	private final Limelight limelight = new Limelight(networkTable)
+	NetworkTable networkTable = NetworkTableInstance.getDefault().getTable("limelight");
+	private final Limelight limelight = new Limelight(networkTable);
 
 	private final SwerveDrivetrain drivetrain = new SwerveDrivetrain();
 	private final Climber climber = new Climber(CAN50, CAN51, DIO0, DIO1);
@@ -225,7 +226,6 @@ public class RobotContainer {
 		operator.b().whileTrue(new ChangeSpeed(outtake, 0, "stop"));
 
 		operator.y().whileTrue(new SmartShoot(outtake, 3100, limelight));
-
 	}
 
 	/**
