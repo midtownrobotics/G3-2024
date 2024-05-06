@@ -5,6 +5,9 @@
 package frc.robot;
 
 import com.revrobotics.CANSparkMax;
+
+import java.util.List;
+
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -12,7 +15,12 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -56,6 +64,9 @@ import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Outtake;
 import frc.robot.subsystems.SwerveDrivetrain;
+
+import com.fasterxml.jackson.core.sym.Name;
+import com.pathplanner.lib.auto.NamedCommands;
 import frc.utils.ShooterUtils;
 import frc.robot.subsystems.Limelight;
 // Opchecks
@@ -117,7 +128,8 @@ public class RobotContainer {
 		STRAIGHT_TAXI,
 		SHOOT,
 		SHOOT_STRAIGHT_TAXI,
-		TWO_NOTE
+		TWO_NOTE,
+		TRAJECTORY
 	}
 
 	private final ShuffleboardTab autonTab = Shuffleboard.getTab("Auton");
@@ -137,8 +149,15 @@ public class RobotContainer {
 		autonChooser.setDefaultOption("Straight Taxi", Auton.STRAIGHT_TAXI);
 		autonChooser.addOption("Shoot", Auton.SHOOT);
 		autonChooser.addOption("Shoot & Straight Taxi", Auton.SHOOT_STRAIGHT_TAXI);
+		autonChooser.addOption("Trajectory Test", Auton.TRAJECTORY);
 		autonChooser.addOption("Two Note", Auton.TWO_NOTE);
 		autonTab.add("Auton Mode Chooser", autonChooser).withSize(2, 1);
+
+		NamedCommands.registerCommand("speakerHighSpeed", new ChangeSpeed(outtake, OuttakeConstants.SPEAKER_SPEED, "speaker"));
+		NamedCommands.registerCommand("speakerLowSpeed", new ChangeSpeed(outtake, OuttakeConstants.SPEAKER_SPEED, "bottom"));
+        NamedCommands.registerCommand("speedPID", new SpeedPID(outtake));
+        NamedCommands.registerCommand("intakeOuttake", new IntakeOuttake(intake, outtake, 0.75));
+		NamedCommands.registerCommand("runIntake", new RunIntake(intake, outtake, 0.67));
 
 		// Configure the button bindings
 
@@ -155,7 +174,7 @@ public class RobotContainer {
 				RobotContainer.deadzone(-driver.getLeftY(), -driver.getLeftX(), -driver.getRightX(), JOYSTICK_Y1_AXIS_THRESHOLD)*control_limiter,
 				RobotContainer.deadzone(-driver.getLeftX(), -driver.getLeftY(), -driver.getRightX(), JOYSTICK_X1_AXIS_THRESHOLD)*control_limiter,
 				RobotContainer.deadzone(-driver.getRightX(), -driver.getLeftY(), -driver.getLeftX(), JOYSTICK_X2_AXIS_THRESHOLD)*control_limiter,
-				true, doSpeedBoost), drivetrain));
+		 		true, doSpeedBoost), drivetrain));
 		climber.setDefaultCommand(new Climb(climber, operator));
 		outtake.setDefaultCommand(new SpeedPID(outtake));
 	}
@@ -251,17 +270,10 @@ public class RobotContainer {
 				);
 				break;
 			case TWO_NOTE:
-				autoCommand = new SequentialCommandGroup(
-					new ChangeSpeed(outtake, OuttakeConstants.SPEAKER_SPEED, "speaker").withTimeout(2.1),
-					new SpeedPID(outtake).withTimeout(2),
-					new IntakeOuttake(intake, outtake, .75).withTimeout(2),
-					new RunIntake(intake, outtake, .67).alongWith(new RunCommand(() -> drivetrain.drive(-.5, 0, 0, false), drivetrain).withTimeout(1.9)).withTimeout(1.9),
-					new RunCommand(() -> drivetrain.drive(0, 0, 0, false), drivetrain).withTimeout(0),
-					new RunCommand(() -> drivetrain.drive(.5, 0, 0, false), drivetrain).alongWith(new SpeedPID(outtake).withTimeout(2.8)).withTimeout(2.3),	
-					new IntakeOuttake(intake, outtake, .75).withTimeout(2.1),
-					new ChangeSpeed(outtake, 0, "stop").withTimeout(0.1),
-					new SpeedPID(outtake).withTimeout(0.1)
-				);
+				autoCommand = drivetrain.ppAuto("2_note");
+			break;
+			case TRAJECTORY:
+				autoCommand = drivetrain.ppAuto("2_note");
 				break;
 			default:	
 				break;

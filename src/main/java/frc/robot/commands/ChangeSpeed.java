@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.hal.simulation.RoboRioDataJNI;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.Constants.OuttakeConstants;
@@ -21,6 +22,8 @@ public class ChangeSpeed extends Command{
 
     @Override
     public void initialize() {
+        SmartDashboard.putString("command-auton", "changeSpeed");
+
         switch (mode) {
             case "amp":
                 outtake.changeStop(false);
@@ -46,6 +49,11 @@ public class ChangeSpeed extends Command{
                 outtake.setMode("stop");
                 break;
         }
+    }
+
+    @Override
+    public boolean isFinished() {
+        return true;
     }
 
 }

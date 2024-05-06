@@ -20,7 +20,7 @@ public class RunIntake extends Command {
     @Override
     public void execute() {
         intake.run(power);
-        outtake.roller(0.1);
+        outtake.roller(0.15);
     }
 
     @Override

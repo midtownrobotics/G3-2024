@@ -1,0 +1,9 @@
+{
+  "lengthUnit": "Meter",
+  "exportUnit": "Always Meters",
+  "maxVelocity": 4.95,
+  "maxAcceleration": 10.791,
+  "trackWidth": 0.4826,
+  "gameName": "Crescendo",
+  "outputDir": ""
+}
