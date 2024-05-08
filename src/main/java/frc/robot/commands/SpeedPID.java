@@ -21,7 +21,6 @@ public class SpeedPID extends Command {
 
     public void execute() {
         outtake.pidWheel();
-        outtake.setRightSpeed();
         outtake.setPivot(); 
     }
 

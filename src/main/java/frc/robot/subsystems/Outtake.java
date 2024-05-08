@@ -102,16 +102,6 @@ public class Outtake extends SubsystemBase {
         pidWheel(speed);
     }
 
-    public void setRightSpeed() {
-        // double leftPower = leftWheel.getAppliedOutput();
-
-        // if (mode == "amp") {
-        //     rightWheel.set(leftPower);
-        // } else {
-        //     rightWheel.set(leftPower / .35);
-        // }
-    }
-
     @Override
     public void periodic() {
         if (stop == true) {
