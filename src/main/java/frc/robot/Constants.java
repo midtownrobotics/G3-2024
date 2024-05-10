@@ -146,5 +146,8 @@ public final class Constants {
 		public static final double FLYWHEEL_SPEED_P = 0.0005;
 		public static final double FLYWHEEL_SPEED_D = 0.0005;
 		public static final double FLYWHEEL_SPEED_FF = 0.00024;
+		public static final double SMART_ROTATE_P = 0;
+		public static final double SMART_ROTATE_I = 0;
+		public static final double SMART_ROTATE_D = 0;
 	}
 }

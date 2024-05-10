@@ -225,7 +225,7 @@ public class RobotContainer {
 		operator.x().whileTrue(new ChangeSpeed(outtake, OuttakeConstants.AMP_SPEED, "amp"));
 		operator.b().whileTrue(new ChangeSpeed(outtake, 0, "stop"));
 
-		operator.y().whileTrue(new SmartShoot(outtake, 3100, limelight));
+		operator.y().whileTrue(new SmartShoot(outtake, 3100, limelight, drivetrain));
 	}
 
 	/**
